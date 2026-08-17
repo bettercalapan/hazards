@@ -14,7 +14,7 @@ Hazards is a public, no-login web app for helping Calapan residents understand l
 
 - Confirm Calapan City and barangay boundary data.
 - Find and verify an authoritative flood-risk dataset.
-- Verify an official source for incidents reported during the past 24 hours.
+- Use PAGASA's official Public Alert CAP feed for active hazard alerts.
 - Confirm terrain and other data needed for a useful 3D view.
 - Check data licensing, attribution, coverage, timestamps, and update frequency.
 - Identify the official emergency contacts and safety guidance to display.
@@ -29,8 +29,8 @@ The first release serves residents and focuses on flooding.
 - Flood-risk layer with a labeled severity legend and adjustable opacity.
 - Barangay search and clickable area details.
 - Area details showing risk level, explanation, source, and update dates.
-- Separate map layer and panel for verified official events from the past 24 hours.
-- Event timestamps, location, severity, status, source, and source link when available.
+- Separate panel for verified official alerts.
+- Alert timestamps, location, severity, status, source, and source link when available.
 - Clear states for no verified events, stale data, and unavailable sources.
 - Short, authoritative flood-safety guidance and emergency contacts.
 - Responsive, keyboard-accessible controls and a mobile-friendly details panel.

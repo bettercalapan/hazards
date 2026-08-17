@@ -2,8 +2,12 @@
 	import { resolve } from '$app/paths';
 	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
 	import { floodHazardMetadata } from '$lib/data/flood';
+	import { formatAlertDate } from '$lib/data/alerts';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
+	import type { PageData } from './$types';
+
+	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
 
@@ -16,7 +20,7 @@
 	<title>Hazards | Calapan City</title>
 	<meta
 		name="description"
-		content="A localized view of hazard-risk zones and recent official incidents in Calapan City."
+		content="A localized view of hazard-risk zones and active official alerts in Calapan City."
 	/>
 </svelte:head>
 
@@ -39,8 +43,7 @@
 				<p class="eyebrow">Calapan City hazard map</p>
 				<h1>Understand the risks around you.</h1>
 				<p class="intro-copy">
-					Explore hazard-risk zones across Calapan and check what official sources have reported in
-					the last 24 hours.
+					Explore hazard-risk zones across Calapan and check active official alerts from PAGASA.
 				</p>
 			</header>
 
@@ -90,12 +93,60 @@
 			<section class="info-card recent-events">
 				<div class="card-heading">
 					<div>
-						<div class="card-kicker">Official reports</div>
-						<h2>Past 24 hours</h2>
+						<div class="card-kicker">Official alerts</div>
+						<h2>Active advisories</h2>
 					</div>
-					<span class="coming-soon">Soon</span>
+					<span class:unavailable={data.alertFeedStatus === 'unavailable'} class="feed-status">
+						{data.alertFeedStatus === 'unavailable' ? 'Unavailable' : 'PAGASA'}
+					</span>
 				</div>
-				<p>Verified recent incident reports will appear here once an official feed is connected.</p>
+
+				{#if data.alertFeedStatus === 'unavailable'}
+					<p>No PAGASA alert data is available right now. No alerts are being inferred.</p>
+				{:else if data.activeAlerts.length === 0}
+					<p>No active PAGASA advisories currently cover Calapan or Oriental Mindoro.</p>
+				{:else}
+					<ul class="alert-list">
+						{#each data.activeAlerts as alert (alert.id)}
+							<li
+								class:severe={alert.severity.toLowerCase() === 'severe'}
+								class:moderate={alert.severity.toLowerCase() === 'moderate'}
+							>
+								<!-- External source links do not pass through SvelteKit routing. -->
+								<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+								<a href={alert.url} target="_blank" rel="noreferrer">
+									<strong>{alert.title}</strong>
+									<span>{alert.event}</span>
+								</a>
+								<small>
+									{alert.severity || 'Severity not provided'} ·
+									{alert.urgency || 'Urgency not provided'} ·
+									{alert.certainty || 'Certainty not provided'}
+								</small>
+								<small>
+									Issued {formatAlertDate(alert.sentAt)} ·
+									{alert.expiresAt
+										? `Expires ${formatAlertDate(alert.expiresAt)}`
+										: 'No expiry provided'}
+								</small>
+								<small>Area: {alert.localAreas.join(', ') || 'Local area not specified'}</small>
+								{#if alert.instruction}
+									<p>{alert.instruction}</p>
+								{/if}
+								<p class="alert-note">
+									Official PAGASA advisory. This does not confirm an on-the-ground incident.
+								</p>
+							</li>
+						{/each}
+					</ul>
+				{/if}
+
+				<p class="selection-source">
+					Source:
+					<a href="https://publicalert.pagasa.dost.gov.ph/feeds/" target="_blank" rel="noreferrer"
+						>PAGASA Public Alert CAP</a
+					>. Checked {formatAlertDate(data.alertsFetchedAt)}.
+				</p>
 			</section>
 
 			<p class="boundary-attribution">{calapanBarangayAttribution}</p>
@@ -287,7 +338,7 @@
 		margin-bottom: 0;
 	}
 
-	.coming-soon {
+	.feed-status {
 		padding: 0.3rem 0.5rem;
 		border-radius: 999px;
 		background: var(--neutral-light);
@@ -296,6 +347,77 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	.feed-status.unavailable {
+		background: #fce8e6;
+		color: #9d3a32;
+	}
+
+	.alert-list {
+		display: grid;
+		gap: 0.75rem;
+		margin: 1.25rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.alert-list li {
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--gray);
+	}
+
+	.alert-list li.severe {
+		border-top-color: #eb5757;
+	}
+
+	.alert-list li.moderate {
+		border-top-color: #f2994a;
+	}
+
+	.alert-list a {
+		display: grid;
+		gap: 0.35rem;
+		color: var(--fg);
+		text-decoration: none;
+	}
+
+	.alert-list a:hover strong,
+	.alert-list a:focus-visible strong {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	.alert-list strong {
+		font-size: 0.9rem;
+		line-height: 1.35;
+	}
+
+	.alert-list span,
+	.alert-list small {
+		color: var(--fg-secondary);
+		font-size: 0.75rem;
+	}
+
+	.alert-list p {
+		margin-top: 0.55rem;
+		font-size: 0.82rem !important;
+	}
+
+	.alert-list .alert-note {
+		color: var(--fg-secondary);
+		font-size: 0.76rem !important;
+	}
+
+	.alert-list small {
+		display: block;
+		margin-top: 0.35rem;
+	}
+
+	.selection-source a {
+		color: inherit;
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
 	}
 
 	.boundary-attribution {
