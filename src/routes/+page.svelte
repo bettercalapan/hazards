@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { calapanBoundaryAttribution } from '$lib/data/calapan-boundary';
 	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
@@ -92,6 +93,8 @@
 				</div>
 				<p>Verified recent events will appear here once an official feed is connected.</p>
 			</section>
+
+			<p class="boundary-attribution">{calapanBoundaryAttribution}</p>
 		</div>
 	</aside>
 </div>
@@ -306,6 +309,13 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	.boundary-attribution {
+		padding: 0.25rem 0.25rem 1rem;
+		color: var(--fg-secondary);
+		font-size: 0.7rem;
+		line-height: 1.4;
 	}
 
 	@media (max-width: 850px) {

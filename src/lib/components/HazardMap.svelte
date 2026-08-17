@@ -1,5 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import {
+		calapanCityBoundary,
+		calapanCityBounds,
+		calapanCityMask
+	} from '$lib/data/calapan-boundary';
 	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -8,6 +13,7 @@
 	type Props = {
 		onSelectArea?: (area: HazardAreaProperties | null) => void;
 	};
+	type MapBounds = [[number, number], [number, number]];
 
 	let { onSelectArea }: Props = $props();
 
@@ -15,6 +21,41 @@
 		if (!object || typeof object !== 'object' || !('properties' in object)) return null;
 
 		return object.properties as HazardAreaProperties;
+	}
+
+	function getPanBounds(map: import('maplibre-gl').Map): MapBounds {
+		const visibleBounds = map.getBounds();
+		const horizontalPanPixels = 2;
+		const center = map.getCenter();
+		const centerPoint = map.project(center);
+		const leftPoint = map.unproject([centerPoint.x - horizontalPanPixels, centerPoint.y]);
+		const rightPoint = map.unproject([centerPoint.x + horizontalPanPixels, centerPoint.y]);
+
+		return [
+			[visibleBounds.getWest() - (center.lng - leftPoint.lng), visibleBounds.getSouth()],
+			[visibleBounds.getEast() + (rightPoint.lng - center.lng), visibleBounds.getNorth()]
+		];
+	}
+
+	function restrictSymbolLayers(map: import('maplibre-gl').Map) {
+		const withinBoundary = [
+			'within',
+			calapanCityBoundary.geometry
+		] as unknown as import('maplibre-gl').FilterSpecification;
+
+		for (const layer of map.getStyle().layers ?? []) {
+			if (layer.type !== 'symbol') continue;
+
+			const filter = layer.filter
+				? ([
+						'all',
+						layer.filter,
+						withinBoundary
+					] as unknown as import('maplibre-gl').FilterSpecification)
+				: withinBoundary;
+
+			map.setFilter(layer.id, filter);
+		}
 	}
 
 	let mapElement: HTMLDivElement;
@@ -51,6 +92,10 @@
 
 			if (disposed) return;
 			setWorkerUrl(workerUrl);
+			const cityBounds: MapBounds = [
+				[calapanCityBounds[0], calapanCityBounds[1]],
+				[calapanCityBounds[2], calapanCityBounds[3]]
+			];
 
 			const mapInstance = new MapLibreMap({
 				container: mapElement,
@@ -121,7 +166,52 @@
 
 			mapInstance.once('load', () => {
 				if (!overlay || disposed) return;
+				const firstSymbolLayerId = mapInstance
+					.getStyle()
+					.layers?.find((layer) => layer.type === 'symbol')?.id;
 
+				mapInstance.addSource('calapan-city-mask', {
+					type: 'geojson',
+					data: calapanCityMask
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-city-mask',
+						type: 'fill',
+						source: 'calapan-city-mask',
+						paint: {
+							'fill-color': '#f7f2e8',
+							'fill-opacity': 0.88
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addSource('calapan-city-boundary', {
+					type: 'geojson',
+					data: calapanCityBoundary
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-city-boundary',
+						type: 'line',
+						source: 'calapan-city-boundary',
+						paint: {
+							'line-color': '#d18f38',
+							'line-width': 2,
+							'line-opacity': 0.9
+						}
+					},
+					firstSymbolLayerId
+				);
+				restrictSymbolLayers(mapInstance);
+
+				mapInstance.fitBounds(cityBounds, {
+					padding: 32,
+					maxZoom: 12,
+					duration: 0
+				});
+				mapInstance.setMaxBounds(getPanBounds(mapInstance));
+				mapInstance.setMinZoom(mapInstance.getZoom());
 				mapInstance.addControl(overlay);
 				updateMapCamera(viewMode);
 				updateDeckLayer();
