@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { prototypeFloodLayer } from '$lib/data/hazards';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 </script>
 
@@ -33,13 +34,10 @@
 					<span class="layer-dot"></span>
 					Active layer
 				</div>
-				<h2>Flooding prototype</h2>
-				<p>
-					The highlighted shape is placeholder geometry for testing the map. It is not an official
-					flood-risk classification.
-				</p>
+				<h2>{prototypeFloodLayer.name}</h2>
+				<p>{prototypeFloodLayer.description}</p>
 				<div class="legend" aria-label="Prototype map legend">
-					<div><span class="legend-swatch demo"></span>Demo polygon</div>
+					<div><span class="legend-swatch demo"></span>{prototypeFloodLayer.legendLabel}</div>
 				</div>
 			</section>
 
@@ -56,7 +54,11 @@
 
 			<section class="source-note">
 				<span class="source-icon">i</span>
-				<p>Always check the source and update time before making safety decisions.</p>
+				<p>
+					Source: {prototypeFloodLayer.sourceName}. Update:
+					{prototypeFloodLayer.updatedAt ?? 'not available for prototype data'}. Always check the
+					source and update time before making safety decisions.
+				</p>
 			</section>
 		</aside>
 	</section>

@@ -1,33 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { FeatureCollection, Polygon } from 'geojson';
+	import { prototypeFloodLayer } from '$lib/data/hazards';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
-
-	const prototypeFloodZone: FeatureCollection<Polygon> = {
-		type: 'FeatureCollection',
-		features: [
-			{
-				type: 'Feature',
-				properties: { name: 'Prototype flood-risk zone' },
-				geometry: {
-					type: 'Polygon',
-					coordinates: [
-						[
-							[121.165, 13.402],
-							[121.185, 13.402],
-							[121.19, 13.415],
-							[121.172, 13.422],
-							[121.16, 13.414],
-							[121.165, 13.402]
-						]
-					]
-				}
-			}
-		]
-	};
 
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
@@ -97,8 +74,8 @@
 				overlay.setProps({
 					layers: [
 						new GeoJsonLayer({
-							id: 'prototype-flood-zone',
-							data: prototypeFloodZone,
+							id: prototypeFloodLayer.id,
+							data: prototypeFloodLayer.data,
 							filled: true,
 							stroked: true,
 							extruded: viewMode === '3d',
@@ -166,7 +143,11 @@
 		{mapReady ? 'Map ready' : 'Loading map'}
 	</div>
 
-	<div class="prototype-note">Demo geometry only. Official flood data is not connected yet.</div>
+	<div class="prototype-note">
+		{prototypeFloodLayer.status === 'prototype'
+			? 'Demo geometry only. Official flood data is not connected yet.'
+			: 'Verified hazard data is connected.'}
+	</div>
 </div>
 
 <style>
