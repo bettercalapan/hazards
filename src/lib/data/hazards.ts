@@ -2,6 +2,13 @@ import type { FeatureCollection, Polygon } from 'geojson';
 
 export type HazardLayerStatus = 'prototype' | 'verified';
 
+export type HazardAreaProperties = {
+	id: string;
+	name: string;
+	status: HazardLayerStatus;
+	description: string;
+};
+
 export type HazardLayer = {
 	id: string;
 	name: string;
@@ -11,7 +18,7 @@ export type HazardLayer = {
 	sourceUrl: string | null;
 	updatedAt: string | null;
 	legendLabel: string;
-	data: FeatureCollection<Polygon>;
+	data: FeatureCollection<Polygon, HazardAreaProperties>;
 };
 
 export const prototypeFloodLayer: HazardLayer = {
@@ -29,7 +36,13 @@ export const prototypeFloodLayer: HazardLayer = {
 		features: [
 			{
 				type: 'Feature',
-				properties: { name: 'Prototype flood-risk zone' },
+				properties: {
+					id: 'prototype-flood-zone-area',
+					name: 'Prototype flood-risk zone',
+					status: 'prototype',
+					description:
+						'This selected area uses placeholder geometry for testing. It is not an official flood-risk classification.'
+				},
 				geometry: {
 					type: 'Polygon',
 					coordinates: [

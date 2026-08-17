@@ -1,10 +1,21 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { prototypeFloodLayer } from '$lib/data/hazards';
+	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
+	type Props = {
+		onSelectArea?: (area: HazardAreaProperties | null) => void;
+	};
+
+	let { onSelectArea }: Props = $props();
+
+	function getAreaProperties(object: unknown): HazardAreaProperties | null {
+		if (!object || typeof object !== 'object' || !('properties' in object)) return null;
+
+		return object.properties as HazardAreaProperties;
+	}
 
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
@@ -72,7 +83,10 @@
 
 			overlay = new MapboxOverlay({
 				interleaved: false,
-				layers: []
+				layers: [],
+				onClick: (info) => {
+					if (!info.object) onSelectArea?.(null);
+				}
 			});
 
 			updateDeckLayer = () => {
@@ -92,7 +106,14 @@
 							getLineWidth: 3,
 							lineWidthUnits: 'pixels',
 							pickable: true,
-							autoHighlight: true
+							autoHighlight: true,
+							onClick: ({ object }) => {
+								const properties = getAreaProperties(object);
+								if (!properties) return false;
+
+								onSelectArea?.(properties);
+								return true;
+							}
 						})
 					]
 				});
@@ -178,7 +199,8 @@
 		display: flex;
 		flex: 1;
 		width: 100%;
-		min-height: 34rem;
+		height: 100%;
+		min-height: 0;
 		overflow: hidden;
 		background: #d9e5e4;
 		isolation: isolate;
@@ -315,7 +337,8 @@
 
 	@media (max-width: 640px) {
 		.map-shell {
-			min-height: 27rem;
+			height: 100%;
+			min-height: 0;
 		}
 
 		.map-toolbar {

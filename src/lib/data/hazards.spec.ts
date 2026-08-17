@@ -8,5 +8,12 @@ describe('prototype flood layer', () => {
 		expect(prototypeFloodLayer.sourceUrl).toBeNull();
 		expect(prototypeFloodLayer.updatedAt).toBeNull();
 		expect(prototypeFloodLayer.data.features).toHaveLength(1);
+		expect(prototypeFloodLayer.data.features[0].properties).toEqual({
+			id: 'prototype-flood-zone-area',
+			name: 'Prototype flood-risk zone',
+			status: 'prototype',
+			description:
+				'This selected area uses placeholder geometry for testing. It is not an official flood-risk classification.'
+		});
 	});
 });

@@ -1,8 +1,6 @@
 <script lang="ts">
 	import '../global.css';
 	import favicon from '$lib/assets/favicon.png';
-	import Footer from '$lib/components/footer.svelte';
-	import Header from '$lib/components/header.svelte';
 
 	let { children } = $props();
 </script>
@@ -12,13 +10,9 @@
 </svelte:head>
 
 <a class="skip-link" href="#main-content">Skip to main content</a>
-<Header />
 <main id="main-content" tabindex="-1">
-	<div class="main-wrapper">
-		{@render children()}
-	</div>
+	{@render children()}
 </main>
-<Footer />
 
 <style>
 	.skip-link {
@@ -52,21 +46,20 @@
 	main {
 		display: flex;
 		flex: 1;
-		flex-direction: column;
-		align-items: center;
-		padding: 1rem 1rem 4rem;
+		height: 100%;
+		min-height: 0;
+		overflow: hidden;
 	}
 
 	main:focus {
 		outline: none;
 	}
 
-	.main-wrapper {
-		display: flex;
-		flex: 1;
-		flex-direction: column;
-		width: 100%;
-		max-width: 80rem;
+	@media (max-width: 850px) {
+		main {
+			height: auto;
+			overflow: visible;
+		}
 	}
 
 	@media (prefers-reduced-motion: reduce) {

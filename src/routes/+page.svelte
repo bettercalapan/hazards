@@ -1,6 +1,18 @@
 <script lang="ts">
-	import { prototypeFloodLayer } from '$lib/data/hazards';
+	import { resolve } from '$app/paths';
+	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
+	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
+
+	let selectedArea = $state<HazardAreaProperties | null>(null);
+
+	function handleAreaSelect(area: HazardAreaProperties | null) {
+		selectedArea = area;
+	}
+
+	function clearSelectedArea() {
+		selectedArea = null;
+	}
 </script>
 
 <svelte:head>
@@ -11,24 +23,30 @@
 	/>
 </svelte:head>
 
-<div class="page">
-	<section class="intro" aria-labelledby="page-title">
-		<div>
-			<p class="eyebrow">Calapan City hazard map</p>
-			<h1 id="page-title">Understand the risks around you.</h1>
-		</div>
-		<p class="intro-copy">
-			Explore hazard-risk zones across Calapan and check what official sources have reported in the
-			last 24 hours.
-		</p>
+<div class="app-shell">
+	<section class="map-pane" aria-label="Hazard map">
+		<HazardMap onSelectArea={handleAreaSelect} />
 	</section>
 
-	<section class="workspace" aria-label="Hazard map workspace">
-		<div class="map-card">
-			<HazardMap />
-		</div>
+	<aside class="sidebar" aria-label="Hazard information">
+		<div class="sidebar-inner">
+			<div class="brand-row">
+				<a class="brand-link" href={resolve('/')} aria-label="Go to Hazards home">
+					<img src={logo} alt="" width="36" height="36" />
+					<span>BetterCalapan</span>
+				</a>
+				<span class="product-label">Hazards</span>
+			</div>
 
-		<aside class="information-panel">
+			<header class="sidebar-intro">
+				<p class="eyebrow">Calapan City hazard map</p>
+				<h1>Understand the risks around you.</h1>
+				<p class="intro-copy">
+					Explore hazard-risk zones across Calapan and check what official sources have reported in
+					the last 24 hours.
+				</p>
+			</header>
+
 			<section class="info-card active-layer">
 				<div class="card-kicker">
 					<span class="layer-dot"></span>
@@ -41,6 +59,29 @@
 				</div>
 			</section>
 
+			<section class="info-card selection-card" class:selected={selectedArea} aria-live="polite">
+				{#if selectedArea}
+					<div class="card-kicker">Selected area</div>
+					<h2>{selectedArea.name}</h2>
+					<p>{selectedArea.description}</p>
+					<div class="selection-status">
+						<span class="layer-dot"></span>
+						{selectedArea.status === 'prototype' ? 'Prototype data' : 'Verified data'}
+					</div>
+					<p class="selection-source">
+						Source: {prototypeFloodLayer.sourceName}. Update:
+						{prototypeFloodLayer.updatedAt ?? 'not available for prototype data'}.
+					</p>
+					<button class="clear-selection" type="button" onclick={clearSelectedArea}>
+						Clear selection
+					</button>
+				{:else}
+					<div class="card-kicker">Area details</div>
+					<h2>Select an area</h2>
+					<p>Click the highlighted area on the map to inspect its available details.</p>
+				{/if}
+			</section>
+
 			<section class="info-card recent-events">
 				<div class="card-heading">
 					<div>
@@ -51,33 +92,70 @@
 				</div>
 				<p>Verified recent events will appear here once an official feed is connected.</p>
 			</section>
-
-			<section class="source-note">
-				<span class="source-icon">i</span>
-				<p>
-					Source: {prototypeFloodLayer.sourceName}. Update:
-					{prototypeFloodLayer.updatedAt ?? 'not available for prototype data'}. Always check the
-					source and update time before making safety decisions.
-				</p>
-			</section>
-		</aside>
-	</section>
+		</div>
+	</aside>
 </div>
 
 <style>
-	.page {
-		display: flex;
+	.app-shell {
+		display: grid;
 		flex: 1;
-		flex-direction: column;
-		gap: 2rem;
+		grid-template-columns: minmax(0, 1fr) minmax(22rem, 28rem);
+		width: 100%;
+		min-height: 0;
 	}
 
-	.intro {
+	.map-pane {
+		min-width: 0;
+		min-height: 0;
+		background: var(--neutral-light);
+	}
+
+	.sidebar {
+		min-width: 0;
+		min-height: 0;
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		border-left: 1px solid var(--gray);
+		background: var(--neutral-lightest);
+		scrollbar-color: var(--gray) transparent;
+	}
+
+	.sidebar-inner {
+		padding: 1.5rem;
+	}
+
+	.brand-row {
 		display: flex;
-		align-items: end;
+		align-items: center;
 		justify-content: space-between;
-		gap: 2rem;
-		padding: 2rem 0 1rem;
+		gap: 1rem;
+		padding-bottom: 1.5rem;
+		border-bottom: 1px solid var(--gray);
+	}
+
+	.brand-link {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.65rem;
+		font-size: 0.95rem;
+		font-weight: 700;
+	}
+
+	.brand-link img {
+		border-radius: 0.65rem;
+	}
+
+	.product-label {
+		color: var(--fg-secondary);
+		font-size: 0.75rem;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+	}
+
+	.sidebar-intro {
+		padding: 2rem 0 1.5rem;
 	}
 
 	.eyebrow,
@@ -91,59 +169,53 @@
 	}
 
 	h1 {
-		max-width: 45rem;
-		font-size: 2.5rem;
+		font-size: 2.25rem;
 		font-weight: 700;
-		line-height: 1.15;
+		line-height: 1.1;
+		text-wrap: balance;
 	}
 
 	.intro-copy {
-		max-width: 24rem;
-		margin-bottom: 0.25rem;
+		margin-top: 1rem;
 		color: var(--fg-secondary);
-		font-size: 1.125rem;
-	}
-
-	.workspace {
-		display: grid;
-		grid-template-columns: minmax(0, 1fr) 20rem;
-		gap: 2rem;
-		align-items: stretch;
-	}
-
-	.map-card,
-	.info-card,
-	.source-note {
-		border: 1px solid var(--gray);
-		border-radius: 0.75rem;
-	}
-
-	.map-card {
-		display: flex;
-		min-width: 0;
-		overflow: hidden;
-		background: var(--neutral-light);
-	}
-
-	.information-panel {
-		display: flex;
-		flex-direction: column;
-		gap: 1rem;
+		font-size: 1rem;
 	}
 
 	.info-card {
 		padding: 1.5rem;
+		border: 1px solid var(--gray);
+		border-radius: 0.75rem;
 		background: var(--bg);
 	}
 
+	.info-card + .info-card {
+		margin-top: 1rem;
+	}
+
 	.active-layer {
-		flex: 1;
 		border-color: var(--accent-light);
-		background: var(--neutral-light);
+		background: var(--bg);
 	}
 
 	.active-layer .card-kicker {
 		color: var(--accent-dark);
+	}
+
+	.selection-card.selected {
+		border-color: var(--accent);
+	}
+
+	h2 {
+		margin-bottom: 0.75rem;
+		font-size: 1.4rem;
+		font-weight: 700;
+		line-height: 1.2;
+	}
+
+	.info-card p {
+		color: var(--fg-secondary);
+		font-size: 0.95rem;
+		line-height: 1.5;
 	}
 
 	.layer-dot {
@@ -155,27 +227,13 @@
 		background: var(--accent);
 	}
 
-	h2 {
-		margin-bottom: 0.75rem;
-		font-size: 1.5rem;
-		font-weight: 700;
-		line-height: 1.2;
-	}
-
-	.info-card p,
-	.source-note p {
-		color: var(--fg-secondary);
-		font-size: 1rem;
-		line-height: 1.5;
-	}
-
 	.legend {
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
 		margin-top: 1.5rem;
 		color: var(--fg-secondary);
-		font-size: 0.9rem;
+		font-size: 0.85rem;
 	}
 
 	.legend div {
@@ -192,6 +250,40 @@
 
 	.legend-swatch.demo {
 		background: var(--accent);
+	}
+
+	.selection-status {
+		display: flex;
+		align-items: center;
+		gap: 0.35rem;
+		margin-top: 1rem;
+		color: var(--fg-secondary);
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.selection-status .layer-dot {
+		margin-right: 0;
+	}
+
+	.selection-source {
+		margin-top: 0.75rem;
+		font-size: 0.8rem !important;
+	}
+
+	.clear-selection {
+		margin-top: 1.25rem;
+		padding: 0.6rem 0.9rem;
+		border: 1px solid var(--gray);
+		border-radius: 999px;
+		background: var(--bg);
+		color: var(--fg);
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.clear-selection:hover {
+		background: var(--neutral-hover);
 	}
 
 	.card-heading {
@@ -216,59 +308,47 @@
 		text-transform: uppercase;
 	}
 
-	.source-note {
-		display: flex;
-		gap: 0.7rem;
-		padding: 1rem;
-		background: var(--neutral-light);
-	}
-
-	.source-icon {
-		display: grid;
-		flex: 0 0 auto;
-		width: 1.25rem;
-		height: 1.25rem;
-		place-items: center;
-		border: 1px solid var(--neutral-dark);
-		border-radius: 50%;
-		color: var(--fg-secondary);
-		font-size: 0.8rem;
-		font-style: italic;
-	}
-
-	@media (min-width: 800px) {
-		h1 {
-			font-size: 3.5rem;
-		}
-	}
-
 	@media (max-width: 850px) {
-		.workspace {
-			grid-template-columns: 1fr;
+		.app-shell {
+			display: flex;
+			flex-direction: column;
+			min-height: 100%;
 		}
 
-		.information-panel {
-			display: grid;
-			grid-template-columns: repeat(2, minmax(0, 1fr));
+		.map-pane {
+			flex: 0 0 auto;
+			height: 55dvh;
+			min-height: 24rem;
+			max-height: 42rem;
 		}
 
-		.source-note {
-			grid-column: 1 / -1;
+		.sidebar {
+			flex: 1 0 auto;
+			overflow: visible;
+			border-top: 1px solid var(--gray);
+			border-left: 0;
+		}
+
+		.sidebar-inner {
+			padding: 1.25rem 1rem 3rem;
 		}
 	}
 
-	@media (max-width: 620px) {
-		.intro {
-			display: block;
-			padding: 1rem 0;
+	@media (min-width: 851px) and (max-width: 1100px) {
+		.sidebar-inner {
+			padding: 1.25rem;
 		}
 
-		.intro-copy {
-			margin-top: 1rem;
+		h1 {
+			font-size: 2rem;
 		}
+	}
 
-		.information-panel {
-			display: flex;
+	@media (min-width: 851px) {
+		.app-shell,
+		.map-pane,
+		.sidebar {
+			height: 100%;
 		}
 	}
 </style>
