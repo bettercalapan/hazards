@@ -8,6 +8,7 @@
 
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
+	let layerOpacity = $state(0.65);
 	let mapReady = $state(false);
 	let updateDeckLayer = () => {};
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
@@ -15,6 +16,12 @@
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
 		updateMapCamera(nextMode);
+		updateDeckLayer();
+	}
+
+	function setLayerOpacity(event: Event) {
+		const input = event.currentTarget as HTMLInputElement;
+		layerOpacity = Number(input.value) / 100;
 		updateDeckLayer();
 	}
 
@@ -80,8 +87,8 @@
 							stroked: true,
 							extruded: viewMode === '3d',
 							getElevation: 35,
-							getFillColor: [228, 154, 61, 115],
-							getLineColor: [145, 78, 21, 220],
+							getFillColor: [228, 154, 61, Math.round(115 * layerOpacity)],
+							getLineColor: [145, 78, 21, Math.round(220 * layerOpacity)],
 							getLineWidth: 3,
 							lineWidthUnits: 'pixels',
 							pickable: true,
@@ -114,7 +121,7 @@
 </script>
 
 <div class="map-shell">
-	<div class="map-toolbar" aria-label="Map view controls">
+	<div class="map-toolbar" aria-label="Map controls">
 		<span class="toolbar-label">View</span>
 		<div class="view-toggle" role="group" aria-label="Map view mode">
 			<button
@@ -134,6 +141,21 @@
 				2D
 			</button>
 		</div>
+		<label class="opacity-control">
+			<span class="opacity-label">
+				Layer opacity
+				<output>{Math.round(layerOpacity * 100)}%</output>
+			</span>
+			<input
+				aria-label="Hazard layer opacity"
+				type="range"
+				min="0"
+				max="100"
+				step="5"
+				value={Math.round(layerOpacity * 100)}
+				oninput={setLayerOpacity}
+			/>
+		</label>
 	</div>
 
 	<div bind:this={mapElement} class="map" aria-label="Interactive map of Calapan City"></div>
@@ -175,8 +197,10 @@
 		top: 1rem;
 		left: 1rem;
 		display: flex;
+		flex-wrap: wrap;
 		align-items: center;
 		gap: 0.7rem;
+		max-width: calc(100% - 2rem);
 		padding: 0.45rem;
 		border: 1px solid rgb(255 255 255 / 65%);
 		border-radius: 999px;
@@ -214,6 +238,34 @@
 	.view-toggle button.active {
 		background: #173e3b;
 		color: #fffdf7;
+	}
+
+	.opacity-control {
+		display: grid;
+		min-width: 10rem;
+		gap: 0.2rem;
+		padding: 0.2rem 0.45rem;
+		border-left: 1px solid rgb(71 101 99 / 20%);
+	}
+
+	.opacity-label {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 0.75rem;
+		color: #476563;
+		font-size: 0.68rem;
+		font-weight: 700;
+	}
+
+	.opacity-label output {
+		font-variant-numeric: tabular-nums;
+	}
+
+	.opacity-control input {
+		width: 100%;
+		accent-color: #173e3b;
+		cursor: pointer;
 	}
 
 	.map-status {
@@ -266,6 +318,14 @@
 		.map-toolbar {
 			top: 0.75rem;
 			left: 0.75rem;
+			max-width: calc(100% - 1.5rem);
+		}
+
+		.opacity-control {
+			flex: 1 1 10rem;
+			border-top: 1px solid rgb(71 101 99 / 20%);
+			border-left: 0;
+			padding-top: 0.45rem;
 		}
 
 		.map-status {
