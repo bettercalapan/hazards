@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
+	import { floodHazardMetadata } from '$lib/data/flood';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 
@@ -48,11 +49,20 @@
 					<span class="layer-dot"></span>
 					Active layer
 				</div>
-				<h2>Barangay boundaries</h2>
-				<p>Explore Calapan's 62 barangays and select one to inspect its administrative boundary.</p>
+				<h2>{floodHazardMetadata.name}</h2>
+				<p>
+					Source-provided flood hazard classes for a {floodHazardMetadata.returnPeriodYears}-year
+					return period.
+				</p>
 				<div class="legend" aria-label="Map legend">
+					<div><span class="legend-swatch low"></span>Low</div>
+					<div><span class="legend-swatch medium"></span>Medium</div>
+					<div><span class="legend-swatch high"></span>High</div>
 					<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
 				</div>
+				<p class="selection-source">
+					Source: {floodHazardMetadata.source}. {floodHazardMetadata.classification}
+				</p>
 			</section>
 
 			<section class="info-card selection-card" class:selected={selectedArea} aria-live="polite">
@@ -60,8 +70,16 @@
 					<div class="card-kicker">Selected area</div>
 					<h2>{selectedArea.name}</h2>
 					<p class="selection-source">
-						Source name: {selectedArea.sourceName}. Administrative boundary data only.
+						Source name: {selectedArea.sourceName}. Administrative boundary data.
 					</p>
+					<p class="selection-source">
+						25-year flood hazard: {selectedArea.floodHazardSummary}.
+					</p>
+					{#if selectedArea.floodHazardClasses.length > 0}
+						<p class="selection-source">
+							Classes mapped in this barangay: {selectedArea.floodHazardClasses.join(', ')}.
+						</p>
+					{/if}
 				{:else}
 					<div class="card-kicker">Area details</div>
 					<h2>Select an area</h2>
@@ -77,7 +95,7 @@
 					</div>
 					<span class="coming-soon">Soon</span>
 				</div>
-				<p>Verified recent events will appear here once an official feed is connected.</p>
+				<p>Verified recent incident reports will appear here once an official feed is connected.</p>
 			</section>
 
 			<p class="boundary-attribution">{calapanBarangayAttribution}</p>
@@ -239,6 +257,18 @@
 
 	.legend-swatch.boundary {
 		background: var(--accent);
+	}
+
+	.legend-swatch.low {
+		background: #f2c94c;
+	}
+
+	.legend-swatch.medium {
+		background: #f2994a;
+	}
+
+	.legend-swatch.high {
+		background: #eb5757;
 	}
 
 	.selection-source {

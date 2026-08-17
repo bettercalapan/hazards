@@ -29,4 +29,4 @@ The app uses SvelteKit with the Cloudflare adapter and deploys to Workers throug
 pnpm run deploy
 ```
 
-The current map view shows Calapan's 62 barangay boundaries from OCHA Philippines' COD-AB dataset, sourced from NAMRIA and PSA. Hazard layers and incident feeds are not connected yet.
+The current map view shows Calapan's 62 barangay boundaries from OCHA Philippines' COD-AB dataset, sourced from NAMRIA and PSA, plus the UP Resilience Institute NOAH Center's 25-year flood hazard classes. The flood classes are source-provided modeled information, not a guarantee of future flooding. The 3D view uses Mapzen Terrain Tiles with elevation data sourced from USGS, NASA, and other contributors. Incident feeds are not connected yet.

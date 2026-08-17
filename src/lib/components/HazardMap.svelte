@@ -10,6 +10,8 @@
 		calapanBarangays,
 		type BarangayProperties
 	} from '$lib/data/barangays';
+	import { calapanFloodHazardRaster } from '$lib/data/flood';
+	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -57,7 +59,7 @@
 		] as unknown as import('maplibre-gl').FilterSpecification;
 
 		for (const layer of map.getStyle().layers ?? []) {
-			if (layer.id === 'calapan-barangay-labels') continue;
+			if (layer.id === 'calapan-barangay-labels' || layer.id === 'calapan-contour-labels') continue;
 			if (layer.type !== 'symbol') continue;
 
 			const filter = layer.filter
@@ -195,6 +197,7 @@
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
 		let selectedBarangayId: string | null = null;
+		let terrainReady = false;
 
 		const initialize = async () => {
 			const { setWorkerUrl, Map: MapLibreMap } = await import('maplibre-gl');
@@ -213,6 +216,8 @@
 				zoom: 11.5,
 				pitch: 45,
 				bearing: -12,
+				maxPitch: 75,
+				pitchWithRotate: true,
 				attributionControl: { compact: true }
 			});
 			map = mapInstance;
@@ -245,6 +250,9 @@
 
 			updateMapCamera = (nextMode) => {
 				const is3d = nextMode === '3d';
+				if (terrainReady) {
+					mapInstance.setTerrain(is3d ? { source: 'calapan-terrain', exaggeration: 1.15 } : null);
+				}
 
 				if (is3d) {
 					mapInstance.dragRotate.enable();
@@ -267,6 +275,82 @@
 				const firstSymbolLayerId = mapInstance
 					.getStyle()
 					.layers?.find((layer) => layer.type === 'symbol')?.id;
+				mapInstance.addSource('calapan-terrain', {
+					type: 'raster-dem',
+					tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
+					tileSize: 256,
+					maxzoom: 15,
+					encoding: 'terrarium',
+					attribution: terrainAttribution
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-terrain-hillshade',
+						type: 'hillshade',
+						source: 'calapan-terrain',
+						paint: {
+							'hillshade-exaggeration': 0.18,
+							'hillshade-shadow-color': '#756c5f',
+							'hillshade-highlight-color': '#fffaf0'
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addSource('calapan-contours', {
+					type: 'geojson',
+					data: calapanContourDataUrl
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-contours-minor',
+						type: 'line',
+						source: 'calapan-contours',
+						filter: ['==', ['get', 'major'], false],
+						paint: {
+							'line-color': '#8d8878',
+							'line-width': 0.65,
+							'line-opacity': 0.35
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-contours-major',
+						type: 'line',
+						source: 'calapan-contours',
+						filter: ['==', ['get', 'major'], true],
+						paint: {
+							'line-color': '#756c5f',
+							'line-width': 1.1,
+							'line-opacity': 0.58
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-contour-labels',
+						type: 'symbol',
+						source: 'calapan-contours',
+						minzoom: 13,
+						filter: ['==', ['get', 'major'], true],
+						layout: {
+							'symbol-placement': 'line',
+							'symbol-spacing': 300,
+							'text-field': ['concat', ['to-string', ['get', 'elevation']], ' m'],
+							'text-size': 10,
+							'text-allow-overlap': false
+						},
+						paint: {
+							'text-color': '#756c5f',
+							'text-halo-color': '#f7f2e8',
+							'text-halo-width': 1.2
+						}
+					},
+					firstSymbolLayerId
+				);
+				terrainReady = true;
 
 				mapInstance.addSource('calapan-city-mask', {
 					type: 'geojson',
@@ -279,7 +363,7 @@
 						source: 'calapan-city-mask',
 						paint: {
 							'fill-color': '#f7f2e8',
-							'fill-opacity': 0.88
+							'fill-opacity': 0.5
 						}
 					},
 					firstSymbolLayerId
@@ -291,6 +375,48 @@
 				mapInstance.addLayer(
 					{
 						id: 'calapan-city-boundary',
+						type: 'line',
+						source: 'calapan-city-boundary',
+						paint: {
+							'line-color': '#d18f38',
+							'line-width': 2,
+							'line-opacity': 0.9
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addSource('calapan-flood-hazard', {
+					type: 'image',
+					url: calapanFloodHazardRaster.url,
+					coordinates: calapanFloodHazardRaster.coordinates
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-flood-hazard',
+						type: 'raster',
+						source: 'calapan-flood-hazard',
+						paint: {
+							'raster-opacity': 0.9,
+							'raster-resampling': 'nearest'
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-city-mask-overlay',
+						type: 'fill',
+						source: 'calapan-city-mask',
+						paint: {
+							'fill-color': '#f7f2e8',
+							'fill-opacity': 0.5
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-city-boundary-overlay',
 						type: 'line',
 						source: 'calapan-city-boundary',
 						paint: {
@@ -434,7 +560,7 @@
 	</div>
 
 	<div class="boundary-note">
-		Barangay boundaries are shown for orientation. Hazard layers are not connected yet.
+		NOAH 25-year flood hazard classes. 3D elevation uses Mapzen Terrain Tiles.
 	</div>
 </div>
 

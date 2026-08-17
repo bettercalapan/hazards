@@ -4,7 +4,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205001",
-			"properties": { "id": "PH1705205001", "name": "Balingayan", "sourceName": "Balingayan" },
+			"properties": {
+				"id": "PH1705205001",
+				"name": "Balingayan",
+				"sourceName": "Balingayan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -217,7 +223,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205002",
-			"properties": { "id": "PH1705205002", "name": "Balite", "sourceName": "Balite" },
+			"properties": {
+				"id": "PH1705205002",
+				"name": "Balite",
+				"sourceName": "Balite",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -930,7 +942,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205003",
-			"properties": { "id": "PH1705205003", "name": "Baruyan", "sourceName": "Baruyan" },
+			"properties": {
+				"id": "PH1705205003",
+				"name": "Baruyan",
+				"sourceName": "Baruyan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1139,7 +1157,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205004",
-			"properties": { "id": "PH1705205004", "name": "Batino", "sourceName": "Batino" },
+			"properties": {
+				"id": "PH1705205004",
+				"name": "Batino",
+				"sourceName": "Batino",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1310,7 +1334,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205005",
-			"properties": { "id": "PH1705205005", "name": "Bayanan I", "sourceName": "Bayanan I" },
+			"properties": {
+				"id": "PH1705205005",
+				"name": "Bayanan I",
+				"sourceName": "Bayanan I",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1461,7 +1491,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205006",
-			"properties": { "id": "PH1705205006", "name": "Bayanan II", "sourceName": "Bayanan II" },
+			"properties": {
+				"id": "PH1705205006",
+				"name": "Bayanan II",
+				"sourceName": "Bayanan II",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1512,7 +1548,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205007",
-			"properties": { "id": "PH1705205007", "name": "Biga", "sourceName": "Biga" },
+			"properties": {
+				"id": "PH1705205007",
+				"name": "Biga",
+				"sourceName": "Biga",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1568,7 +1610,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205008",
-			"properties": { "id": "PH1705205008", "name": "Bondoc", "sourceName": "Bondoc" },
+			"properties": {
+				"id": "PH1705205008",
+				"name": "Bondoc",
+				"sourceName": "Bondoc",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1622,7 +1670,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205009",
-			"properties": { "id": "PH1705205009", "name": "Bucayao", "sourceName": "Bucayao" },
+			"properties": {
+				"id": "PH1705205009",
+				"name": "Bucayao",
+				"sourceName": "Bucayao",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1685,7 +1739,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205010",
-			"properties": { "id": "PH1705205010", "name": "Buhuan", "sourceName": "Buhuan" },
+			"properties": {
+				"id": "PH1705205010",
+				"name": "Buhuan",
+				"sourceName": "Buhuan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1717,7 +1777,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205011",
-			"properties": { "id": "PH1705205011", "name": "Bulusan", "sourceName": "Bulusan" },
+			"properties": {
+				"id": "PH1705205011",
+				"name": "Bulusan",
+				"sourceName": "Bulusan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -1781,7 +1847,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205013",
-			"properties": { "id": "PH1705205013", "name": "Calero", "sourceName": "Calero (Pob.)" },
+			"properties": {
+				"id": "PH1705205013",
+				"name": "Calero",
+				"sourceName": "Calero (Pob.)",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2044,7 +2116,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205015",
-			"properties": { "id": "PH1705205015", "name": "Camansihan", "sourceName": "Camansihan" },
+			"properties": {
+				"id": "PH1705205015",
+				"name": "Camansihan",
+				"sourceName": "Camansihan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2115,7 +2193,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205016",
-			"properties": { "id": "PH1705205016", "name": "Camilmil", "sourceName": "Camilmil" },
+			"properties": {
+				"id": "PH1705205016",
+				"name": "Camilmil",
+				"sourceName": "Camilmil",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2205,7 +2289,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205017",
-			"properties": { "id": "PH1705205017", "name": "Canubing I", "sourceName": "Canubing I" },
+			"properties": {
+				"id": "PH1705205017",
+				"name": "Canubing I",
+				"sourceName": "Canubing I",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2458,7 +2548,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205018",
-			"properties": { "id": "PH1705205018", "name": "Canubing II", "sourceName": "Canubing II" },
+			"properties": {
+				"id": "PH1705205018",
+				"name": "Canubing II",
+				"sourceName": "Canubing II",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2894,7 +2990,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205019",
-			"properties": { "id": "PH1705205019", "name": "Comunal", "sourceName": "Comunal" },
+			"properties": {
+				"id": "PH1705205019",
+				"name": "Comunal",
+				"sourceName": "Comunal",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -2931,7 +3033,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205021",
-			"properties": { "id": "PH1705205021", "name": "Guinobatan", "sourceName": "Guinobatan" },
+			"properties": {
+				"id": "PH1705205021",
+				"name": "Guinobatan",
+				"sourceName": "Guinobatan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -3014,7 +3122,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205022",
-			"properties": { "id": "PH1705205022", "name": "Gulod", "sourceName": "Gulod" },
+			"properties": {
+				"id": "PH1705205022",
+				"name": "Gulod",
+				"sourceName": "Gulod",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -3339,7 +3453,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205023",
-			"properties": { "id": "PH1705205023", "name": "Gutad", "sourceName": "Gutad" },
+			"properties": {
+				"id": "PH1705205023",
+				"name": "Gutad",
+				"sourceName": "Gutad",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -3486,7 +3606,9 @@
 			"properties": {
 				"id": "PH1705205025",
 				"name": "Ibaba East",
-				"sourceName": "Ibaba East (Pob.)"
+				"sourceName": "Ibaba East (Pob.)",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3625,7 +3747,9 @@
 			"properties": {
 				"id": "PH1705205026",
 				"name": "Ibaba West",
-				"sourceName": "Ibaba West (Pob.)"
+				"sourceName": "Ibaba West (Pob.)",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3749,7 +3873,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205027",
-			"properties": { "id": "PH1705205027", "name": "Ilaya", "sourceName": "Ilaya (Pob.)" },
+			"properties": {
+				"id": "PH1705205027",
+				"name": "Ilaya",
+				"sourceName": "Ilaya (Pob.)",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -3819,7 +3949,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205028",
-			"properties": { "id": "PH1705205028", "name": "Lalud", "sourceName": "Lalud" },
+			"properties": {
+				"id": "PH1705205028",
+				"name": "Lalud",
+				"sourceName": "Lalud",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -3942,7 +4078,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205029",
-			"properties": { "id": "PH1705205029", "name": "Lazareto", "sourceName": "Lazareto" },
+			"properties": {
+				"id": "PH1705205029",
+				"name": "Lazareto",
+				"sourceName": "Lazareto",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -6756,7 +6898,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205030",
-			"properties": { "id": "PH1705205030", "name": "Libis", "sourceName": "Libis (Pob.)" },
+			"properties": {
+				"id": "PH1705205030",
+				"name": "Libis",
+				"sourceName": "Libis (Pob.)",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -6790,7 +6938,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205031",
-			"properties": { "id": "PH1705205031", "name": "Lumangbayan", "sourceName": "Lumangbayan" },
+			"properties": {
+				"id": "PH1705205031",
+				"name": "Lumangbayan",
+				"sourceName": "Lumangbayan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -6994,7 +7148,9 @@
 			"properties": {
 				"id": "PH1705205032",
 				"name": "Mahal na Pangalan",
-				"sourceName": "Mahal Na Pangalan"
+				"sourceName": "Mahal Na Pangalan",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -7815,7 +7971,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205033",
-			"properties": { "id": "PH1705205033", "name": "Maidlang", "sourceName": "Maidlang" },
+			"properties": {
+				"id": "PH1705205033",
+				"name": "Maidlang",
+				"sourceName": "Maidlang",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -8568,7 +8730,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205034",
-			"properties": { "id": "PH1705205034", "name": "Malad", "sourceName": "Malad" },
+			"properties": {
+				"id": "PH1705205034",
+				"name": "Malad",
+				"sourceName": "Malad",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -8699,7 +8867,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205035",
-			"properties": { "id": "PH1705205035", "name": "Malamig", "sourceName": "Malamig" },
+			"properties": {
+				"id": "PH1705205035",
+				"name": "Malamig",
+				"sourceName": "Malamig",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -8786,7 +8960,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205036",
-			"properties": { "id": "PH1705205036", "name": "Managpi", "sourceName": "Managpi" },
+			"properties": {
+				"id": "PH1705205036",
+				"name": "Managpi",
+				"sourceName": "Managpi",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -9103,7 +9283,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205037",
-			"properties": { "id": "PH1705205037", "name": "Masipit", "sourceName": "Masipit" },
+			"properties": {
+				"id": "PH1705205037",
+				"name": "Masipit",
+				"sourceName": "Masipit",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -9166,7 +9352,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205038",
-			"properties": { "id": "PH1705205038", "name": "Nag-Iba I", "sourceName": "Nag-Iba I" },
+			"properties": {
+				"id": "PH1705205038",
+				"name": "Nag-Iba I",
+				"sourceName": "Nag-Iba I",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -9804,7 +9996,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205068",
-			"properties": { "id": "PH1705205068", "name": "Nag-Iba II", "sourceName": "Nag-Iba II" },
+			"properties": {
+				"id": "PH1705205068",
+				"name": "Nag-Iba II",
+				"sourceName": "Nag-Iba II",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -10292,7 +10490,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205039",
-			"properties": { "id": "PH1705205039", "name": "Navotas", "sourceName": "Navotas" },
+			"properties": {
+				"id": "PH1705205039",
+				"name": "Navotas",
+				"sourceName": "Navotas",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -11276,7 +11480,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205041",
-			"properties": { "id": "PH1705205041", "name": "Pachoca", "sourceName": "Pachoca" },
+			"properties": {
+				"id": "PH1705205041",
+				"name": "Pachoca",
+				"sourceName": "Pachoca",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -11606,7 +11816,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205042",
-			"properties": { "id": "PH1705205042", "name": "Palhi", "sourceName": "Palhi" },
+			"properties": {
+				"id": "PH1705205042",
+				"name": "Palhi",
+				"sourceName": "Palhi",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -11890,7 +12106,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205043",
-			"properties": { "id": "PH1705205043", "name": "Panggalaan", "sourceName": "Panggalaan" },
+			"properties": {
+				"id": "PH1705205043",
+				"name": "Panggalaan",
+				"sourceName": "Panggalaan",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -11940,7 +12162,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205044",
-			"properties": { "id": "PH1705205044", "name": "Parang", "sourceName": "Parang" },
+			"properties": {
+				"id": "PH1705205044",
+				"name": "Parang",
+				"sourceName": "Parang",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -13449,7 +13677,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205045",
-			"properties": { "id": "PH1705205045", "name": "Patas", "sourceName": "Patas" },
+			"properties": {
+				"id": "PH1705205045",
+				"name": "Patas",
+				"sourceName": "Patas",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -13710,7 +13944,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205046",
-			"properties": { "id": "PH1705205046", "name": "Personas", "sourceName": "Personas" },
+			"properties": {
+				"id": "PH1705205046",
+				"name": "Personas",
+				"sourceName": "Personas",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -13826,7 +14066,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205047",
-			"properties": { "id": "PH1705205047", "name": "Puting Tubig", "sourceName": "Puting Tubig" },
+			"properties": {
+				"id": "PH1705205047",
+				"name": "Puting Tubig",
+				"sourceName": "Puting Tubig",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -14165,7 +14411,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205048",
-			"properties": { "id": "PH1705205048", "name": "Salong", "sourceName": "Salong" },
+			"properties": {
+				"id": "PH1705205048",
+				"name": "Salong",
+				"sourceName": "Salong",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -14928,7 +15180,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205049",
-			"properties": { "id": "PH1705205049", "name": "San Antonio", "sourceName": "San Antonio" },
+			"properties": {
+				"id": "PH1705205049",
+				"name": "San Antonio",
+				"sourceName": "San Antonio",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -15336,7 +15594,9 @@
 			"properties": {
 				"id": "PH1705205050",
 				"name": "San Vicente Central",
-				"sourceName": "San Vicente Central (Pob.)"
+				"sourceName": "San Vicente Central (Pob.)",
+				"floodHazardClasses": ["Low"],
+				"floodHazardSummary": "Low"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15371,7 +15631,9 @@
 			"properties": {
 				"id": "PH1705205051",
 				"name": "San Vicente East",
-				"sourceName": "San Vicente East (Pob.)"
+				"sourceName": "San Vicente East (Pob.)",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15439,7 +15701,9 @@
 			"properties": {
 				"id": "PH1705205052",
 				"name": "San Vicente North",
-				"sourceName": "San Vicente North (Pob.)"
+				"sourceName": "San Vicente North (Pob.)",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15499,7 +15763,9 @@
 			"properties": {
 				"id": "PH1705205053",
 				"name": "San Vicente South",
-				"sourceName": "San Vicente South (Pob.)"
+				"sourceName": "San Vicente South (Pob.)",
+				"floodHazardClasses": ["Low"],
+				"floodHazardSummary": "Low"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15531,7 +15797,9 @@
 			"properties": {
 				"id": "PH1705205054",
 				"name": "San Vicente West",
-				"sourceName": "San Vicente West (Pob.)"
+				"sourceName": "San Vicente West (Pob.)",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15567,7 +15835,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205058",
-			"properties": { "id": "PH1705205058", "name": "Sapul", "sourceName": "Sapul" },
+			"properties": {
+				"id": "PH1705205058",
+				"name": "Sapul",
+				"sourceName": "Sapul",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -15749,7 +16023,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205059",
-			"properties": { "id": "PH1705205059", "name": "Silonay", "sourceName": "Silonay" },
+			"properties": {
+				"id": "PH1705205059",
+				"name": "Silonay",
+				"sourceName": "Silonay",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -15921,7 +16201,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205055",
-			"properties": { "id": "PH1705205055", "name": "Sta. Cruz", "sourceName": "Sta. Cruz" },
+			"properties": {
+				"id": "PH1705205055",
+				"name": "Sta. Cruz",
+				"sourceName": "Sta. Cruz",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -15967,7 +16253,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205056",
-			"properties": { "id": "PH1705205056", "name": "Sta. Isabel", "sourceName": "Sta. Isabel" },
+			"properties": {
+				"id": "PH1705205056",
+				"name": "Sta. Isabel",
+				"sourceName": "Sta. Isabel",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -16065,7 +16357,9 @@
 			"properties": {
 				"id": "PH1705205061",
 				"name": "Sta. Maria Village",
-				"sourceName": "Sta. Maria Village"
+				"sourceName": "Sta. Maria Village",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16120,7 +16414,9 @@
 			"properties": {
 				"id": "PH1705205012",
 				"name": "Sta. Rita",
-				"sourceName": "Sta. Rita (Bungahan)"
+				"sourceName": "Sta. Rita (Bungahan)",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16329,7 +16625,9 @@
 			"properties": {
 				"id": "PH1705205057",
 				"name": "Sto. Ni\u00f1o",
-				"sourceName": "Sto. Ni\u00f1o"
+				"sourceName": "Sto. Ni\u00f1o",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16405,7 +16703,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205062",
-			"properties": { "id": "PH1705205062", "name": "Suqui", "sourceName": "Suqui" },
+			"properties": {
+				"id": "PH1705205062",
+				"name": "Suqui",
+				"sourceName": "Suqui",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -17210,7 +17514,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205063",
-			"properties": { "id": "PH1705205063", "name": "Tawagan", "sourceName": "Tawagan" },
+			"properties": {
+				"id": "PH1705205063",
+				"name": "Tawagan",
+				"sourceName": "Tawagan",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -17307,7 +17617,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205064",
-			"properties": { "id": "PH1705205064", "name": "Tawiran", "sourceName": "Tawiran" },
+			"properties": {
+				"id": "PH1705205064",
+				"name": "Tawiran",
+				"sourceName": "Tawiran",
+				"floodHazardClasses": ["Low", "Medium", "High"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -17391,7 +17707,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205065",
-			"properties": { "id": "PH1705205065", "name": "Tibag", "sourceName": "Tibag" },
+			"properties": {
+				"id": "PH1705205065",
+				"name": "Tibag",
+				"sourceName": "Tibag",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [
@@ -17491,7 +17813,13 @@
 		{
 			"type": "Feature",
 			"id": "PH1705205066",
-			"properties": { "id": "PH1705205066", "name": "Wawa", "sourceName": "Wawa" },
+			"properties": {
+				"id": "PH1705205066",
+				"name": "Wawa",
+				"sourceName": "Wawa",
+				"floodHazardClasses": ["Low", "Medium"],
+				"floodHazardSummary": "Mixed"
+			},
 			"geometry": {
 				"type": "MultiPolygon",
 				"coordinates": [

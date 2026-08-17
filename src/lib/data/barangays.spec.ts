@@ -10,6 +10,18 @@ describe('Calapan barangays', () => {
 		expect(new Set(names).size).toBe(62);
 		expect(new Set(ids).size).toBe(62);
 		expect(
+			calapanBarangays.features.every((feature) =>
+				feature.properties.floodHazardClasses.every((hazardClass) =>
+					['Low', 'Medium', 'High'].includes(hazardClass)
+				)
+			)
+		).toBe(true);
+		expect(
+			calapanBarangays.features.every((feature) =>
+				['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(feature.properties.floodHazardSummary)
+			)
+		).toBe(true);
+		expect(
 			calapanBarangays.features.every((feature) => feature.geometry.type === 'MultiPolygon')
 		).toBe(true);
 		expect(calapanBarangayLabelPoints.features).toHaveLength(62);
