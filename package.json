@@ -1,0 +1,48 @@
+{
+	"name": "hazards",
+	"private": true,
+	"version": "0.0.1",
+	"packageManager": "pnpm@11.20.0",
+	"type": "module",
+	"scripts": {
+		"dev": "vite dev",
+		"build": "wrangler types --check && vite build",
+		"preview": "wrangler dev .svelte-kit/cloudflare/_worker.js --port 4173",
+		"prepare": "svelte-kit sync || echo ''",
+		"check": "wrangler types --check && svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --check . && eslint .",
+		"format": "prettier --write .",
+		"test:unit": "vitest",
+		"test": "pnpm run test:unit -- --run",
+		"gen": "wrangler types",
+		"deploy": "pnpm run build && wrangler deploy"
+	},
+	"devDependencies": {
+		"@eslint/js": "^10.0.1",
+		"@sveltejs/adapter-cloudflare": "^7.2.8",
+		"@sveltejs/kit": "^2.63.0",
+		"@sveltejs/vite-plugin-svelte": "^7.1.2",
+		"@types/geojson": "^7946.0.16",
+		"@types/node": "^24",
+		"eslint": "^10.4.1",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-svelte": "^3.19.0",
+		"globals": "^17.6.0",
+		"prettier": "^3.8.3",
+		"prettier-plugin-svelte": "^4.1.0",
+		"svelte": "^5.56.1",
+		"svelte-check": "^4.6.0",
+		"typescript": "^6.0.3",
+		"typescript-eslint": "^8.60.1",
+		"vite": "^8.0.16",
+		"vitest": "^4.1.8",
+		"wrangler": "^4.97.0"
+	},
+	"dependencies": {
+		"@deck.gl/core": "^9.3.10",
+		"@deck.gl/layers": "^9.3.10",
+		"@deck.gl/mapbox": "^9.3.10",
+		"maplibre-gl": "^6.4.0"
+	}
+}
