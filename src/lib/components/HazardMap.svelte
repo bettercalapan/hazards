@@ -5,22 +5,35 @@
 		calapanCityBounds,
 		calapanCityMask
 	} from '$lib/data/calapan-boundary';
-	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
+	import {
+		calapanBarangayLabelPoints,
+		calapanBarangays,
+		type BarangayProperties
+	} from '$lib/data/barangays';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
 	type Props = {
-		onSelectArea?: (area: HazardAreaProperties | null) => void;
+		onSelectArea?: (area: BarangayProperties | null) => void;
 	};
 	type MapBounds = [[number, number], [number, number]];
 
 	let { onSelectArea }: Props = $props();
 
-	function getAreaProperties(object: unknown): HazardAreaProperties | null {
-		if (!object || typeof object !== 'object' || !('properties' in object)) return null;
+	function getBarangayProperties(object: unknown): BarangayProperties | null {
+		if (!object || typeof object !== 'object') return null;
+		const properties = object as Partial<BarangayProperties>;
 
-		return object.properties as HazardAreaProperties;
+		if (
+			typeof properties.id !== 'string' ||
+			typeof properties.name !== 'string' ||
+			typeof properties.sourceName !== 'string'
+		) {
+			return null;
+		}
+
+		return properties as BarangayProperties;
 	}
 
 	function getPanBounds(map: import('maplibre-gl').Map): MapBounds {
@@ -44,6 +57,7 @@
 		] as unknown as import('maplibre-gl').FilterSpecification;
 
 		for (const layer of map.getStyle().layers ?? []) {
+			if (layer.id === 'calapan-barangay-labels') continue;
 			if (layer.type !== 'symbol') continue;
 
 			const filter = layer.filter
@@ -58,37 +72,132 @@
 		}
 	}
 
+	function dimBaseMapTransportLayers(map: import('maplibre-gl').Map) {
+		const detailTextOpacity = [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			13,
+			0,
+			15,
+			1
+		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
+		const detailHaloWidth = [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			13,
+			0,
+			15,
+			1
+		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
+		const barangayNames = calapanBarangays.features.map((feature) => feature.properties.name);
+		const excludeBarangayNames = [
+			'!',
+			[
+				'any',
+				['match', ['get', 'name'], barangayNames, true, false],
+				['match', ['get', 'name:latin'], barangayNames, true, false]
+			]
+		] as unknown as import('maplibre-gl').FilterSpecification;
+		const opacityAtZoom = (atReveal: number, zoomedIn: number) => [
+			'interpolate',
+			['linear'],
+			['zoom'],
+			12.5,
+			0,
+			13,
+			atReveal,
+			14,
+			zoomedIn
+		];
+		const roadLineOpacity = [
+			'match',
+			['get', 'class'],
+			['motorway', 'trunk', 'primary'],
+			opacityAtZoom(0.12, 0.28),
+			['secondary', 'tertiary'],
+			opacityAtZoom(0.08, 0.18),
+			opacityAtZoom(0.04, 0.1)
+		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
+
+		for (const layer of map.getStyle().layers ?? []) {
+			const styleLayer = layer as {
+				source?: string;
+				sourceLayer?: string;
+				'source-layer'?: string;
+				maxzoom?: number;
+			};
+			const source = styleLayer.source;
+			const sourceLayer = styleLayer['source-layer'] ?? styleLayer.sourceLayer;
+			if (source !== 'openmaptiles') continue;
+
+			if (sourceLayer === 'transportation') {
+				if (layer.type === 'line') {
+					const maxzoom = styleLayer.maxzoom ?? 24;
+					if (maxzoom > 13) {
+						map.setLayerZoomRange(layer.id, 13, maxzoom);
+					} else {
+						map.setLayoutProperty(layer.id, 'visibility', 'none');
+					}
+					map.setPaintProperty(layer.id, 'line-opacity', roadLineOpacity);
+					map.setPaintProperty(layer.id, 'line-color', '#d9c8b7');
+				} else if (layer.type === 'fill' || layer.type === 'symbol') {
+					map.setLayoutProperty(layer.id, 'visibility', 'none');
+				}
+			}
+
+			if (sourceLayer === 'transportation_name' && layer.type === 'symbol') {
+				map.setLayoutProperty(layer.id, 'visibility', 'visible');
+				map.setPaintProperty(layer.id, 'icon-opacity', 0);
+			}
+
+			if (layer.type === 'symbol') {
+				map.setPaintProperty(layer.id, 'text-opacity', detailTextOpacity);
+				map.setPaintProperty(layer.id, 'text-halo-width', detailHaloWidth);
+			}
+
+			if (
+				sourceLayer === 'place' &&
+				(layer.id === 'label_city' || layer.id === 'label_city_capital') &&
+				layer.type === 'symbol'
+			) {
+				map.setLayoutProperty(layer.id, 'visibility', 'none');
+			}
+
+			if (sourceLayer === 'place' && layer.type === 'symbol') {
+				const existingFilter = layer.filter;
+				map.setFilter(
+					layer.id,
+					existingFilter
+						? ([
+								'all',
+								existingFilter,
+								excludeBarangayNames
+							] as unknown as import('maplibre-gl').FilterSpecification)
+						: excludeBarangayNames
+				);
+			}
+		}
+	}
+
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
-	let layerOpacity = $state(0.65);
 	let mapReady = $state(false);
-	let updateDeckLayer = () => {};
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
 		updateMapCamera(nextMode);
-		updateDeckLayer();
-	}
-
-	function setLayerOpacity(event: Event) {
-		const input = event.currentTarget as HTMLInputElement;
-		layerOpacity = Number(input.value) / 100;
-		updateDeckLayer();
 	}
 
 	onMount(() => {
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
-		let overlay: import('@deck.gl/mapbox').MapboxOverlay | undefined;
+		let selectedBarangayId: string | null = null;
 
 		const initialize = async () => {
-			const [{ setWorkerUrl, Map: MapLibreMap }, { MapboxOverlay }, { GeoJsonLayer }] =
-				await Promise.all([
-					import('maplibre-gl'),
-					import('@deck.gl/mapbox'),
-					import('@deck.gl/layers')
-				]);
+			const { setWorkerUrl, Map: MapLibreMap } = await import('maplibre-gl');
 
 			if (disposed) return;
 			setWorkerUrl(workerUrl);
@@ -108,6 +217,32 @@
 			});
 			map = mapInstance;
 
+			const clearSelection = () => {
+				if (selectedBarangayId) {
+					mapInstance.setFeatureState(
+						{ source: 'calapan-barangays', id: selectedBarangayId },
+						{ selected: false }
+					);
+				}
+				selectedBarangayId = null;
+				onSelectArea?.(null);
+			};
+
+			const selectBarangay = (properties: BarangayProperties) => {
+				if (selectedBarangayId && selectedBarangayId !== properties.id) {
+					mapInstance.setFeatureState(
+						{ source: 'calapan-barangays', id: selectedBarangayId },
+						{ selected: false }
+					);
+				}
+				selectedBarangayId = properties.id;
+				mapInstance.setFeatureState(
+					{ source: 'calapan-barangays', id: properties.id },
+					{ selected: true }
+				);
+				onSelectArea?.(properties);
+			};
+
 			updateMapCamera = (nextMode) => {
 				const is3d = nextMode === '3d';
 
@@ -126,46 +261,9 @@
 				});
 			};
 
-			overlay = new MapboxOverlay({
-				interleaved: false,
-				layers: [],
-				onClick: (info) => {
-					if (!info.object) onSelectArea?.(null);
-				}
-			});
-
-			updateDeckLayer = () => {
-				if (!overlay) return;
-
-				overlay.setProps({
-					layers: [
-						new GeoJsonLayer({
-							id: prototypeFloodLayer.id,
-							data: prototypeFloodLayer.data,
-							filled: true,
-							stroked: true,
-							extruded: viewMode === '3d',
-							getElevation: 35,
-							getFillColor: [228, 154, 61, Math.round(115 * layerOpacity)],
-							getLineColor: [145, 78, 21, Math.round(220 * layerOpacity)],
-							getLineWidth: 3,
-							lineWidthUnits: 'pixels',
-							pickable: true,
-							autoHighlight: true,
-							onClick: ({ object }) => {
-								const properties = getAreaProperties(object);
-								if (!properties) return false;
-
-								onSelectArea?.(properties);
-								return true;
-							}
-						})
-					]
-				});
-			};
-
 			mapInstance.once('load', () => {
-				if (!overlay || disposed) return;
+				if (disposed) return;
+				dimBaseMapTransportLayers(mapInstance);
 				const firstSymbolLayerId = mapInstance
 					.getStyle()
 					.layers?.find((layer) => layer.type === 'symbol')?.id;
@@ -203,7 +301,85 @@
 					},
 					firstSymbolLayerId
 				);
+				mapInstance.addSource('calapan-barangays', {
+					type: 'geojson',
+					data: calapanBarangays,
+					promoteId: 'id'
+				});
+				mapInstance.addSource('calapan-barangay-labels', {
+					type: 'geojson',
+					data: calapanBarangayLabelPoints,
+					promoteId: 'id'
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-barangay-fill',
+						type: 'fill',
+						source: 'calapan-barangays',
+						paint: {
+							'fill-color': '#ff5500',
+							'fill-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 0.35, 0]
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-barangay-boundaries',
+						type: 'line',
+						source: 'calapan-barangays',
+						paint: {
+							'line-color': [
+								'case',
+								['boolean', ['feature-state', 'selected'], false],
+								'#ff5500',
+								'#6f8881'
+							],
+							'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 2.5, 1],
+							'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0.8]
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer({
+					id: 'calapan-barangay-labels',
+					type: 'symbol',
+					source: 'calapan-barangay-labels',
+					minzoom: 2,
+					layout: {
+						'symbol-placement': 'point',
+						'text-field': ['get', 'name'],
+						'text-size': 11,
+						'text-allow-overlap': false,
+						'text-ignore-placement': false
+					},
+					paint: {
+						'text-color': '#173e3b',
+						'text-halo-color': '#fffdf7',
+						'text-opacity': ['step', ['zoom'], 0, 2, 1],
+						'text-halo-width': ['step', ['zoom'], 0, 2, 1.5]
+					}
+				});
 				restrictSymbolLayers(mapInstance);
+
+				mapInstance.on('click', 'calapan-barangay-fill', (event) => {
+					const properties = getBarangayProperties(event.features?.[0]?.properties);
+					if (properties) selectBarangay(properties);
+				});
+				mapInstance.on('click', (event) => {
+					if (
+						mapInstance.queryRenderedFeatures(event.point, { layers: ['calapan-barangay-fill'] })
+							.length === 0
+					) {
+						clearSelection();
+					}
+				});
+				mapInstance.on('mouseenter', 'calapan-barangay-fill', () => {
+					mapInstance.getCanvas().style.cursor = 'pointer';
+				});
+				mapInstance.on('mouseleave', 'calapan-barangay-fill', () => {
+					mapInstance.getCanvas().style.cursor = '';
+				});
 
 				mapInstance.fitBounds(cityBounds, {
 					padding: 32,
@@ -212,9 +388,7 @@
 				});
 				mapInstance.setMaxBounds(getPanBounds(mapInstance));
 				mapInstance.setMinZoom(mapInstance.getZoom());
-				mapInstance.addControl(overlay);
 				updateMapCamera(viewMode);
-				updateDeckLayer();
 				mapReady = true;
 			});
 		};
@@ -224,8 +398,6 @@
 		return () => {
 			disposed = true;
 			updateMapCamera = () => {};
-			updateDeckLayer = () => {};
-			overlay?.finalize();
 			map?.remove();
 		};
 	});
@@ -252,21 +424,6 @@
 				2D
 			</button>
 		</div>
-		<label class="opacity-control">
-			<span class="opacity-label">
-				Layer opacity
-				<output>{Math.round(layerOpacity * 100)}%</output>
-			</span>
-			<input
-				aria-label="Hazard layer opacity"
-				type="range"
-				min="0"
-				max="100"
-				step="5"
-				value={Math.round(layerOpacity * 100)}
-				oninput={setLayerOpacity}
-			/>
-		</label>
 	</div>
 
 	<div bind:this={mapElement} class="map" aria-label="Interactive map of Calapan City"></div>
@@ -276,10 +433,8 @@
 		{mapReady ? 'Map ready' : 'Loading map'}
 	</div>
 
-	<div class="prototype-note">
-		{prototypeFloodLayer.status === 'prototype'
-			? 'Demo geometry only. Official flood data is not connected yet.'
-			: 'Verified hazard data is connected.'}
+	<div class="boundary-note">
+		Barangay boundaries are shown for orientation. Hazard layers are not connected yet.
 	</div>
 </div>
 
@@ -303,7 +458,7 @@
 
 	.map-toolbar,
 	.map-status,
-	.prototype-note {
+	.boundary-note {
 		position: absolute;
 		z-index: 2;
 	}
@@ -355,34 +510,6 @@
 		color: #fffdf7;
 	}
 
-	.opacity-control {
-		display: grid;
-		min-width: 10rem;
-		gap: 0.2rem;
-		padding: 0.2rem 0.45rem;
-		border-left: 1px solid rgb(71 101 99 / 20%);
-	}
-
-	.opacity-label {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 0.75rem;
-		color: #476563;
-		font-size: 0.68rem;
-		font-weight: 700;
-	}
-
-	.opacity-label output {
-		font-variant-numeric: tabular-nums;
-	}
-
-	.opacity-control input {
-		width: 100%;
-		accent-color: #173e3b;
-		cursor: pointer;
-	}
-
 	.map-status {
 		top: 1rem;
 		right: 1rem;
@@ -410,7 +537,7 @@
 		background: #3c9276;
 	}
 
-	.prototype-note {
+	.boundary-note {
 		left: 1rem;
 		bottom: 1rem;
 		max-width: 18rem;
@@ -437,20 +564,13 @@
 			max-width: calc(100% - 1.5rem);
 		}
 
-		.opacity-control {
-			flex: 1 1 10rem;
-			border-top: 1px solid rgb(71 101 99 / 20%);
-			border-left: 0;
-			padding-top: 0.45rem;
-		}
-
 		.map-status {
 			top: auto;
 			right: 0.75rem;
 			bottom: 0.75rem;
 		}
 
-		.prototype-note {
+		.boundary-note {
 			left: 0.75rem;
 			bottom: 0.75rem;
 		}

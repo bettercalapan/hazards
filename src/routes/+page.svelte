@@ -1,18 +1,13 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { calapanBoundaryAttribution } from '$lib/data/calapan-boundary';
-	import { prototypeFloodLayer, type HazardAreaProperties } from '$lib/data/hazards';
+	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 
-	let selectedArea = $state<HazardAreaProperties | null>(null);
+	let selectedArea = $state<BarangayProperties | null>(null);
 
-	function handleAreaSelect(area: HazardAreaProperties | null) {
+	function handleAreaSelect(area: BarangayProperties | null) {
 		selectedArea = area;
-	}
-
-	function clearSelectedArea() {
-		selectedArea = null;
 	}
 </script>
 
@@ -53,10 +48,10 @@
 					<span class="layer-dot"></span>
 					Active layer
 				</div>
-				<h2>{prototypeFloodLayer.name}</h2>
-				<p>{prototypeFloodLayer.description}</p>
-				<div class="legend" aria-label="Prototype map legend">
-					<div><span class="legend-swatch demo"></span>{prototypeFloodLayer.legendLabel}</div>
+				<h2>Barangay boundaries</h2>
+				<p>Explore Calapan's 62 barangays and select one to inspect its administrative boundary.</p>
+				<div class="legend" aria-label="Map legend">
+					<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
 				</div>
 			</section>
 
@@ -64,18 +59,9 @@
 				{#if selectedArea}
 					<div class="card-kicker">Selected area</div>
 					<h2>{selectedArea.name}</h2>
-					<p>{selectedArea.description}</p>
-					<div class="selection-status">
-						<span class="layer-dot"></span>
-						{selectedArea.status === 'prototype' ? 'Prototype data' : 'Verified data'}
-					</div>
 					<p class="selection-source">
-						Source: {prototypeFloodLayer.sourceName}. Update:
-						{prototypeFloodLayer.updatedAt ?? 'not available for prototype data'}.
+						Source name: {selectedArea.sourceName}. Administrative boundary data only.
 					</p>
-					<button class="clear-selection" type="button" onclick={clearSelectedArea}>
-						Clear selection
-					</button>
 				{:else}
 					<div class="card-kicker">Area details</div>
 					<h2>Select an area</h2>
@@ -94,7 +80,7 @@
 				<p>Verified recent events will appear here once an official feed is connected.</p>
 			</section>
 
-			<p class="boundary-attribution">{calapanBoundaryAttribution}</p>
+			<p class="boundary-attribution">{calapanBarangayAttribution}</p>
 		</div>
 	</aside>
 </div>
@@ -251,42 +237,13 @@
 		border-radius: 999px;
 	}
 
-	.legend-swatch.demo {
+	.legend-swatch.boundary {
 		background: var(--accent);
-	}
-
-	.selection-status {
-		display: flex;
-		align-items: center;
-		gap: 0.35rem;
-		margin-top: 1rem;
-		color: var(--fg-secondary);
-		font-size: 0.85rem;
-		font-weight: 700;
-	}
-
-	.selection-status .layer-dot {
-		margin-right: 0;
 	}
 
 	.selection-source {
 		margin-top: 0.75rem;
 		font-size: 0.8rem !important;
-	}
-
-	.clear-selection {
-		margin-top: 1.25rem;
-		padding: 0.6rem 0.9rem;
-		border: 1px solid var(--gray);
-		border-radius: 999px;
-		background: var(--bg);
-		color: var(--fg);
-		font-size: 0.85rem;
-		font-weight: 700;
-	}
-
-	.clear-selection:hover {
-		background: var(--neutral-hover);
 	}
 
 	.card-heading {
