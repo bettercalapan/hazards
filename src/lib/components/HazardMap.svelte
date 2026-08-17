@@ -175,6 +175,9 @@
 <style>
 	.map-shell {
 		position: relative;
+		display: flex;
+		flex: 1;
+		width: 100%;
 		min-height: 34rem;
 		overflow: hidden;
 		background: #d9e5e4;

@@ -119,6 +119,7 @@
 	}
 
 	.map-card {
+		display: flex;
 		min-width: 0;
 		overflow: hidden;
 		background: var(--neutral-light);
