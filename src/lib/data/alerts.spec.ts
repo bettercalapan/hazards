@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { formatAlertDate, parsePagasaCap, parsePagasaFeed } from './alerts';
+import {
+	fetchPagasaAlerts,
+	formatAlertDate,
+	latestPagasaFeedUpdate,
+	pagasaAlertFeedUrl,
+	parsePagasaCap,
+	parsePagasaFeed
+} from './alerts';
 
 const now = Date.parse('2026-08-17T12:00:00Z');
 const feed = `
@@ -55,6 +62,18 @@ const cap = `
 describe('PAGASA alerts', () => {
 	it('keeps recent MIMAROPA CAP entries', () => {
 		expect(parsePagasaFeed(feed, now)).toEqual([entry]);
+	});
+
+	it('returns the source feed update timestamp', async () => {
+		const result = await fetchPagasaAlerts(async (input) => {
+			if (String(input) === pagasaAlertFeedUrl) return new Response(feed);
+			return new Response(cap);
+		}, now);
+
+		expect(result.sourceUpdatedAt).toBe(entry.updatedAt);
+		expect(result.alerts).toHaveLength(1);
+		expect(latestPagasaFeedUpdate(parsePagasaFeed(feed, now))).toBe(entry.updatedAt);
+		expect(latestPagasaFeedUpdate([])).toBeNull();
 	});
 
 	it('keeps active alerts covering Oriental Mindoro', () => {

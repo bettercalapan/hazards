@@ -48,13 +48,15 @@ export type TyphoonMapData = {
 	points: FeatureCollection<Point, TrackPointProperties>;
 	grid: FeatureCollection<Polygon, GridCellProperties>;
 	names: string[];
+	latestDataAt: string | null;
 };
 
 export const emptyTyphoonMapData: TyphoonMapData = {
 	tracks: { type: 'FeatureCollection', features: [] },
 	points: { type: 'FeatureCollection', features: [] },
 	grid: { type: 'FeatureCollection', features: [] },
-	names: []
+	names: [],
+	latestDataAt: null
 };
 
 type UnknownRecord = Record<string, unknown>;
@@ -268,6 +270,23 @@ function createGrid(tracks: TyphoonTrack[]): FeatureCollection<Polygon, GridCell
 	return { type: 'FeatureCollection', features };
 }
 
+function latestTrackTimestamp(tracks: TyphoonTrack[]): string | null {
+	let latestTime = -Infinity;
+	let latestValue: string | null = null;
+
+	for (const track of tracks) {
+		for (const point of track.points) {
+			const timestamp = Date.parse(point.time);
+			if (Number.isFinite(timestamp) && timestamp > latestTime) {
+				latestTime = timestamp;
+				latestValue = point.time;
+			}
+		}
+	}
+
+	return latestValue;
+}
+
 export function buildTyphoonMapData(tracks: TyphoonTrack[]): TyphoonMapData {
 	const trackFeatures: Feature<LineString, TrackLineProperties>[] = [];
 	const pointFeatures: Feature<Point, TrackPointProperties>[] = [];
@@ -313,7 +332,8 @@ export function buildTyphoonMapData(tracks: TyphoonTrack[]): TyphoonMapData {
 		tracks: { type: 'FeatureCollection', features: trackFeatures },
 		points: { type: 'FeatureCollection', features: pointFeatures },
 		grid: createGrid(tracks),
-		names: tracks.map((track) => track.name)
+		names: tracks.map((track) => track.name),
+		latestDataAt: latestTrackTimestamp(tracks)
 	};
 }
 

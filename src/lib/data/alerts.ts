@@ -27,6 +27,11 @@ export type OfficialAlert = {
 	description: string;
 };
 
+export type PagasaAlertsResult = {
+	alerts: OfficialAlert[];
+	sourceUpdatedAt: string | null;
+};
+
 function cleanAlertText(value: string): string {
 	return value
 		.replace(/\*\*/g, '')
@@ -105,6 +110,10 @@ export function parsePagasaFeed(xml: string, now = Date.now()): PagasaFeedEntry[
 	}));
 }
 
+export function latestPagasaFeedUpdate(entries: PagasaFeedEntry[]): string | null {
+	return entries[0]?.updatedAt || null;
+}
+
 export function parsePagasaCap(
 	xml: string,
 	entry: PagasaFeedEntry,
@@ -160,7 +169,7 @@ type Fetcher = (input: RequestInfo | URL, init?: RequestInit) => Promise<Respons
 export async function fetchPagasaAlerts(
 	fetcher: Fetcher,
 	now = Date.now()
-): Promise<OfficialAlert[]> {
+): Promise<PagasaAlertsResult> {
 	const feedResponse = await fetcher(pagasaAlertFeedUrl, {
 		headers: { accept: 'application/atom+xml, application/xml' }
 	});
@@ -188,10 +197,11 @@ export async function fetchPagasaAlerts(
 	const uniqueAlerts = new Map(
 		results.flatMap((result) => (result.alert ? [[result.alert.id, result.alert] as const] : []))
 	);
-
-	return [...uniqueAlerts.values()].sort(
+	const alerts = [...uniqueAlerts.values()].sort(
 		(left, right) => Date.parse(right.updatedAt) - Date.parse(left.updatedAt)
 	);
+
+	return { alerts, sourceUpdatedAt: latestPagasaFeedUpdate(entries) };
 }
 
 export function formatAlertDate(value: string): string {

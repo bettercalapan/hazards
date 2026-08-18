@@ -26,7 +26,7 @@ The first release serves residents and focuses on flooding.
 - 3D map centered on Calapan City.
 - 2D map mode using the same data layers as the 3D view.
 - Calapan City and barangay boundaries.
-- Flood-risk layer with a labeled severity legend and adjustable opacity.
+- Flood-risk layer with a labeled severity legend.
 - Barangay search and clickable area details.
 - Area details showing risk level, explanation, source, and update dates.
 - Separate panel for verified official alerts.

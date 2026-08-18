@@ -12,7 +12,9 @@ export const load: PageServerLoad = async ({ fetch }) => {
 	return {
 		alertFeedStatus:
 			alertsResult.status === 'fulfilled' ? ('ready' as const) : ('unavailable' as const),
-		activeAlerts: alertsResult.status === 'fulfilled' ? alertsResult.value : [],
+		activeAlerts: alertsResult.status === 'fulfilled' ? alertsResult.value.alerts : [],
+		alertsSourceUpdatedAt:
+			alertsResult.status === 'fulfilled' ? alertsResult.value.sourceUpdatedAt : null,
 		alertsFetchedAt: fetchedAt,
 		typhoonTrackStatus:
 			typhoonResult.status === 'fulfilled' ? ('ready' as const) : ('unavailable' as const),

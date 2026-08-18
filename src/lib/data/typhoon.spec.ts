@@ -63,6 +63,7 @@ describe('PANaHON typhoon tracks', () => {
 		const mapData = buildTyphoonMapData([track!]);
 
 		expect(mapData.names).toEqual(['MAYMAY (KUJIRA)']);
+		expect(mapData.latestDataAt).toBe('2026-08-19 00:00');
 		expect(mapData.tracks.features).toHaveLength(2);
 		expect(mapData.points.features).toHaveLength(3);
 		expect(mapData.grid.features.length).toBeGreaterThan(0);

@@ -46,12 +46,12 @@
 	let alertsFreshness = $derived(
 		data.alertFeedStatus === 'unavailable'
 			? ('unavailable' as const)
-			: getFreshnessStatus(data.alertsFetchedAt)
+			: getFreshnessStatus(data.alertsSourceUpdatedAt)
 	);
 	let typhoonFreshness = $derived(
 		data.typhoonTrackStatus === 'unavailable'
 			? ('unavailable' as const)
-			: getFreshnessStatus(data.typhoonFetchedAt)
+			: getFreshnessStatus(data.typhoonMapData.latestDataAt)
 	);
 
 	function handleAreaSelect(area: BarangayProperties | null) {
@@ -359,7 +359,14 @@
 						<!-- External source links do not pass through SvelteKit routing. -->
 						<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 						<a href={typhoonSourceUrl} target="_blank" rel="noreferrer">PANaHON cyclone track</a>.
-						Checked {formatAlertDate(data.typhoonFetchedAt)}.
+						{#if data.typhoonTrackStatus === 'unavailable'}
+							The feed could not be checked.
+						{:else}
+							Source updated
+							{data.typhoonMapData.latestDataAt
+								? formatAlertDate(data.typhoonMapData.latestDataAt)
+								: 'not provided'}. Checked {formatAlertDate(data.typhoonFetchedAt)}.
+						{/if}
 					</p>
 					<p class="selection-source">
 						Caveat: Colors show PANaHON cyclone type. Opacity shows distance from the track, not
@@ -380,8 +387,10 @@
 						</span>
 						{#if typhoonFreshness === 'unavailable'}
 							PANaHON track feed could not be checked.
+						{:else if data.typhoonMapData.latestDataAt}
+							Source updated {formatAlertDate(data.typhoonMapData.latestDataAt)}.
 						{:else}
-							Checked {formatDataDate(data.typhoonFetchedAt)}.
+							Source update not provided.
 						{/if}
 					</p>
 				{:else}
@@ -602,7 +611,10 @@
 					{#if data.alertFeedStatus === 'unavailable'}
 						The feed could not be checked.
 					{:else}
-						Checked {formatAlertDate(data.alertsFetchedAt)}.
+						Source updated
+						{data.alertsSourceUpdatedAt
+							? formatAlertDate(data.alertsSourceUpdatedAt)
+							: 'not provided'}. Checked {formatAlertDate(data.alertsFetchedAt)}.
 					{/if}
 				</p>
 			</section>
