@@ -3,13 +3,22 @@
 	import favicon from '$lib/assets/favicon.png';
 
 	let { children } = $props();
+
+	function focusHazardInformation(event: MouseEvent) {
+		event.preventDefault();
+		const target = document.getElementById('hazard-information');
+		target?.focus();
+		target?.scrollIntoView({ block: 'start' });
+	}
 </script>
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
 </svelte:head>
 
-<a class="skip-link" href="#main-content">Skip to main content</a>
+<a class="skip-link" href="#hazard-information" onclick={focusHazardInformation}
+	>Skip to hazard information</a
+>
 <main id="main-content" tabindex="-1">
 	{@render children()}
 </main>

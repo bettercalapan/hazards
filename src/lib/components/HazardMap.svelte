@@ -1238,7 +1238,7 @@
 </script>
 
 <div class="map-shell">
-	<div class="map-toolbar" aria-label="Map controls">
+	<div class="map-toolbar" role="region" aria-label="Map controls">
 		<div class="map-control-groups">
 			<div class="control-header">
 				<div class="control-heading">
@@ -1392,7 +1392,11 @@
 							{/each}
 						</div>
 					{:else}
-						<div class="flood-toggle typhoon-toggle" aria-label="Typhoon track status">
+						<div
+							class="flood-toggle typhoon-toggle"
+							role="status"
+							aria-label="Typhoon track status"
+						>
 							<span class="typhoon-toggle-swatch"></span>
 							<span>Track proximity</span>
 						</div>
@@ -1402,10 +1406,16 @@
 		</div>
 	</div>
 
-	<div bind:this={mapElement} class="map" aria-label="Interactive map of Calapan City"></div>
+	<div
+		bind:this={mapElement}
+		class="map"
+		role="region"
+		aria-label="Interactive map of Calapan City"
+		aria-describedby="map-boundary-note"
+	></div>
 
 	{#if !mapReady || loadingHazardFamily}
-		<div class="map-status" aria-live="polite">
+		<div class="map-status" role="status" aria-live="polite">
 			<span class="status-dot"></span>
 			{#if !mapReady}
 				Loading map
@@ -1428,6 +1438,7 @@
 			class:error={criticalFacilitiesState === 'error'}
 			aria-pressed={criticalFacilitiesEnabled}
 			aria-busy={criticalFacilitiesState === 'loading'}
+			aria-live="polite"
 			type="button"
 			onclick={toggleCriticalFacilities}
 		>
@@ -1443,7 +1454,7 @@
 	{/if}
 
 	{#if criticalFacilitiesEnabled}
-		<div class="facility-legend" aria-label="Critical facility colors">
+		<div class="facility-legend" role="group" aria-label="Critical facility colors">
 			{#each criticalFacilitySources as facility (facility.category)}
 				<div>
 					<span
@@ -1456,7 +1467,7 @@
 		</div>
 	{/if}
 
-	<div class="boundary-note">
+	<div id="map-boundary-note" class="boundary-note" role="note">
 		{#if activeHazardFamily === 'earthquake'}
 			PHIVOLCS Ground Shaking, Liquefaction, and Tsunami vector layers.
 		{:else if activeHazardFamily === 'typhoon'}
@@ -1812,11 +1823,13 @@
 			top: auto;
 			right: 0.75rem;
 			bottom: 3.7rem;
+			max-width: calc(100% - 1.5rem);
 		}
 
 		.boundary-note {
 			left: 0.75rem;
-			bottom: 0.75rem;
+			bottom: 4.5rem;
+			max-width: calc(100% - 1.5rem);
 		}
 	}
 </style>

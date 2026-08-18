@@ -31,6 +31,8 @@
 	let barangayQuery = $state('');
 	let barangaySearchOpen = $state(false);
 	let highlightedBarangayIndex = $state(0);
+	let barangaySearchInput: HTMLInputElement;
+	let barangaySearchBlurTimeout: ReturnType<typeof setTimeout> | undefined;
 	let activeHazardFamily = $state<HazardFamily>('flood');
 	let barangayMatches = $derived(searchCalapanBarangays(barangayQuery).slice(0, 8));
 	let activeSafetyGuidance = $derived(safetyGuidance[activeHazardFamily]);
@@ -68,9 +70,21 @@
 	}
 
 	function handleBarangaySearchInput(event: Event) {
+		if (barangaySearchBlurTimeout) clearTimeout(barangaySearchBlurTimeout);
 		barangayQuery = (event.currentTarget as HTMLInputElement).value;
 		barangaySearchOpen = true;
 		highlightedBarangayIndex = 0;
+	}
+
+	function handleBarangaySearchFocus() {
+		barangaySearchOpen = barangayMatches.length > 0;
+	}
+
+	function handleBarangaySearchBlur() {
+		if (barangaySearchBlurTimeout) clearTimeout(barangaySearchBlurTimeout);
+		barangaySearchBlurTimeout = setTimeout(() => {
+			barangaySearchOpen = false;
+		}, 100);
 	}
 
 	function selectSearchBarangay(area: BarangayProperties) {
@@ -79,6 +93,7 @@
 		barangayQuery = area.name;
 		barangaySearchOpen = false;
 		highlightedBarangayIndex = 0;
+		barangaySearchInput?.focus();
 	}
 
 	function clearBarangaySearch() {
@@ -87,6 +102,7 @@
 		barangayQuery = '';
 		barangaySearchOpen = false;
 		highlightedBarangayIndex = 0;
+		barangaySearchInput?.focus();
 	}
 
 	function handleBarangaySearchKeydown(event: KeyboardEvent) {
@@ -141,7 +157,7 @@
 		/>
 	</section>
 
-	<aside class="sidebar" aria-label="Hazard information">
+	<aside id="hazard-information" class="sidebar" tabindex="-1" aria-label="Hazard information">
 		<div class="sidebar-inner">
 			<div class="brand-row">
 				<a class="brand-link" href={resolve('/')} aria-label="Go to Hazards home">
@@ -155,20 +171,21 @@
 				<label class="search-label" for="barangay-search">Find a barangay</label>
 				<div class="search-input-wrap">
 					<input
+						bind:this={barangaySearchInput}
 						id="barangay-search"
 						value={barangayQuery}
 						placeholder="Search by name"
 						role="combobox"
 						aria-autocomplete="list"
-						aria-controls="barangay-search-results"
-						aria-expanded={barangaySearchOpen && barangayMatches.length > 0}
+						aria-controls={barangayMatches.length > 0 ? 'barangay-search-results' : undefined}
+						aria-expanded={barangaySearchOpen}
 						aria-activedescendant={barangaySearchOpen && barangayMatches.length > 0
 							? `barangay-result-${barangayMatches[highlightedBarangayIndex].id}`
 							: undefined}
 						oninput={handleBarangaySearchInput}
 						onkeydown={handleBarangaySearchKeydown}
-						onfocus={() => (barangaySearchOpen = barangayMatches.length > 0)}
-						onblur={() => setTimeout(() => (barangaySearchOpen = false), 100)}
+						onfocus={handleBarangaySearchFocus}
+						onblur={handleBarangaySearchBlur}
 					/>
 					{#if barangayQuery}
 						<button
@@ -658,6 +675,11 @@
 		border-left: 1px solid var(--gray);
 		background: var(--neutral-lightest);
 		scrollbar-color: var(--gray) transparent;
+	}
+
+	.sidebar:focus {
+		outline: 3px solid var(--accent);
+		outline-offset: -3px;
 	}
 
 	.sidebar-inner {
@@ -1163,6 +1185,17 @@
 
 		.sidebar-inner {
 			padding: 1.25rem 1rem 3rem;
+		}
+	}
+
+	@media (max-width: 500px) {
+		.contact-row {
+			flex-direction: column;
+			gap: 0.35rem;
+		}
+
+		.contact-value {
+			font-size: 0.95rem;
 		}
 	}
 
