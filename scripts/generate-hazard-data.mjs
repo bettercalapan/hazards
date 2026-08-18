@@ -11,6 +11,8 @@ const { intersection } = polygonClipping;
 const run = promisify(execFile);
 const projectRoot = process.cwd();
 const sourceRoot = process.env.NOAH_DATA_DIR ?? path.join(homedir(), 'downloads/noah');
+const floodRoot = path.join(sourceRoot, 'flood');
+const stormSurgeRoot = path.join(sourceRoot, 'storm-surge');
 const outputRoot = path.join(projectRoot, 'static');
 const dataRoot = path.join(projectRoot, 'src/lib/data');
 const boundaryFile = path.join(dataRoot, 'calapan-city.json');
@@ -19,21 +21,43 @@ const minZoom = 10;
 const maxZoom = 15;
 const cityBounds = [121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054];
 
-const periods = [
+const hazardSets = [
 	{
-		key: '5',
-		label: '5-year',
-		file: path.join(sourceRoot, '5yr/Mindoro_FH_5yr.shp')
+		key: 'flood',
+		tilePrefix: 'calapan-flood-hazard',
+		summaryFile: 'calapan-flood-summaries.json',
+		classField: 'Var',
+		periods: [
+			{
+				key: '5',
+				label: '5-year',
+				file: path.join(floodRoot, '5yr/Mindoro_FH_5yr.shp')
+			},
+			{
+				key: '25',
+				label: '25-year',
+				file: path.join(floodRoot, '25yr/OrientalMindoro_FH_25yr.shp')
+			},
+			{
+				key: '100',
+				label: '100-year',
+				file: path.join(floodRoot, '100yr/OrientalMindoro_Flood_100year.shp')
+			}
+		]
 	},
 	{
-		key: '25',
-		label: '25-year',
-		file: path.join(sourceRoot, '25yr/OrientalMindoro_FH_25yr.shp')
-	},
-	{
-		key: '100',
-		label: '100-year',
-		file: path.join(sourceRoot, '100yr/OrientalMindoro_Flood_100year.shp')
+		key: 'storm-surge',
+		tilePrefix: 'calapan-storm-surge',
+		summaryFile: 'calapan-storm-surge-summaries.json',
+		classField: 'HAZ',
+		periods: [1, 2, 3, 4].map((advisory) => ({
+			key: String(advisory),
+			label: `Storm Surge Advisory ${advisory}`,
+			file: path.join(
+				stormSurgeRoot,
+				`ss-advisory-${advisory}/OrientalMindoro_StormSurge_SSA${advisory}.shp`
+			)
+		}))
 	}
 ];
 
@@ -45,8 +69,10 @@ function asMultiPolygon(geometry) {
 	throw new Error(`Unsupported geometry type: ${geometry.type}`);
 }
 
-function getHazardClass(properties) {
-	const entry = Object.entries(properties ?? {}).find(([key]) => key.toLowerCase() === 'var');
+function getHazardClass(properties, field) {
+	const entry = Object.entries(properties ?? {}).find(
+		([key]) => key.toLowerCase() === field.toLowerCase()
+	);
 	const value = Number(entry?.[1]);
 
 	if (![1, 2, 3].includes(value)) {
@@ -104,9 +130,10 @@ function className(value) {
 	return ['Low', 'Medium', 'High'][value - 1];
 }
 
-async function loadPeriod(period, tempRoot) {
-	const clippedFile = path.join(tempRoot, `${period.key}-cells.json`);
-	const summaryFile = path.join(tempRoot, `${period.key}-summary.json`);
+async function loadPeriod(hazardSet, period, tempRoot) {
+	const fileKey = `${hazardSet.key}-${period.key}`;
+	const clippedFile = path.join(tempRoot, `${fileKey}-cells.json`);
+	const summaryFile = path.join(tempRoot, `${fileKey}-summary.json`);
 	const sourceArgs = [mapshaperBin, period.file, '-clip', boundaryFile];
 
 	await run(process.execPath, [
@@ -120,7 +147,7 @@ async function loadPeriod(period, tempRoot) {
 		...sourceArgs,
 		'-clean',
 		'-dissolve',
-		'Var',
+		hazardSet.classField,
 		'-simplify',
 		'10%',
 		'-o',
@@ -136,19 +163,19 @@ async function loadPeriod(period, tempRoot) {
 	for (const feature of cellSource.features) {
 		cellFeatures.push({
 			type: 'Feature',
-			properties: { Var: getHazardClass(feature.properties) },
+			properties: { Var: getHazardClass(feature.properties, hazardSet.classField) },
 			geometry: feature.geometry
 		});
 	}
 
 	const summaryFeatures = summarySource.features.map((feature) => ({
 		...feature,
-		properties: { Var: getHazardClass(feature.properties) },
+		properties: { Var: getHazardClass(feature.properties, hazardSet.classField) },
 		bbox: bbox(feature.geometry.coordinates)
 	}));
 
 	console.log(
-		`${period.label}: ${cellFeatures.length} cell features, ${summaryFeatures.length} summary features`
+		`${hazardSet.key} ${period.label}: ${cellFeatures.length} cell features, ${summaryFeatures.length} summary features`
 	);
 
 	return {
@@ -172,8 +199,9 @@ function latitudeToTileY(latitude, zoom) {
 	);
 }
 
-async function writeVectorTiles(period, collection) {
-	const outputDirectory = path.join(outputRoot, `calapan-flood-hazard-${period.key}yr-tiles`);
+async function writeVectorTiles(hazardSet, period, collection) {
+	const suffix = hazardSet.key === 'flood' ? `${period.key}yr` : `advisory-${period.key}`;
+	const outputDirectory = path.join(outputRoot, `${hazardSet.tilePrefix}-${suffix}-tiles`);
 	await rm(outputDirectory, { recursive: true, force: true });
 
 	const tileIndex = geojsonvt(collection, {
@@ -199,56 +227,66 @@ async function writeVectorTiles(period, collection) {
 
 				const tilePath = path.join(outputDirectory, String(zoom), String(x), `${y}.pbf`);
 				await mkdir(path.dirname(tilePath), { recursive: true });
-				await writeFile(tilePath, vtpbf.fromGeojsonVt({ flood: tile }));
+				await writeFile(tilePath, vtpbf.fromGeojsonVt({ [hazardSet.key]: tile }));
 			}
 		}
 	}
 }
 
-const tempRoot = path.join(projectRoot, '.svelte-kit/flood-data');
+const tempRoot = path.join(projectRoot, '.svelte-kit/hazard-data');
 await mkdir(tempRoot, { recursive: true });
-const loadedPeriods = await Promise.all(periods.map((period) => loadPeriod(period, tempRoot)));
-const summaries = {};
-
-for (const barangay of barangays.features) {
-	const barangayCoordinates = asMultiPolygon(barangay.geometry);
-	const barangayBbox = bbox(barangayCoordinates);
-	summaries[barangay.properties.id] = {};
-
-	for (const { period, summaryFeatures } of loadedPeriods) {
-		const classes = new Set();
-
-		for (const feature of summaryFeatures) {
-			if (!bboxesOverlap(barangayBbox, feature.bbox)) continue;
-
-			const overlap = intersection(feature.geometry.coordinates, barangayCoordinates);
-			if (overlap.length > 0 && multiPolygonArea(overlap) > 1e-12) {
-				classes.add(className(feature.properties.Var));
-			}
-		}
-
-		const sortedClasses = ['Low', 'Medium', 'High'].filter((value) => classes.has(value));
-		summaries[barangay.properties.id][period.key] = {
-			classes: sortedClasses,
-			summary:
-				sortedClasses.length === 0
-					? 'NoData'
-					: sortedClasses.length === 1
-						? sortedClasses[0]
-						: 'Mixed'
-		};
-	}
-}
-
-for (const { period, cellCollection } of loadedPeriods) {
-	await writeVectorTiles(period, cellCollection);
-}
-
-await writeFile(
-	path.join(dataRoot, 'calapan-flood-summaries.json'),
-	`${JSON.stringify(summaries, null, '\t')}\n`
+const loadedHazards = await Promise.all(
+	hazardSets.map(async (hazardSet) => ({
+		hazardSet,
+		periods: await Promise.all(
+			hazardSet.periods.map((period) => loadPeriod(hazardSet, period, tempRoot))
+		)
+	}))
 );
 
+for (const { hazardSet, periods } of loadedHazards) {
+	const summaries = {};
+
+	for (const barangay of barangays.features) {
+		const barangayCoordinates = asMultiPolygon(barangay.geometry);
+		const barangayBbox = bbox(barangayCoordinates);
+		summaries[barangay.properties.id] = {};
+
+		for (const { period, summaryFeatures } of periods) {
+			const classes = new Set();
+
+			for (const feature of summaryFeatures) {
+				if (!bboxesOverlap(barangayBbox, feature.bbox)) continue;
+
+				const overlap = intersection(feature.geometry.coordinates, barangayCoordinates);
+				if (overlap.length > 0 && multiPolygonArea(overlap) > 1e-12) {
+					classes.add(className(feature.properties.Var));
+				}
+			}
+
+			const sortedClasses = ['Low', 'Medium', 'High'].filter((value) => classes.has(value));
+			summaries[barangay.properties.id][period.key] = {
+				classes: sortedClasses,
+				summary:
+					sortedClasses.length === 0
+						? 'NoData'
+						: sortedClasses.length === 1
+							? sortedClasses[0]
+							: 'Mixed'
+			};
+		}
+	}
+
+	for (const { period, cellCollection } of periods) {
+		await writeVectorTiles(hazardSet, period, cellCollection);
+	}
+
+	await writeFile(
+		path.join(dataRoot, hazardSet.summaryFile),
+		`${JSON.stringify(summaries, null, '\t')}\n`
+	);
+}
+
 console.log(
-	`Wrote ${loadedPeriods.length} localized flood tile sets and ${Object.keys(summaries).length} barangay summaries`
+	`Wrote ${loadedHazards.reduce((total, { periods }) => total + periods.length, 0)} localized hazard tile sets and summaries`
 );

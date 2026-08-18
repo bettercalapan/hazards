@@ -16,7 +16,7 @@
 		"test:unit": "vitest",
 		"test": "pnpm run test:unit -- --run",
 		"gen": "wrangler types",
-		"generate:flood": "node scripts/generate-flood-data.mjs",
+		"generate:hazards": "node scripts/generate-hazard-data.mjs",
 		"deploy": "pnpm run build && wrangler deploy"
 	},
 	"devDependencies": {

@@ -11,17 +11,20 @@
 		type BarangayProperties
 	} from '$lib/data/barangays';
 	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
+	import { stormSurgeAdvisories, type StormSurgeAdvisory } from '$lib/data/storm-surge';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
+	type HazardFamily = 'flood' | 'storm-surge';
 	type Props = {
 		onSelectArea?: (area: BarangayProperties | null) => void;
+		onHazardFamilyChange?: (family: HazardFamily) => void;
 	};
 	type MapBounds = [[number, number], [number, number]];
 
-	let { onSelectArea }: Props = $props();
+	let { onSelectArea, onHazardFamilyChange }: Props = $props();
 
 	function getBarangayProperties(object: unknown): BarangayProperties | null {
 		if (!object || typeof object !== 'object') return null;
@@ -186,20 +189,35 @@
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
 	let mapReady = $state(false);
-	let enabledFloodPeriods = $state<ReturnPeriod[]>([5]);
+	let activeHazardFamily = $state<HazardFamily>('flood');
+	let enabledFloodPeriods = $state<ReturnPeriod[]>([5, 25, 100]);
+	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([1, 2, 3, 4]);
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
-	let updateFloodVisibility: (period: ReturnPeriod, visible: boolean) => void = () => {};
+	let updateHazardVisibility: () => void = () => {};
 
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
 		updateMapCamera(nextMode);
 	}
 
+	function setHazardFamily(nextFamily: HazardFamily) {
+		activeHazardFamily = nextFamily;
+		onHazardFamilyChange?.(nextFamily);
+		updateHazardVisibility();
+	}
+
 	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
 		enabledFloodPeriods = enabled
 			? [...new Set([...enabledFloodPeriods, period])]
 			: enabledFloodPeriods.filter((value) => value !== period);
-		updateFloodVisibility(period, enabled);
+		updateHazardVisibility();
+	}
+
+	function setStormSurgeAdvisoryEnabled(advisory: StormSurgeAdvisory, enabled: boolean) {
+		enabledStormSurgeAdvisories = enabled
+			? [...new Set([...enabledStormSurgeAdvisories, advisory])]
+			: enabledStormSurgeAdvisories.filter((value) => value !== advisory);
+		updateHazardVisibility();
 	}
 
 	onMount(() => {
@@ -394,49 +412,86 @@
 					},
 					firstSymbolLayerId
 				);
-				for (const period of [...floodHazardPeriods].reverse()) {
-					const sourceId = `calapan-flood-hazard-${period.key}`;
-					mapInstance.addSource(sourceId, {
-						type: 'vector',
-						tiles: [period.tilePath],
-						minzoom: 10,
-						maxzoom: 15,
-						bounds: [121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054]
-					});
-					mapInstance.addLayer(
-						{
-							id: sourceId,
-							type: 'fill',
-							source: sourceId,
-							'source-layer': 'flood',
-							layout: {
-								visibility: enabledFloodPeriods.includes(period.key) ? 'visible' : 'none'
+				const addHazardLayers = (
+					family: HazardFamily,
+					layers: readonly {
+						key: number;
+						tilePath: string;
+						colors: { Low: string; Medium: string; High: string };
+					}[],
+					sourceLayer: string
+				) => {
+					for (const layer of [...layers].reverse()) {
+						const sourceId =
+							family === 'flood'
+								? `calapan-flood-hazard-${layer.key}`
+								: `calapan-storm-surge-advisory-${layer.key}`;
+						mapInstance.addSource(sourceId, {
+							type: 'vector',
+							tiles: [layer.tilePath],
+							minzoom: 10,
+							maxzoom: 15,
+							bounds: [
+								121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054
+							]
+						});
+						mapInstance.addLayer(
+							{
+								id: sourceId,
+								type: 'fill',
+								source: sourceId,
+								'source-layer': sourceLayer,
+								layout: { visibility: 'none' },
+								paint: {
+									'fill-color': [
+										'match',
+										['get', 'Var'],
+										1,
+										layer.colors.Low,
+										2,
+										layer.colors.Medium,
+										3,
+										layer.colors.High,
+										'#000000'
+									] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+									'fill-opacity': 0.85
+								}
 							},
-							paint: {
-								'fill-color': [
-									'match',
-									['get', 'Var'],
-									1,
-									period.colors.Low,
-									2,
-									period.colors.Medium,
-									3,
-									period.colors.High,
-									'#000000'
-								] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
-								'fill-opacity': 0.85
-							}
-						},
-						firstSymbolLayerId
-					);
-				}
-
-				updateFloodVisibility = (period, visible) => {
-					const layerId = `calapan-flood-hazard-${period}`;
-					if (mapInstance.getLayer(layerId)) {
-						mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+							firstSymbolLayerId
+						);
 					}
 				};
+
+				addHazardLayers('flood', floodHazardPeriods, 'flood');
+				addHazardLayers('storm-surge', stormSurgeAdvisories, 'storm-surge');
+				updateHazardVisibility = () => {
+					for (const period of floodHazardPeriods) {
+						const layerId = `calapan-flood-hazard-${period.key}`;
+						if (mapInstance.getLayer(layerId)) {
+							mapInstance.setLayoutProperty(
+								layerId,
+								'visibility',
+								activeHazardFamily === 'flood' && enabledFloodPeriods.includes(period.key)
+									? 'visible'
+									: 'none'
+							);
+						}
+					}
+					for (const advisory of stormSurgeAdvisories) {
+						const layerId = `calapan-storm-surge-advisory-${advisory.key}`;
+						if (mapInstance.getLayer(layerId)) {
+							mapInstance.setLayoutProperty(
+								layerId,
+								'visibility',
+								activeHazardFamily === 'storm-surge' &&
+									enabledStormSurgeAdvisories.includes(advisory.key)
+									? 'visible'
+									: 'none'
+							);
+						}
+					}
+				};
+				updateHazardVisibility();
 				mapInstance.addLayer(
 					{
 						id: 'calapan-city-mask-overlay',
@@ -586,19 +641,57 @@
 				</button>
 			</div>
 
-			<div class="flood-toggle" role="group" aria-label="Flood return period layers">
-				{#each floodHazardPeriods as period (period.key)}
-					<label class:active={enabledFloodPeriods.includes(period.key)}>
-						<input
-							type="checkbox"
-							checked={enabledFloodPeriods.includes(period.key)}
-							onchange={(event) => setFloodPeriodEnabled(period.key, event.currentTarget.checked)}
-						/>
-						<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}></span>
-						<span>{period.shortName}</span>
-					</label>
-				{/each}
+			<div class="hazard-family-toggle" role="group" aria-label="Hazard type">
+				<button
+					class:active={activeHazardFamily === 'flood'}
+					aria-pressed={activeHazardFamily === 'flood'}
+					type="button"
+					onclick={() => setHazardFamily('flood')}
+				>
+					Flood
+				</button>
+				<button
+					class:active={activeHazardFamily === 'storm-surge'}
+					aria-pressed={activeHazardFamily === 'storm-surge'}
+					type="button"
+					onclick={() => setHazardFamily('storm-surge')}
+				>
+					Storm surge
+				</button>
 			</div>
+
+			{#if activeHazardFamily === 'flood'}
+				<div class="flood-toggle" role="group" aria-label="Flood return period layers">
+					{#each floodHazardPeriods as period (period.key)}
+						<label class:active={enabledFloodPeriods.includes(period.key)}>
+							<input
+								type="checkbox"
+								checked={enabledFloodPeriods.includes(period.key)}
+								onchange={(event) => setFloodPeriodEnabled(period.key, event.currentTarget.checked)}
+							/>
+							<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}
+							></span>
+							<span>{period.shortName}</span>
+						</label>
+					{/each}
+				</div>
+			{:else}
+				<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
+					{#each stormSurgeAdvisories as advisory (advisory.key)}
+						<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
+							<input
+								type="checkbox"
+								checked={enabledStormSurgeAdvisories.includes(advisory.key)}
+								onchange={(event) =>
+									setStormSurgeAdvisoryEnabled(advisory.key, event.currentTarget.checked)}
+							/>
+							<span class="flood-toggle-swatch" style={`background: ${advisory.colors.Medium}`}
+							></span>
+							<span>{advisory.shortName}</span>
+						</label>
+					{/each}
+				</div>
+			{/if}
 		</div>
 	</div>
 
@@ -609,7 +702,10 @@
 		{mapReady ? 'Map ready' : 'Loading map'}
 	</div>
 
-	<div class="boundary-note">NOAH flood hazard layers. 3D elevation uses Mapzen Terrain Tiles.</div>
+	<div class="boundary-note">
+		NOAH {activeHazardFamily === 'flood' ? 'flood hazard' : 'storm-surge'} layers. 3D elevation uses Mapzen
+		Terrain Tiles.
+	</div>
 </div>
 
 <style>
@@ -678,6 +774,30 @@
 	}
 
 	.view-toggle button.active {
+		background: #173e3b;
+		color: #fffdf7;
+	}
+
+	.hazard-family-toggle {
+		display: flex;
+		gap: 0.15rem;
+		border-left: 1px solid rgb(71 101 99 / 20%);
+		padding-left: 0.3rem;
+	}
+
+	.hazard-family-toggle button {
+		border: 0;
+		border-radius: 999px;
+		padding: 0.45rem 0.65rem;
+		background: transparent;
+		color: #476563;
+		font: inherit;
+		font-size: 0.72rem;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.hazard-family-toggle button.active {
 		background: #173e3b;
 		color: #fffdf7;
 	}

@@ -19,6 +19,20 @@ describe('Calapan barangays', () => {
 		).toBe(true);
 		expect(
 			calapanBarangays.features.every((feature) =>
+				[1, 2, 3, 4].every((advisory) => {
+					const hazard = feature.properties.stormSurgeHazards[advisory as 1 | 2 | 3 | 4];
+					return (
+						Boolean(hazard) &&
+						hazard.classes.every((hazardClass) =>
+							['Low', 'Medium', 'High'].includes(hazardClass)
+						) &&
+						['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(hazard.summary)
+					);
+				})
+			)
+		).toBe(true);
+		expect(
+			calapanBarangays.features.every((feature) =>
 				['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(feature.properties.floodHazardSummary)
 			)
 		).toBe(true);

@@ -3,6 +3,7 @@
 	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
 	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
 	import { formatAlertDate } from '$lib/data/alerts';
+	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 	import type { PageData } from './$types';
@@ -10,9 +11,15 @@
 	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
+	type HazardFamily = 'flood' | 'storm-surge';
+	let activeHazardFamily = $state<HazardFamily>('flood');
 
 	function handleAreaSelect(area: BarangayProperties | null) {
 		selectedArea = area;
+	}
+
+	function handleHazardFamilyChange(family: HazardFamily) {
+		activeHazardFamily = family;
 	}
 </script>
 
@@ -26,7 +33,7 @@
 
 <div class="app-shell">
 	<section class="map-pane" aria-label="Hazard map">
-		<HazardMap onSelectArea={handleAreaSelect} />
+		<HazardMap onSelectArea={handleAreaSelect} onHazardFamilyChange={handleHazardFamilyChange} />
 	</section>
 
 	<aside class="sidebar" aria-label="Hazard information">
@@ -50,39 +57,74 @@
 			<section class="info-card active-layer">
 				<div class="card-kicker">
 					<span class="layer-dot"></span>
-					Flood layers
+					{activeHazardFamily === 'flood' ? 'Flood layers' : 'Storm-surge layers'}
 				</div>
-				<h2>Flood hazard periods</h2>
-				<p>
-					Source-provided flood hazard classes for three return periods. Use the map controls to
-					stack them. Only the 5-year period is enabled by default.
-				</p>
-				<div class="period-legends" aria-label="Flood hazard legends">
-					{#each floodHazardPeriods as period (period.key)}
-						<div class="period-legend">
-							<strong>{period.shortName}</strong>
-							<div class="legend">
-								<div>
-									<span class="legend-swatch" style={`background: ${period.colors.Low}`}></span>Low
-								</div>
-								<div>
-									<span class="legend-swatch" style={`background: ${period.colors.Medium}`}
-									></span>Medium
-								</div>
-								<div>
-									<span class="legend-swatch" style={`background: ${period.colors.High}`}
-									></span>High
+				{#if activeHazardFamily === 'flood'}
+					<h2>Flood hazard periods</h2>
+					<p>
+						Source-provided flood hazard classes for three return periods. All periods are enabled
+						by default.
+					</p>
+					<div class="period-legends" aria-label="Flood hazard legends">
+						{#each floodHazardPeriods as period (period.key)}
+							<div class="period-legend">
+								<strong>{period.shortName}</strong>
+								<div class="legend">
+									<div>
+										<span class="legend-swatch" style={`background: ${period.colors.Low}`}
+										></span>Low
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${period.colors.Medium}`}
+										></span>Medium
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${period.colors.High}`}
+										></span>High
+									</div>
 								</div>
 							</div>
+						{/each}
+						<div class="legend boundary-legend">
+							<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
 						</div>
-					{/each}
-					<div class="legend boundary-legend">
-						<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
 					</div>
-				</div>
-				<p class="selection-source">
-					Source: {floodHazardMetadata.source}. {floodHazardMetadata.classification}
-				</p>
+					<p class="selection-source">
+						Source: {floodHazardMetadata.source}. {floodHazardMetadata.classification}
+					</p>
+				{:else}
+					<h2>Storm-surge advisories</h2>
+					<p>
+						Source-provided storm-surge hazard classes. All four advisories are enabled by default.
+					</p>
+					<div class="period-legends" aria-label="Storm-surge hazard legends">
+						{#each stormSurgeAdvisories as advisory (advisory.key)}
+							<div class="period-legend">
+								<strong>{advisory.shortName}, {advisory.height}</strong>
+								<div class="legend">
+									<div>
+										<span class="legend-swatch" style={`background: ${advisory.colors.Low}`}
+										></span>Low
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${advisory.colors.Medium}`}
+										></span>Medium
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${advisory.colors.High}`}
+										></span>High
+									</div>
+								</div>
+							</div>
+						{/each}
+						<div class="legend boundary-legend">
+							<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
+						</div>
+					</div>
+					<p class="selection-source">
+						Source: {stormSurgeMetadata.source}. {stormSurgeMetadata.classification}
+					</p>
+				{/if}
 			</section>
 
 			<section class="info-card selection-card" class:selected={selectedArea} aria-live="polite">
@@ -92,17 +134,31 @@
 					<p class="selection-source">
 						Source name: {selectedArea.sourceName}. Administrative boundary data.
 					</p>
-					{#each floodHazardPeriods as period (period.key)}
-						{@const hazard = selectedArea.floodHazards[period.key]}
-						<p class="selection-source">
-							{period.shortName} flood hazard: {hazard.summary}.
-						</p>
-						{#if hazard.classes.length > 0}
+					{#if activeHazardFamily === 'flood'}
+						{#each floodHazardPeriods as period (period.key)}
+							{@const hazard = selectedArea.floodHazards[period.key]}
 							<p class="selection-source">
-								Classes mapped: {hazard.classes.join(', ')}.
+								{period.shortName} flood hazard: {hazard.summary}.
 							</p>
-						{/if}
-					{/each}
+							{#if hazard.classes.length > 0}
+								<p class="selection-source">
+									Classes mapped: {hazard.classes.join(', ')}.
+								</p>
+							{/if}
+						{/each}
+					{:else}
+						{#each stormSurgeAdvisories as advisory (advisory.key)}
+							{@const hazard = selectedArea.stormSurgeHazards[advisory.key]}
+							<p class="selection-source">
+								{advisory.shortName} storm surge: {hazard.summary}.
+							</p>
+							{#if hazard.classes.length > 0}
+								<p class="selection-source">
+									Classes mapped: {hazard.classes.join(', ')}.
+								</p>
+							{/if}
+						{/each}
+					{/if}
 				{:else}
 					<div class="card-kicker">Area details</div>
 					<h2>Select an area</h2>
