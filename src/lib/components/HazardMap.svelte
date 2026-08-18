@@ -16,18 +16,24 @@
 	import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
 	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
+	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	type Props = {
+		typhoonMapData?: TyphoonMapData;
 		onSelectArea?: (area: BarangayProperties | null) => void;
 		onHazardFamilyChange?: (family: HazardFamily) => void;
 	};
 	type MapBounds = [[number, number], [number, number]];
 
-	let { onSelectArea, onHazardFamilyChange }: Props = $props();
+	let {
+		typhoonMapData = emptyTyphoonMapData,
+		onSelectArea,
+		onHazardFamilyChange
+	}: Props = $props();
 
 	function getBarangayProperties(object: unknown): BarangayProperties | null {
 		if (!object || typeof object !== 'object') return null;
@@ -501,11 +507,133 @@
 				for (const layer of seismicHazards) {
 					addHazardLayers('earthquake', [layer], layer.sourceLayer);
 				}
-				const hazardFamilies: HazardFamily[] = ['flood', 'storm-surge', 'landslide', 'earthquake'];
+				const typhoonLayerIds = [
+					'calapan-typhoon-grid',
+					'calapan-typhoon-track-observed',
+					'calapan-typhoon-track-forecast',
+					'calapan-typhoon-points'
+				];
+				mapInstance.addSource('calapan-typhoon-grid', {
+					type: 'geojson',
+					data: typhoonMapData.grid
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-typhoon-grid',
+						type: 'fill',
+						source: 'calapan-typhoon-grid',
+						layout: { visibility: 'none' },
+						paint: {
+							'fill-color': [
+								'match',
+								['get', 'type'],
+								'LPA',
+								'#9aa5b1',
+								'TD',
+								'#00e400',
+								'TS',
+								'#ffe400',
+								'STS',
+								'#ff9800',
+								'TY',
+								'#ff2020',
+								'STY',
+								'#e000e0',
+								'#9aa5b1'
+							] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+							'fill-opacity': [
+								'interpolate',
+								['linear'],
+								['get', 'proximity'],
+								1,
+								0.18,
+								4,
+								0.78
+							] as unknown as import('maplibre-gl').PropertyValueSpecification<number>,
+							'fill-outline-color': '#fff8df'
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addSource('calapan-typhoon-track', {
+					type: 'geojson',
+					data: typhoonMapData.tracks
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-typhoon-track-observed',
+						type: 'line',
+						source: 'calapan-typhoon-track',
+						filter: ['==', ['get', 'forecast'], false],
+						layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' },
+						paint: { 'line-color': '#b83355', 'line-width': 3, 'line-opacity': 0.9 }
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'calapan-typhoon-track-forecast',
+						type: 'line',
+						source: 'calapan-typhoon-track',
+						filter: ['==', ['get', 'forecast'], true],
+						layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' },
+						paint: {
+							'line-color': '#b83355',
+							'line-width': 3,
+							'line-opacity': 0.9,
+							'line-dasharray': [1.5, 1.5]
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addSource('calapan-typhoon-points', {
+					type: 'geojson',
+					data: typhoonMapData.points
+				});
+				mapInstance.addLayer(
+					{
+						id: 'calapan-typhoon-points',
+						type: 'circle',
+						source: 'calapan-typhoon-points',
+						layout: { visibility: 'none' },
+						paint: {
+							'circle-radius': 4,
+							'circle-color': [
+								'match',
+								['get', 'type'],
+								'LPA',
+								'#9aa5b1',
+								'TD',
+								'#00e400',
+								'TS',
+								'#ffe400',
+								'STS',
+								'#ff9800',
+								'TY',
+								'#ff2020',
+								'STY',
+								'#e000e0',
+								'#9aa5b1'
+							] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+							'circle-stroke-color': '#b83355',
+							'circle-stroke-width': 2
+						}
+					},
+					firstSymbolLayerId
+				);
+
+				const hazardFamilies: HazardFamily[] = [
+					'flood',
+					'storm-surge',
+					'landslide',
+					'earthquake',
+					'typhoon'
+				];
 				const layersForFamily = (family: HazardFamily) => {
 					if (family === 'flood') return floodHazardPeriods;
 					if (family === 'storm-surge') return stormSurgeAdvisories;
 					if (family === 'landslide') return landslideHazards;
+					if (family === 'typhoon') return [];
 					return seismicHazards;
 				};
 				const layerIdFor = (family: HazardFamily, key: string | number) => {
@@ -520,9 +648,20 @@
 						return enabledStormSurgeAdvisories.includes(key as StormSurgeAdvisory);
 					}
 					if (family === 'landslide') return enabledLandslideLayers.includes(key as LandslideLayer);
+					if (family === 'typhoon') return true;
 					return enabledSeismicLayers.includes(key as SeismicLayer);
 				};
 				const setFamilyVisibility = (family: HazardFamily, visible: boolean, opacity = 0.85) => {
+					if (family === 'typhoon') {
+						for (const layerId of typhoonLayerIds) {
+							if (!mapInstance.getLayer(layerId)) continue;
+							mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+							if (layerId === 'calapan-typhoon-grid') {
+								mapInstance.setPaintProperty(layerId, 'fill-opacity', visible ? opacity : 0.72);
+							}
+						}
+						return;
+					}
 					for (const layer of layersForFamily(family)) {
 						const layerId = layerIdFor(family, layer.key);
 						const shouldShow = visible && layerEnabled(family, layer.key);
@@ -811,6 +950,16 @@
 				>
 					Earthquake
 				</button>
+				<button
+					class:active={activeHazardFamily === 'typhoon'}
+					aria-pressed={activeHazardFamily === 'typhoon'}
+					type="button"
+					onclick={() => setHazardFamily('typhoon')}
+					onmouseenter={() => preloadHazardFamily('typhoon')}
+					onfocus={() => preloadHazardFamily('typhoon')}
+				>
+					Typhoon
+				</button>
 			</div>
 
 			{#if activeHazardFamily === 'flood'}
@@ -859,7 +1008,7 @@
 						</label>
 					{/each}
 				</div>
-			{:else}
+			{:else if activeHazardFamily === 'earthquake'}
 				<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
 					{#each seismicHazards as layer (layer.key)}
 						<label class:active={enabledSeismicLayers.includes(layer.key)}>
@@ -873,6 +1022,11 @@
 							<span>{layer.shortName}</span>
 						</label>
 					{/each}
+				</div>
+			{:else}
+				<div class="flood-toggle typhoon-toggle" aria-label="Typhoon track status">
+					<span class="typhoon-toggle-swatch"></span>
+					<span>Track proximity</span>
 				</div>
 			{/if}
 		</div>
@@ -892,6 +1046,8 @@
 			Loading landslide tiles
 		{:else if loadingHazardFamily === 'earthquake'}
 			Loading earthquake tiles
+		{:else if loadingHazardFamily === 'typhoon'}
+			Loading typhoon track
 		{:else}
 			Map ready
 		{/if}
@@ -900,6 +1056,8 @@
 	<div class="boundary-note">
 		{#if activeHazardFamily === 'earthquake'}
 			PHIVOLCS Ground Shaking, Liquefaction, and Tsunami vector layers.
+		{:else if activeHazardFamily === 'typhoon'}
+			PANaHON track proximity grid. Colors are not wind speeds.
 		{:else}
 			NOAH {activeHazardFamily === 'flood'
 				? 'flood hazard'

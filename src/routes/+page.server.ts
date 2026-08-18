@@ -1,20 +1,23 @@
 import type { PageServerLoad } from './$types';
 import { fetchPagasaAlerts } from '$lib/data/alerts';
+import { emptyTyphoonMapData, fetchPanahonTyphoonTracks } from '$lib/data/typhoon';
 
 export const load: PageServerLoad = async ({ fetch }) => {
 	const fetchedAt = new Date().toISOString();
+	const [alertsResult, typhoonResult] = await Promise.allSettled([
+		fetchPagasaAlerts(fetch),
+		fetchPanahonTyphoonTracks(fetch)
+	]);
 
-	try {
-		return {
-			alertFeedStatus: 'ready' as const,
-			activeAlerts: await fetchPagasaAlerts(fetch),
-			alertsFetchedAt: fetchedAt
-		};
-	} catch {
-		return {
-			alertFeedStatus: 'unavailable' as const,
-			activeAlerts: [],
-			alertsFetchedAt: fetchedAt
-		};
-	}
+	return {
+		alertFeedStatus:
+			alertsResult.status === 'fulfilled' ? ('ready' as const) : ('unavailable' as const),
+		activeAlerts: alertsResult.status === 'fulfilled' ? alertsResult.value : [],
+		alertsFetchedAt: fetchedAt,
+		typhoonTrackStatus:
+			typhoonResult.status === 'fulfilled' ? ('ready' as const) : ('unavailable' as const),
+		typhoonMapData:
+			typhoonResult.status === 'fulfilled' ? typhoonResult.value : emptyTyphoonMapData,
+		typhoonFetchedAt: fetchedAt
+	};
 };

@@ -6,6 +6,7 @@
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
+	import { typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 	import type { PageData } from './$types';
@@ -13,7 +14,7 @@
 	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	let activeHazardFamily = $state<HazardFamily>('flood');
 
 	function handleAreaSelect(area: BarangayProperties | null) {
@@ -35,7 +36,11 @@
 
 <div class="app-shell">
 	<section class="map-pane" aria-label="Hazard map">
-		<HazardMap onSelectArea={handleAreaSelect} onHazardFamilyChange={handleHazardFamilyChange} />
+		<HazardMap
+			typhoonMapData={data.typhoonMapData}
+			onSelectArea={handleAreaSelect}
+			onHazardFamilyChange={handleHazardFamilyChange}
+		/>
 	</section>
 
 	<aside class="sidebar" aria-label="Hazard information">
@@ -65,7 +70,9 @@
 							? 'Storm-surge layers'
 							: activeHazardFamily === 'landslide'
 								? 'Landslide layers'
-								: 'Ground-shaking layers'}
+								: activeHazardFamily === 'earthquake'
+									? 'Ground-shaking layers'
+									: 'Typhoon track'}
 				</div>
 				{#if activeHazardFamily === 'flood'}
 					<h2>Flood hazard periods</h2>
@@ -161,7 +168,7 @@
 					<p class="selection-source">
 						Source: {landslideMetadata.source}. {landslideMetadata.classification}
 					</p>
-				{:else}
+				{:else if activeHazardFamily === 'earthquake'}
 					<h2>Earthquake hazards</h2>
 					<p>
 						Official PHIVOLCS vector layers for ground shaking, liquefaction, and tsunami hazard in
@@ -189,6 +196,39 @@
 						Source: {seismicMetadata.source}. {seismicMetadata.classification}
 					</p>
 					<p class="selection-source">Caveat: {seismicMetadata.caveat}</p>
+				{:else}
+					<h2>Typhoon track proximity</h2>
+					{#if data.typhoonTrackStatus === 'unavailable'}
+						<p>No PANaHON typhoon track data is available right now.</p>
+					{:else if data.typhoonMapData.names.length === 0}
+						<p>No active PANaHON typhoon track currently covers the map.</p>
+					{:else}
+						<p>
+							Squares show distance from the PANaHON track for
+							{data.typhoonMapData.names.join(', ')}.
+						</p>
+						<div class="period-legends" aria-label="Typhoon track proximity legend">
+							<div class="legend">
+								<div><span class="legend-swatch typhoon-lpa"></span>LPA</div>
+								<div><span class="legend-swatch typhoon-td"></span>TD</div>
+								<div><span class="legend-swatch typhoon-ts"></span>TS</div>
+								<div><span class="legend-swatch typhoon-sts"></span>STS</div>
+								<div><span class="legend-swatch typhoon-ty"></span>TY</div>
+								<div><span class="legend-swatch typhoon-sty"></span>STY</div>
+							</div>
+						</div>
+					{/if}
+					<p class="selection-source">
+						Source:
+						<!-- External source links do not pass through SvelteKit routing. -->
+						<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+						<a href={typhoonSourceUrl} target="_blank" rel="noreferrer">PANaHON cyclone track</a>.
+						Checked {formatAlertDate(data.typhoonFetchedAt)}.
+					</p>
+					<p class="selection-source">
+						Caveat: Colors show PANaHON cyclone type. Opacity shows distance from the track, not
+						wind speed or damage.
+					</p>
 				{/if}
 			</section>
 
@@ -235,7 +275,7 @@
 								</p>
 							{/if}
 						{/each}
-					{:else}
+					{:else if activeHazardFamily === 'earthquake'}
 						{#each seismicHazards as layer (layer.key)}
 							{@const hazard = selectedArea.seismicHazards[layer.key]}
 							<p class="selection-source">
@@ -247,6 +287,11 @@
 								</p>
 							{/if}
 						{/each}
+					{:else}
+						<p class="selection-source">
+							Typhoon track proximity is shown on the map and does not provide barangay-level hazard
+							classifications.
+						</p>
 					{/if}
 				{:else}
 					<div class="card-kicker">Area details</div>
@@ -491,6 +536,30 @@
 
 	.legend-swatch.boundary {
 		background: var(--accent);
+	}
+
+	.legend-swatch.typhoon-lpa {
+		background: #9aa5b1;
+	}
+
+	.legend-swatch.typhoon-td {
+		background: #00e400;
+	}
+
+	.legend-swatch.typhoon-ts {
+		background: #ffe400;
+	}
+
+	.legend-swatch.typhoon-sts {
+		background: #ff9800;
+	}
+
+	.legend-swatch.typhoon-ty {
+		background: #ff2020;
+	}
+
+	.legend-swatch.typhoon-sty {
+		background: #e000e0;
 	}
 
 	.boundary-legend {
