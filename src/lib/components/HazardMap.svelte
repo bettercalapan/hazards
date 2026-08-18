@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		calapanCityBoundary,
 		calapanCityBounds,
@@ -13,12 +14,13 @@
 	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
 	import { stormSurgeAdvisories, type StormSurgeAdvisory } from '$lib/data/storm-surge';
 	import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
+	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake';
 	type Props = {
 		onSelectArea?: (area: BarangayProperties | null) => void;
 		onHazardFamilyChange?: (family: HazardFamily) => void;
@@ -191,11 +193,16 @@
 	let viewMode = $state<ViewMode>('3d');
 	let mapReady = $state(false);
 	let activeHazardFamily = $state<HazardFamily>('flood');
+	let loadingHazardFamily = $state<HazardFamily | null>(null);
 	let enabledFloodPeriods = $state<ReturnPeriod[]>([5, 25, 100]);
 	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([1, 2, 3, 4]);
 	let enabledLandslideLayers = $state<LandslideLayer[]>(['main']);
+	let enabledSeismicLayers = $state<SeismicLayer[]>(['ground-shaking']);
+	let hasInitializedSeismicLayers = $state(false);
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 	let updateHazardVisibility: () => void = () => {};
+	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
+	let preloadHazardFamily: (family: HazardFamily) => void = () => {};
 
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
@@ -203,9 +210,14 @@
 	}
 
 	function setHazardFamily(nextFamily: HazardFamily) {
+		if (nextFamily === activeHazardFamily) return;
+		if (nextFamily === 'earthquake' && !hasInitializedSeismicLayers) {
+			enabledSeismicLayers = seismicHazards.map((layer) => layer.key);
+			hasInitializedSeismicLayers = true;
+		}
 		activeHazardFamily = nextFamily;
 		onHazardFamilyChange?.(nextFamily);
-		updateHazardVisibility();
+		transitionHazardFamily(nextFamily);
 	}
 
 	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
@@ -226,6 +238,13 @@
 		enabledLandslideLayers = enabled
 			? [...new Set([...enabledLandslideLayers, layer])]
 			: enabledLandslideLayers.filter((value) => value !== layer);
+		updateHazardVisibility();
+	}
+
+	function setSeismicLayerEnabled(layer: SeismicLayer, enabled: boolean) {
+		enabledSeismicLayers = enabled
+			? [...new Set([...enabledSeismicLayers, layer])]
+			: enabledSeismicLayers.filter((value) => value !== layer);
 		updateHazardVisibility();
 	}
 
@@ -426,7 +445,8 @@
 					layers: readonly {
 						key: string | number;
 						tilePath: string;
-						colors: { readonly Low: string; readonly Medium: string; readonly High: string };
+						colors?: { readonly Low: string; readonly Medium: string; readonly High: string };
+						classes?: readonly { readonly color: string }[];
 					}[],
 					sourceLayer: string
 				) => {
@@ -436,7 +456,20 @@
 								? `calapan-flood-hazard-${layer.key}`
 								: family === 'storm-surge'
 									? `calapan-storm-surge-advisory-${layer.key}`
-									: `calapan-landslide-hazard-${layer.key}`;
+									: family === 'landslide'
+										? `calapan-landslide-hazard-${layer.key}`
+										: `calapan-${layer.key}`;
+						const classColors = layer.classes?.map((item) => item.color) ?? [
+							layer.colors?.Low ?? '#000000',
+							layer.colors?.Medium ?? '#000000',
+							layer.colors?.High ?? '#000000'
+						];
+						const fillColor = [
+							'match',
+							['get', 'Var'],
+							...classColors.flatMap((color, index) => [index + 1, color]),
+							'#000000'
+						] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
 						mapInstance.addSource(sourceId, {
 							type: 'vector',
 							tiles: [layer.tilePath],
@@ -454,17 +487,7 @@
 								'source-layer': sourceLayer,
 								layout: { visibility: 'none' },
 								paint: {
-									'fill-color': [
-										'match',
-										['get', 'Var'],
-										1,
-										layer.colors.Low,
-										2,
-										layer.colors.Medium,
-										3,
-										layer.colors.High,
-										'#000000'
-									] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+									'fill-color': fillColor,
 									'fill-opacity': 0.85
 								}
 							},
@@ -472,47 +495,129 @@
 						);
 					}
 				};
-
 				addHazardLayers('flood', floodHazardPeriods, 'flood');
 				addHazardLayers('storm-surge', stormSurgeAdvisories, 'storm-surge');
 				addHazardLayers('landslide', landslideHazards, 'landslide');
+				for (const layer of seismicHazards) {
+					addHazardLayers('earthquake', [layer], layer.sourceLayer);
+				}
+				const hazardFamilies: HazardFamily[] = ['flood', 'storm-surge', 'landslide', 'earthquake'];
+				const layersForFamily = (family: HazardFamily) => {
+					if (family === 'flood') return floodHazardPeriods;
+					if (family === 'storm-surge') return stormSurgeAdvisories;
+					if (family === 'landslide') return landslideHazards;
+					return seismicHazards;
+				};
+				const layerIdFor = (family: HazardFamily, key: string | number) => {
+					if (family === 'flood') return `calapan-flood-hazard-${key}`;
+					if (family === 'storm-surge') return `calapan-storm-surge-advisory-${key}`;
+					if (family === 'landslide') return `calapan-landslide-hazard-${key}`;
+					return `calapan-${key}`;
+				};
+				const layerEnabled = (family: HazardFamily, key: string | number) => {
+					if (family === 'flood') return enabledFloodPeriods.includes(key as ReturnPeriod);
+					if (family === 'storm-surge') {
+						return enabledStormSurgeAdvisories.includes(key as StormSurgeAdvisory);
+					}
+					if (family === 'landslide') return enabledLandslideLayers.includes(key as LandslideLayer);
+					return enabledSeismicLayers.includes(key as SeismicLayer);
+				};
+				const setFamilyVisibility = (family: HazardFamily, visible: boolean, opacity = 0.85) => {
+					for (const layer of layersForFamily(family)) {
+						const layerId = layerIdFor(family, layer.key);
+						const shouldShow = visible && layerEnabled(family, layer.key);
+						if (!mapInstance.getLayer(layerId)) continue;
+						mapInstance.setLayoutProperty(layerId, 'visibility', shouldShow ? 'visible' : 'none');
+						mapInstance.setPaintProperty(layerId, 'fill-opacity', shouldShow ? opacity : 0.85);
+					}
+				};
+				const sourceIdsForFamily = (family: HazardFamily) =>
+					layersForFamily(family)
+						.filter((layer) => layerEnabled(family, layer.key))
+						.map((layer) => layerIdFor(family, layer.key));
+				const familyLoads = new SvelteMap<HazardFamily, Promise<void>>();
+				const loadFamilyTiles = (family: HazardFamily) => {
+					const existingLoad = familyLoads.get(family);
+					if (existingLoad) return existingLoad;
+
+					const sourceIds = sourceIdsForFamily(family);
+					if (sourceIds.length === 0) return Promise.resolve();
+
+					const load = new Promise<void>((resolve) => {
+						let timeout: ReturnType<typeof setTimeout>;
+						let settled = false;
+						const finish = () => {
+							if (settled) return;
+							settled = true;
+							clearTimeout(timeout);
+							mapInstance.off('sourcedata', onSourceData);
+							mapInstance.off('idle', onIdle);
+							resolve();
+						};
+						const check = () => {
+							if (sourceIds.every((sourceId) => mapInstance.isSourceLoaded(sourceId))) finish();
+						};
+						const onSourceData = () => check();
+						const onIdle = () => check();
+
+						mapInstance.on('sourcedata', onSourceData);
+						mapInstance.on('idle', onIdle);
+						timeout = setTimeout(finish, 10000);
+						check();
+					});
+
+					familyLoads.set(family, load);
+					void load.finally(() => {
+						if (familyLoads.get(family) === load) familyLoads.delete(family);
+					});
+					return load;
+				};
+				let renderedHazardFamily: HazardFamily = activeHazardFamily;
+				let transitionSequence = 0;
+				transitionHazardFamily = (nextFamily) => {
+					const previousFamily = renderedHazardFamily;
+					if (nextFamily === previousFamily) {
+						loadingHazardFamily = null;
+						updateHazardVisibility();
+						return;
+					}
+
+					const sequence = ++transitionSequence;
+					loadingHazardFamily = nextFamily;
+					for (const family of hazardFamilies) {
+						if (family !== previousFamily && family !== nextFamily) {
+							setFamilyVisibility(family, false);
+						}
+					}
+					setFamilyVisibility(nextFamily, true, 0);
+
+					void loadFamilyTiles(nextFamily).then(() => {
+						if (sequence !== transitionSequence) return;
+						setFamilyVisibility(previousFamily, false);
+						setFamilyVisibility(nextFamily, true);
+						for (const family of hazardFamilies) {
+							if (family !== nextFamily) setFamilyVisibility(family, false);
+						}
+						renderedHazardFamily = nextFamily;
+						loadingHazardFamily = null;
+					});
+				};
+				preloadHazardFamily = (family) => {
+					if (family === renderedHazardFamily || family === activeHazardFamily) return;
+					setFamilyVisibility(family, true, 0);
+					void loadFamilyTiles(family).then(() => {
+						if (renderedHazardFamily !== family && activeHazardFamily !== family) {
+							setFamilyVisibility(family, false);
+						}
+					});
+				};
 				updateHazardVisibility = () => {
-					for (const period of floodHazardPeriods) {
-						const layerId = `calapan-flood-hazard-${period.key}`;
-						if (mapInstance.getLayer(layerId)) {
-							mapInstance.setLayoutProperty(
-								layerId,
-								'visibility',
-								activeHazardFamily === 'flood' && enabledFloodPeriods.includes(period.key)
-									? 'visible'
-									: 'none'
-							);
-						}
-					}
-					for (const advisory of stormSurgeAdvisories) {
-						const layerId = `calapan-storm-surge-advisory-${advisory.key}`;
-						if (mapInstance.getLayer(layerId)) {
-							mapInstance.setLayoutProperty(
-								layerId,
-								'visibility',
-								activeHazardFamily === 'storm-surge' &&
-									enabledStormSurgeAdvisories.includes(advisory.key)
-									? 'visible'
-									: 'none'
-							);
-						}
-					}
-					for (const layer of landslideHazards) {
-						const layerId = `calapan-landslide-hazard-${layer.key}`;
-						if (mapInstance.getLayer(layerId)) {
-							mapInstance.setLayoutProperty(
-								layerId,
-								'visibility',
-								activeHazardFamily === 'landslide' && enabledLandslideLayers.includes(layer.key)
-									? 'visible'
-									: 'none'
-							);
-						}
+					for (const family of hazardFamilies) {
+						setFamilyVisibility(
+							family,
+							family === renderedHazardFamily || family === loadingHazardFamily,
+							family === loadingHazardFamily ? 0 : 0.85
+						);
 					}
 				};
 				updateHazardVisibility();
@@ -671,6 +776,8 @@
 					aria-pressed={activeHazardFamily === 'flood'}
 					type="button"
 					onclick={() => setHazardFamily('flood')}
+					onmouseenter={() => preloadHazardFamily('flood')}
+					onfocus={() => preloadHazardFamily('flood')}
 				>
 					Flood
 				</button>
@@ -679,6 +786,8 @@
 					aria-pressed={activeHazardFamily === 'storm-surge'}
 					type="button"
 					onclick={() => setHazardFamily('storm-surge')}
+					onmouseenter={() => preloadHazardFamily('storm-surge')}
+					onfocus={() => preloadHazardFamily('storm-surge')}
 				>
 					Storm surge
 				</button>
@@ -687,8 +796,20 @@
 					aria-pressed={activeHazardFamily === 'landslide'}
 					type="button"
 					onclick={() => setHazardFamily('landslide')}
+					onmouseenter={() => preloadHazardFamily('landslide')}
+					onfocus={() => preloadHazardFamily('landslide')}
 				>
 					Landslide
+				</button>
+				<button
+					class:active={activeHazardFamily === 'earthquake'}
+					aria-pressed={activeHazardFamily === 'earthquake'}
+					type="button"
+					onclick={() => setHazardFamily('earthquake')}
+					onmouseenter={() => preloadHazardFamily('earthquake')}
+					onfocus={() => preloadHazardFamily('earthquake')}
+				>
+					Earthquake
 				</button>
 			</div>
 
@@ -723,7 +844,7 @@
 						</label>
 					{/each}
 				</div>
-			{:else}
+			{:else if activeHazardFamily === 'landslide'}
 				<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
 					{#each landslideHazards as layer (layer.key)}
 						<label class:active={enabledLandslideLayers.includes(layer.key)}>
@@ -738,23 +859,55 @@
 						</label>
 					{/each}
 				</div>
+			{:else}
+				<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
+					{#each seismicHazards as layer (layer.key)}
+						<label class:active={enabledSeismicLayers.includes(layer.key)}>
+							<input
+								type="checkbox"
+								checked={enabledSeismicLayers.includes(layer.key)}
+								onchange={(event) => setSeismicLayerEnabled(layer.key, event.currentTarget.checked)}
+							/>
+							<span class="flood-toggle-swatch" style={`background: ${layer.classes[0].color}`}
+							></span>
+							<span>{layer.shortName}</span>
+						</label>
+					{/each}
+				</div>
 			{/if}
 		</div>
 	</div>
 
 	<div bind:this={mapElement} class="map" aria-label="Interactive map of Calapan City"></div>
 
-	<div class="map-status" class:ready={mapReady}>
+	<div class="map-status" class:ready={mapReady && !loadingHazardFamily} aria-live="polite">
 		<span class="status-dot"></span>
-		{mapReady ? 'Map ready' : 'Loading map'}
+		{#if !mapReady}
+			Loading map
+		{:else if loadingHazardFamily === 'flood'}
+			Loading flood tiles
+		{:else if loadingHazardFamily === 'storm-surge'}
+			Loading storm-surge tiles
+		{:else if loadingHazardFamily === 'landslide'}
+			Loading landslide tiles
+		{:else if loadingHazardFamily === 'earthquake'}
+			Loading earthquake tiles
+		{:else}
+			Map ready
+		{/if}
 	</div>
 
 	<div class="boundary-note">
-		NOAH {activeHazardFamily === 'flood'
-			? 'flood hazard'
-			: activeHazardFamily === 'storm-surge'
-				? 'storm-surge'
-				: 'landslide hazard'} layers. 3D elevation uses Mapzen Terrain Tiles.
+		{#if activeHazardFamily === 'earthquake'}
+			PHIVOLCS Ground Shaking, Liquefaction, and Tsunami vector layers.
+		{:else}
+			NOAH {activeHazardFamily === 'flood'
+				? 'flood hazard'
+				: activeHazardFamily === 'storm-surge'
+					? 'storm-surge'
+					: 'landslide hazard'} layers.
+		{/if}
+		3D elevation uses Mapzen Terrain Tiles.
 	</div>
 </div>
 

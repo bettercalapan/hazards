@@ -7,10 +7,15 @@ import stormSurgeSummaryData from './calapan-storm-surge-summaries.json';
 import type { StormSurgeAdvisory, StormSurgeSummary } from './storm-surge';
 import landslideSummaryData from './calapan-landslide-summaries.json';
 import type { LandslideHazardSummary, LandslideLayer } from './landslide';
+import groundShakingSummaryData from './calapan-ground-shaking-summaries.json';
+import liquefactionSummaryData from './calapan-liquefaction-summaries.json';
+import tsunamiSummaryData from './calapan-tsunami-summaries.json';
+import type { SeismicHazardSummary, SeismicLayer } from './seismic';
 
 type FloodSummaryData = Record<string, Record<ReturnPeriod, FloodHazardSummary>>;
 type StormSurgeSummaryData = Record<string, Record<StormSurgeAdvisory, StormSurgeSummary>>;
 type LandslideSummaryData = Record<string, Record<LandslideLayer, LandslideHazardSummary>>;
+type SeismicSummaryData = Record<string, Partial<Record<SeismicLayer, SeismicHazardSummary>>>;
 
 export type BarangayProperties = {
 	id: string;
@@ -21,14 +26,21 @@ export type BarangayProperties = {
 	floodHazards: Record<ReturnPeriod, FloodHazardSummary>;
 	stormSurgeHazards: Record<StormSurgeAdvisory, StormSurgeSummary>;
 	landslideHazards: Record<LandslideLayer, LandslideHazardSummary>;
+	seismicHazards: Record<SeismicLayer, SeismicHazardSummary>;
 };
 
 const floodSummaries = floodSummaryData as FloodSummaryData;
 const stormSurgeSummaries = stormSurgeSummaryData as StormSurgeSummaryData;
 const landslideSummaries = landslideSummaryData as LandslideSummaryData;
+const groundShakingSummaries = groundShakingSummaryData as SeismicSummaryData;
+const liquefactionSummaries = liquefactionSummaryData as SeismicSummaryData;
+const tsunamiSummaries = tsunamiSummaryData as SeismicSummaryData;
 const rawBarangays = barangayData as FeatureCollection<
 	MultiPolygon,
-	Omit<BarangayProperties, 'floodHazards' | 'stormSurgeHazards' | 'landslideHazards'>
+	Omit<
+		BarangayProperties,
+		'floodHazards' | 'stormSurgeHazards' | 'landslideHazards' | 'seismicHazards'
+	>
 >;
 
 export const calapanBarangays = {
@@ -39,7 +51,12 @@ export const calapanBarangays = {
 			...feature.properties,
 			floodHazards: floodSummaries[feature.properties.id],
 			stormSurgeHazards: stormSurgeSummaries[feature.properties.id],
-			landslideHazards: landslideSummaries[feature.properties.id]
+			landslideHazards: landslideSummaries[feature.properties.id],
+			seismicHazards: {
+				'ground-shaking': groundShakingSummaries[feature.properties.id]['ground-shaking']!,
+				liquefaction: liquefactionSummaries[feature.properties.id].liquefaction!,
+				tsunami: tsunamiSummaries[feature.properties.id].tsunami!
+			}
 		}
 	}))
 } as FeatureCollection<MultiPolygon, BarangayProperties>;

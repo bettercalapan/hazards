@@ -5,6 +5,7 @@
 	import { formatAlertDate } from '$lib/data/alerts';
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
+	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 	import type { PageData } from './$types';
@@ -12,7 +13,7 @@
 	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake';
 	let activeHazardFamily = $state<HazardFamily>('flood');
 
 	function handleAreaSelect(area: BarangayProperties | null) {
@@ -25,7 +26,7 @@
 </script>
 
 <svelte:head>
-	<title>Hazards | Calapan City</title>
+	<title>Hazards</title>
 	<meta
 		name="description"
 		content="A localized view of hazard-risk zones and active official alerts in Calapan City."
@@ -62,7 +63,9 @@
 						? 'Flood layers'
 						: activeHazardFamily === 'storm-surge'
 							? 'Storm-surge layers'
-							: 'Landslide layers'}
+							: activeHazardFamily === 'landslide'
+								? 'Landslide layers'
+								: 'Ground-shaking layers'}
 				</div>
 				{#if activeHazardFamily === 'flood'}
 					<h2>Flood hazard periods</h2>
@@ -129,7 +132,7 @@
 					<p class="selection-source">
 						Source: {stormSurgeMetadata.source}. {stormSurgeMetadata.classification}
 					</p>
-				{:else}
+				{:else if activeHazardFamily === 'landslide'}
 					<h2>Landslide hazard</h2>
 					<p>Source-provided landslide hazard classes for Calapan City.</p>
 					<div class="period-legends" aria-label="Landslide hazard legends">
@@ -158,6 +161,34 @@
 					<p class="selection-source">
 						Source: {landslideMetadata.source}. {landslideMetadata.classification}
 					</p>
+				{:else}
+					<h2>Earthquake hazards</h2>
+					<p>
+						Official PHIVOLCS vector layers for ground shaking, liquefaction, and tsunami hazard in
+						Calapan City.
+					</p>
+					<div class="period-legends" aria-label="PHIVOLCS earthquake hazard legends">
+						{#each seismicHazards as layer (layer.key)}
+							<div class="period-legend">
+								<strong>{layer.name}</strong>
+								<div class="legend">
+									{#each layer.classes as item (item.value)}
+										<div>
+											<span class="legend-swatch" style={`background: ${item.color}`}
+											></span>{item.label}
+										</div>
+									{/each}
+								</div>
+							</div>
+						{/each}
+						<div class="legend boundary-legend">
+							<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
+						</div>
+					</div>
+					<p class="selection-source">
+						Source: {seismicMetadata.source}. {seismicMetadata.classification}
+					</p>
+					<p class="selection-source">Caveat: {seismicMetadata.caveat}</p>
 				{/if}
 			</section>
 
@@ -192,9 +223,21 @@
 								</p>
 							{/if}
 						{/each}
-					{:else}
+					{:else if activeHazardFamily === 'landslide'}
 						{#each landslideHazards as layer (layer.key)}
 							{@const hazard = selectedArea.landslideHazards[layer.key]}
+							<p class="selection-source">
+								{layer.name}: {hazard.summary}.
+							</p>
+							{#if hazard.classes.length > 0}
+								<p class="selection-source">
+									Classes mapped: {hazard.classes.join(', ')}.
+								</p>
+							{/if}
+						{/each}
+					{:else}
+						{#each seismicHazards as layer (layer.key)}
+							{@const hazard = selectedArea.seismicHazards[layer.key]}
 							<p class="selection-source">
 								{layer.name}: {hazard.summary}.
 							</p>

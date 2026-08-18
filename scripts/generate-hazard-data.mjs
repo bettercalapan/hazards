@@ -75,6 +75,84 @@ const hazardSets = [
 				file: path.join(landslideRoot, 'hazards/OrientalMindoro_LandslideHazards.shp')
 			}
 		]
+	},
+	{
+		key: 'ground-shaking',
+		tilePrefix: 'calapan',
+		summaryFile: 'calapan-ground-shaking-summaries.json',
+		tileSuffix: () => 'ground-shaking',
+		classFields: ['peiscode'],
+		classMap: { '06': 1, '07': 2, '08': 3 },
+		classLabels: [
+			'VI, very strong ground shaking',
+			'VII, destructive ground shaking',
+			'VIII, very destructive to devastating ground shaking'
+		],
+		periods: [
+			{
+				key: 'ground-shaking',
+				label: 'Ground shaking',
+				file: path.join(dataRoot, 'phivolcs-ground-shaking.json')
+			}
+		]
+	},
+	{
+		key: 'liquefaction',
+		tilePrefix: 'calapan',
+		summaryFile: 'calapan-liquefaction-summaries.json',
+		tileSuffix: () => 'liquefaction',
+		classFields: ['lccode'],
+		classMap: { '01': 1, '02': 2, '03': 3, '04': 4, '05': 5, '06': 6, '07': 7 },
+		classLabels: [
+			'Generally Susceptible',
+			'Low Potential',
+			'Moderate Potential',
+			'High Potential',
+			'Least Susceptible',
+			'Moderately Susceptible',
+			'Highly Susceptible'
+		],
+		periods: [
+			{
+				key: 'liquefaction',
+				label: 'Liquefaction',
+				file: path.join(dataRoot, 'phivolcs-liquefaction.json')
+			}
+		]
+	},
+	{
+		key: 'tsunami',
+		tilePrefix: 'calapan',
+		summaryFile: 'calapan-tsunami-summaries.json',
+		tileSuffix: () => 'tsunami',
+		classFields: ['inundescode', 'inundtcode'],
+		classMap: {
+			'01,08': 1,
+			'02,01': 2,
+			'02,02': 3,
+			'02,03': 4,
+			'02,04': 5,
+			'02,05': 6,
+			'02,06': 7,
+			'02,07': 8
+		},
+		classLabels: [
+			'General inundation, Inundated',
+			'Inundation depth, < 1 meter',
+			'Inundation depth, 1 to < 2 meters',
+			'Inundation depth, 2 to < 3 meters',
+			'Inundation depth, 3 to < 4 meters',
+			'Inundation depth, 4 to < 5 meters',
+			'Inundation depth, 5 to 6 meters',
+			'Inundation depth, > 6 meters'
+		],
+		periods: [
+			{
+				key: 'tsunami',
+				label: 'Tsunami',
+				file: path.join(dataRoot, 'phivolcs-tsunami.json')
+			}
+		]
 	}
 ];
 
@@ -86,14 +164,33 @@ function asMultiPolygon(geometry) {
 	throw new Error(`Unsupported geometry type: ${geometry.type}`);
 }
 
-function getHazardClass(properties, field) {
-	const entry = Object.entries(properties ?? {}).find(
-		([key]) => key.toLowerCase() === field.toLowerCase()
-	);
-	const value = Number(entry?.[1]);
+function getHazardClass(properties, hazardSet) {
+	if (!hazardSet.classFields) {
+		const value = Number(
+			Object.entries(properties ?? {}).find(
+				([key]) => key.toLowerCase() === hazardSet.classField.toLowerCase()
+			)?.[1]
+		);
+		if (![1, 2, 3].includes(value)) {
+			throw new Error(`Unsupported hazard class: ${value || 'missing'}`);
+		}
+		return value;
+	}
+	if (Number.isInteger(Number(properties?.Var))) return Number(properties.Var);
 
-	if (![1, 2, 3].includes(value)) {
-		throw new Error(`Unsupported hazard class: ${entry?.[1] ?? 'missing'}`);
+	const fields = hazardSet.classFields ?? [hazardSet.classField];
+	const values = fields.map(
+		(field) =>
+			Object.entries(properties ?? {}).find(
+				([key]) => key.toLowerCase() === field.toLowerCase()
+			)?.[1]
+	);
+	const rawValue = values.join(',');
+	const value = hazardSet.classMap?.[rawValue] ?? Number(values[0]);
+	const classCount = hazardSet.classLabels?.length ?? 3;
+
+	if (!Number.isInteger(value) || value < 1 || value > classCount) {
+		throw new Error(`Unsupported hazard class: ${rawValue || 'missing'}`);
 	}
 
 	return value;
@@ -143,15 +240,26 @@ function multiPolygonArea(multiPolygon) {
 	);
 }
 
-function className(value) {
-	return ['Low', 'Medium', 'High'][value - 1];
+function className(hazardSet, value) {
+	return hazardSet.classLabels?.[value - 1] ?? ['Low', 'Medium', 'High'][value - 1];
 }
 
 async function loadPeriod(hazardSet, period, tempRoot) {
 	const fileKey = `${hazardSet.key}-${period.key}`;
 	const clippedFile = path.join(tempRoot, `${fileKey}-cells.json`);
 	const summaryFile = path.join(tempRoot, `${fileKey}-summary.json`);
-	const sourceArgs = [mapshaperBin, period.file, '-clip', boundaryFile];
+	const sourceFile = hazardSet.classFields
+		? path.join(tempRoot, `${fileKey}-source.json`)
+		: period.file;
+	if (hazardSet.classFields) {
+		const source = JSON.parse(await readFile(period.file, 'utf8'));
+		source.features = source.features.map((feature) => ({
+			...feature,
+			properties: { ...feature.properties, Var: getHazardClass(feature.properties, hazardSet) }
+		}));
+		await writeFile(sourceFile, `${JSON.stringify(source)}\n`);
+	}
+	const sourceArgs = [mapshaperBin, sourceFile, '-clip', boundaryFile];
 
 	await run(process.execPath, [
 		...sourceArgs,
@@ -164,7 +272,7 @@ async function loadPeriod(hazardSet, period, tempRoot) {
 		...sourceArgs,
 		'-clean',
 		'-dissolve',
-		hazardSet.classField,
+		hazardSet.classFields ? 'Var' : hazardSet.classField,
 		'-simplify',
 		'10%',
 		'-o',
@@ -178,18 +286,21 @@ async function loadPeriod(hazardSet, period, tempRoot) {
 	const cellFeatures = [];
 
 	for (const feature of cellSource.features) {
+		if (!feature.geometry) continue;
 		cellFeatures.push({
 			type: 'Feature',
-			properties: { Var: getHazardClass(feature.properties, hazardSet.classField) },
+			properties: { Var: getHazardClass(feature.properties, hazardSet) },
 			geometry: feature.geometry
 		});
 	}
 
-	const summaryFeatures = summarySource.features.map((feature) => ({
-		...feature,
-		properties: { Var: getHazardClass(feature.properties, hazardSet.classField) },
-		bbox: bbox(feature.geometry.coordinates)
-	}));
+	const summaryFeatures = summarySource.features
+		.filter((feature) => feature.geometry)
+		.map((feature) => ({
+			...feature,
+			properties: { Var: getHazardClass(feature.properties, hazardSet) },
+			bbox: bbox(feature.geometry.coordinates)
+		}));
 
 	console.log(
 		`${hazardSet.key} ${period.label}: ${cellFeatures.length} cell features, ${summaryFeatures.length} summary features`
@@ -276,11 +387,12 @@ for (const { hazardSet, periods } of loadedHazards) {
 
 				const overlap = intersection(feature.geometry.coordinates, barangayCoordinates);
 				if (overlap.length > 0 && multiPolygonArea(overlap) > 1e-12) {
-					classes.add(className(feature.properties.Var));
+					classes.add(className(hazardSet, feature.properties.Var));
 				}
 			}
 
-			const sortedClasses = ['Low', 'Medium', 'High'].filter((value) => classes.has(value));
+			const classOrder = hazardSet.classLabels ?? ['Low', 'Medium', 'High'];
+			const sortedClasses = classOrder.filter((value) => classes.has(value));
 			summaries[barangay.properties.id][period.key] = {
 				classes: sortedClasses,
 				summary:
@@ -299,7 +411,7 @@ for (const { hazardSet, periods } of loadedHazards) {
 
 	await writeFile(
 		path.join(dataRoot, hazardSet.summaryFile),
-		`${JSON.stringify(summaries, null, '\t')}\n`
+		`${JSON.stringify(summaries, null, 2)}\n`
 	);
 }
 

@@ -1,0 +1,453 @@
+{
+	"PH1705205001": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205002": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205003": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205004": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205005": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205006": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205007": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205008": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205009": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205010": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205011": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205013": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205015": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205016": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205017": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205018": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205019": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205021": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205022": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205023": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205025": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205026": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205027": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205028": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205029": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205030": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter"],
+			"summary": "Inundation depth, < 1 meter"
+		}
+	},
+	"PH1705205031": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205032": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205033": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205034": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter"],
+			"summary": "Inundation depth, < 1 meter"
+		}
+	},
+	"PH1705205035": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter"],
+			"summary": "Inundation depth, < 1 meter"
+		}
+	},
+	"PH1705205036": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205037": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205038": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205068": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205039": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205041": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205042": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205043": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205044": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205045": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205046": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205047": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205048": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205049": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205050": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter"],
+			"summary": "Inundation depth, < 1 meter"
+		}
+	},
+	"PH1705205051": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205052": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205053": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205054": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205058": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205059": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205055": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205056": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205061": {
+		"tsunami": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205012": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205057": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205062": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205063": {
+		"tsunami": {
+			"classes": [
+				"Inundation depth, < 1 meter",
+				"Inundation depth, 1 to < 2 meters",
+				"Inundation depth, 2 to < 3 meters",
+				"Inundation depth, 3 to < 4 meters"
+			],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205064": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter"],
+			"summary": "Inundation depth, < 1 meter"
+		}
+	},
+	"PH1705205065": {
+		"tsunami": {
+			"classes": ["Inundation depth, < 1 meter", "Inundation depth, 1 to < 2 meters"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205066": {
+		"tsunami": {
+			"classes": ["Inundation depth, 2 to < 3 meters", "Inundation depth, 3 to < 4 meters"],
+			"summary": "Mixed"
+		}
+	}
+}
