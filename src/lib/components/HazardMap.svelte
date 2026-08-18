@@ -338,11 +338,18 @@
 						{ selected: false }
 					);
 				}
+				if (mapInstance.getLayer('calapan-barangay-dim')) {
+					mapInstance.setPaintProperty('calapan-barangay-dim', 'fill-opacity', 0);
+				}
 				selectedBarangayId = null;
 				onSelectArea?.(null);
 			};
 
 			const selectBarangay = (properties: BarangayProperties) => {
+				if (selectedBarangayId === properties.id) {
+					clearSelection();
+					return;
+				}
 				if (selectedBarangayId && selectedBarangayId !== properties.id) {
 					mapInstance.setFeatureState(
 						{ source: 'calapan-barangays', id: selectedBarangayId },
@@ -354,6 +361,12 @@
 					{ source: 'calapan-barangays', id: properties.id },
 					{ selected: true }
 				);
+				mapInstance.setPaintProperty('calapan-barangay-dim', 'fill-opacity', [
+					'case',
+					['boolean', ['feature-state', 'selected'], false],
+					0,
+					0.3
+				] as unknown as import('maplibre-gl').PropertyValueSpecification<number>);
 				onSelectArea?.(properties);
 			};
 
@@ -1009,12 +1022,24 @@
 				});
 				mapInstance.addLayer(
 					{
+						id: 'calapan-barangay-dim',
+						type: 'fill',
+						source: 'calapan-barangays',
+						paint: {
+							'fill-color': '#000000',
+							'fill-opacity': 0
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
 						id: 'calapan-barangay-fill',
 						type: 'fill',
 						source: 'calapan-barangays',
 						paint: {
 							'fill-color': '#ff5500',
-							'fill-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 0.35, 0]
+							'fill-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 0, 0]
 						}
 					},
 					firstSymbolLayerId
