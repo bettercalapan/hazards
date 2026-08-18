@@ -41,3 +41,4 @@ The localized hazard vector tiles and barangay summaries are generated with `pnp
 - The storm-surge shapefile metadata includes a 19 July 2021 creation date. This is shown as a creation date, not as a confirmed update date.
 - The pinned PHIVOLCS snapshots do not include source publication dates.
 - Hazard layers are clipped to Calapan City. Current licensing notes are kept beside each dataset metadata object and must be rechecked before redistribution.
+- Local PDRRMO, police, fire, public safety, and provincial hospital contacts are sourced from the Province of Oriental Mindoro contact page and verified on 18 August 2026.

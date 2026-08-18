@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { emergencyContacts, safetyGuidance, type HazardFamily } from './safety';
+import {
+	emergencyContacts,
+	emergencyContactGroups,
+	safetyGuidance,
+	type HazardFamily
+} from './safety';
 
 const hazardFamilies: HazardFamily[] = [
 	'flood',
@@ -34,9 +39,17 @@ describe('emergency contacts', () => {
 
 	it('provides a source for every contact', () => {
 		for (const contact of emergencyContacts) {
+			expect(contact.group).toBeTruthy();
 			expect(contact.label).toBeTruthy();
 			expect(contact.note).toBeTruthy();
 			expect(contact.sourceUrl).toMatch(/^https:\/\//);
+			expect(contact.verifiedAt).toMatch(/^\d{4}-\d{2}-\d{2}$/);
 		}
+		expect(emergencyContacts.some((contact) => contact.group === 'local')).toBe(true);
+		expect(emergencyContactGroups.map((group) => group.key)).toEqual([
+			'immediate',
+			'local',
+			'information'
+		]);
 	});
 });

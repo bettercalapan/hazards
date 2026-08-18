@@ -11,7 +11,12 @@
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
-	import { emergencyContacts, safetyGuidance, type HazardFamily } from '$lib/data/safety';
+	import {
+		emergencyContactGroups,
+		emergencyContacts,
+		safetyGuidance,
+		type HazardFamily
+	} from '$lib/data/safety';
 	import { formatDataDate, freshnessLabel, getFreshnessStatus } from '$lib/data/freshness';
 	import hazardDataManifest from '$lib/data/hazard-data-manifest.json';
 	import { typhoonSourceUrl } from '$lib/data/typhoon';
@@ -437,23 +442,29 @@
 				<div class="card-kicker">Emergency contacts</div>
 				<h2 id="emergency-heading">Get help or official information</h2>
 				<div class="contact-list">
-					{#each emergencyContacts as contact (contact.value)}
-						<div class="contact-row">
-							<div>
-								<strong>{contact.label}</strong>
-								<span>{contact.note}</span>
-							</div>
-							<!-- Telephone links do not pass through SvelteKit routing. -->
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a class="contact-value" href={contact.href}>{contact.value}</a>
+					{#each emergencyContactGroups as group (group.key)}
+						<div class="contact-group">
+							<h3>{group.label}</h3>
+							{#each emergencyContacts.filter((contact) => contact.group === group.key) as contact (contact.value)}
+								<div class="contact-row">
+									<div>
+										<strong>{contact.label}</strong>
+										<span>{contact.note}</span>
+									</div>
+									<!-- Telephone links do not pass through SvelteKit routing. -->
+									<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+									<a class="contact-value" href={contact.href}>{contact.value}</a>
+								</div>
+								<p class="selection-source contact-source">
+									Source:
+									<!-- External source links do not pass through SvelteKit routing. -->
+									<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+									<a href={contact.sourceUrl} target="_blank" rel="noreferrer"
+										>{contact.sourceLabel}</a
+									>. Verified {formatDataDate(contact.verifiedAt)}.
+								</p>
+							{/each}
 						</div>
-						<p class="selection-source contact-source">
-							Source:
-							<!-- External source links do not pass through SvelteKit routing. -->
-							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
-							<a href={contact.sourceUrl} target="_blank" rel="noreferrer">{contact.sourceLabel}</a
-							>.
-						</p>
 					{/each}
 				</div>
 			</section>
@@ -730,6 +741,19 @@
 		display: grid;
 		gap: 0.85rem;
 		margin-top: 1rem;
+	}
+
+	.contact-group {
+		display: grid;
+		gap: 0.55rem;
+	}
+
+	.contact-group h3 {
+		margin: 0;
+		color: var(--fg);
+		font-size: 0.78rem;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
 	}
 
 	.contact-row {

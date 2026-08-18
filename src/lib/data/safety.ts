@@ -72,29 +72,100 @@ export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 };
 
 export type EmergencyContact = {
+	group: EmergencyContactGroup;
 	label: string;
 	value: string;
 	href: string;
 	note: string;
 	sourceLabel: string;
 	sourceUrl: string;
+	verifiedAt: string;
 };
+
+export type EmergencyContactGroup = 'immediate' | 'local' | 'information';
+
+export const emergencyContactGroups: readonly {
+	key: EmergencyContactGroup;
+	label: string;
+}[] = [
+	{ key: 'immediate', label: 'Immediate emergencies' },
+	{ key: 'local', label: 'Local response' },
+	{ key: 'information', label: 'Official information' }
+];
+
+const orientalMindoroContacts = {
+	sourceLabel: 'Province of Oriental Mindoro Contact Us',
+	sourceUrl: 'https://ormindoro.gov.ph/contact-us/',
+	verifiedAt: '2026-08-18'
+} as const;
 
 export const emergencyContacts: readonly EmergencyContact[] = [
 	{
+		group: 'immediate',
 		label: 'National emergency hotline',
 		value: '911',
 		href: 'tel:911',
 		note: 'For urgent police, fire, medical, and rescue emergencies.',
 		sourceLabel: 'Emergency 911 National Office',
-		sourceUrl: 'https://e911.gov.ph/'
+		sourceUrl: 'https://e911.gov.ph/',
+		verifiedAt: '2026-08-18'
 	},
 	{
+		group: 'local',
+		label: 'Oriental Mindoro PDRRMO',
+		value: '0948 146 0382',
+		href: 'tel:+639481460382',
+		note: 'Provincial disaster risk reduction and management office.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'local',
+		label: 'Oriental Mindoro PDRRMO',
+		value: '0920 951 3690',
+		href: 'tel:+639209513690',
+		note: 'Alternate provincial disaster risk reduction and management number.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'local',
+		label: 'Oriental Mindoro Police',
+		value: '(043) 288 1616',
+		href: 'tel:+63432881616',
+		note: 'Provincial police contact listed by the province.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'local',
+		label: 'Oriental Mindoro Fire',
+		value: '(043) 288 5617',
+		href: 'tel:+63432885617',
+		note: 'Provincial fire contact listed by the province.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'local',
+		label: 'Oriental Mindoro Public Safety',
+		value: '(043) 288 1111',
+		href: 'tel:+63432881111',
+		note: 'Provincial public safety contact listed by the province.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'local',
+		label: 'Oriental Mindoro Provincial Hospital',
+		value: '(043) 288 3077',
+		href: 'tel:+63432883077',
+		note: 'Provincial hospital contact listed by the province.',
+		...orientalMindoroContacts
+	},
+	{
+		group: 'information',
 		label: 'PAGASA information line',
 		value: '(02) 8284-0800',
 		href: 'tel:+63282840800',
 		note: 'For official weather, flood, and tropical cyclone information. Use 911 for immediate danger.',
 		sourceLabel: 'PAGASA Contact Us',
-		sourceUrl: 'https://pagasa.dost.gov.ph/contact-us'
+		sourceUrl: 'https://pagasa.dost.gov.ph/contact-us',
+		verifiedAt: '2026-08-18'
 	}
 ];
