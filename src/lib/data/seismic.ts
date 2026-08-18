@@ -66,6 +66,7 @@ export const seismicHazards = [
 export const seismicMetadata = {
 	source: 'DOST-PHIVOLCS, GeoRiskPH HazardHunter',
 	sourceUrl: 'https://hazardhunter.georisk.gov.ph/map',
+	sourceDate: null,
 	classification: 'PHIVOLCS feature layers, clipped to Calapan City.',
 	caveat:
 		'These are official hazard-proneness layers, not a site-specific structural assessment or a live warning.'

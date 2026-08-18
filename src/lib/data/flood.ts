@@ -57,6 +57,7 @@ export const floodHazardMetadata = {
 	cellSizeMeters: 25,
 	source: 'UP Resilience Institute NOAH Center',
 	sourceUrl: 'https://noah.up.edu.ph/know-your-hazards',
+	sourceDate: null,
 	classification: 'Low, Medium, and High values are provided by the source dataset.',
 	caveat: 'This is modeled flood hazard information, not a guarantee of future flooding.'
 } as const;

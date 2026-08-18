@@ -11,6 +11,7 @@
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
 	import { emergencyContacts, safetyGuidance, type HazardFamily } from '$lib/data/safety';
+	import { formatDataDate, freshnessLabel, getFreshnessStatus } from '$lib/data/freshness';
 	import { typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
@@ -26,6 +27,30 @@
 	let activeHazardFamily = $state<HazardFamily>('flood');
 	let barangayMatches = $derived(searchCalapanBarangays(barangayQuery).slice(0, 8));
 	let activeSafetyGuidance = $derived(safetyGuidance[activeHazardFamily]);
+	const hazardMetadataByFamily = {
+		flood: floodHazardMetadata,
+		'storm-surge': stormSurgeMetadata,
+		landslide: landslideMetadata,
+		earthquake: seismicMetadata
+	} as const;
+	let activeHazardMetadata = $derived(
+		activeHazardFamily === 'typhoon'
+			? null
+			: hazardMetadataByFamily[activeHazardFamily as Exclude<HazardFamily, 'typhoon'>]
+	);
+	let activeHazardFreshness = $derived(
+		activeHazardMetadata ? getFreshnessStatus(activeHazardMetadata.sourceDate) : 'unknown'
+	);
+	let alertsFreshness = $derived(
+		data.alertFeedStatus === 'unavailable'
+			? ('unavailable' as const)
+			: getFreshnessStatus(data.alertsFetchedAt)
+	);
+	let typhoonFreshness = $derived(
+		data.typhoonTrackStatus === 'unavailable'
+			? ('unavailable' as const)
+			: getFreshnessStatus(data.typhoonFetchedAt)
+	);
 
 	function handleAreaSelect(area: BarangayProperties | null) {
 		selectedArea = area;
@@ -339,6 +364,39 @@
 						wind speed or damage.
 					</p>
 				{/if}
+				{#if activeHazardFamily === 'typhoon'}
+					<p class="data-freshness">
+						<span
+							class="freshness-badge"
+							class:stale={typhoonFreshness === 'stale'}
+							class:unknown={typhoonFreshness === 'unknown'}
+							class:unavailable={typhoonFreshness === 'unavailable'}
+						>
+							{typhoonFreshness === 'unavailable'
+								? 'Unavailable'
+								: freshnessLabel(typhoonFreshness)}
+						</span>
+						{#if typhoonFreshness === 'unavailable'}
+							PANaHON track feed could not be checked.
+						{:else}
+							Checked {formatDataDate(data.typhoonFetchedAt)}.
+						{/if}
+					</p>
+				{:else}
+					<p class="data-freshness">
+						<span
+							class="freshness-badge"
+							class:stale={activeHazardFreshness === 'stale'}
+							class:unknown={activeHazardFreshness === 'unknown'}
+						>
+							{freshnessLabel(activeHazardFreshness)}
+						</span>
+						Source date: {formatDataDate(activeHazardMetadata?.sourceDate ?? null)}.
+						{#if activeHazardFreshness === 'stale'}
+							This dataset may need review.
+						{/if}
+					</p>
+				{/if}
 			</section>
 
 			<section class="info-card safety-card" aria-labelledby="safety-heading">
@@ -446,6 +504,18 @@
 							classifications.
 						</p>
 					{/if}
+					{#if activeHazardFamily !== 'typhoon'}
+						<p class="data-freshness selection-freshness">
+							<span
+								class="freshness-badge"
+								class:stale={activeHazardFreshness === 'stale'}
+								class:unknown={activeHazardFreshness === 'unknown'}
+							>
+								{freshnessLabel(activeHazardFreshness)}
+							</span>
+							Source date: {formatDataDate(activeHazardMetadata?.sourceDate ?? null)}.
+						</p>
+					{/if}
 				{:else}
 					<div class="card-kicker">Area details</div>
 					<h2>Select an area</h2>
@@ -459,8 +529,14 @@
 						<div class="card-kicker">Official alerts</div>
 						<h2>Active advisories</h2>
 					</div>
-					<span class:unavailable={data.alertFeedStatus === 'unavailable'} class="feed-status">
-						{data.alertFeedStatus === 'unavailable' ? 'Unavailable' : 'PAGASA'}
+					<span
+						class="feed-status"
+						class:stale={alertsFreshness === 'stale'}
+						class:unavailable={alertsFreshness === 'unavailable'}
+					>
+						{alertsFreshness === 'unavailable'
+							? 'Unavailable'
+							: `PAGASA · ${freshnessLabel(alertsFreshness)}`}
 					</span>
 				</div>
 
@@ -508,7 +584,12 @@
 					Source:
 					<a href="https://publicalert.pagasa.dost.gov.ph/feeds/" target="_blank" rel="noreferrer"
 						>PAGASA Public Alert CAP</a
-					>. Checked {formatAlertDate(data.alertsFetchedAt)}.
+					>.
+					{#if data.alertFeedStatus === 'unavailable'}
+						The feed could not be checked.
+					{:else}
+						Checked {formatAlertDate(data.alertsFetchedAt)}.
+					{/if}
 				</p>
 			</section>
 
@@ -862,6 +943,51 @@
 		font-size: 0.8rem !important;
 	}
 
+	.data-freshness {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		margin-top: 1rem;
+		color: var(--fg-secondary);
+		font-size: 0.78rem !important;
+		line-height: 1.4;
+	}
+
+	.freshness-badge {
+		padding: 0.25rem 0.45rem;
+		border-radius: 999px;
+		background: #e5f3e9;
+		color: #2c7047;
+		font-size: 0.65rem;
+		font-weight: 800;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+	}
+
+	.freshness-badge.stale,
+	.feed-status.stale {
+		background: #fff0d6;
+		color: #8a5a16;
+	}
+
+	.freshness-badge.unknown {
+		background: #eef1f0;
+		color: #61716d;
+	}
+
+	.freshness-badge.unavailable,
+	.feed-status.unavailable {
+		background: #fce8e6;
+		color: #9d3a32;
+	}
+
+	.selection-freshness {
+		margin-top: 1rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid var(--gray);
+	}
+
 	.card-heading {
 		display: flex;
 		align-items: start;
@@ -882,11 +1008,6 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-	}
-
-	.feed-status.unavailable {
-		background: #fce8e6;
-		color: #9d3a32;
 	}
 
 	.alert-list {
