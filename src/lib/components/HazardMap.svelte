@@ -10,7 +10,7 @@
 		calapanBarangays,
 		type BarangayProperties
 	} from '$lib/data/barangays';
-	import { calapanFloodHazardRaster } from '$lib/data/flood';
+	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -186,11 +186,20 @@
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>('3d');
 	let mapReady = $state(false);
+	let enabledFloodPeriods = $state<ReturnPeriod[]>([5]);
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
+	let updateFloodVisibility: (period: ReturnPeriod, visible: boolean) => void = () => {};
 
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
 		updateMapCamera(nextMode);
+	}
+
+	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
+		enabledFloodPeriods = enabled
+			? [...new Set([...enabledFloodPeriods, period])]
+			: enabledFloodPeriods.filter((value) => value !== period);
+		updateFloodVisibility(period, enabled);
 	}
 
 	onMount(() => {
@@ -385,23 +394,49 @@
 					},
 					firstSymbolLayerId
 				);
-				mapInstance.addSource('calapan-flood-hazard', {
-					type: 'image',
-					url: calapanFloodHazardRaster.url,
-					coordinates: calapanFloodHazardRaster.coordinates
-				});
-				mapInstance.addLayer(
-					{
-						id: 'calapan-flood-hazard',
-						type: 'raster',
-						source: 'calapan-flood-hazard',
-						paint: {
-							'raster-opacity': 0.9,
-							'raster-resampling': 'nearest'
-						}
-					},
-					firstSymbolLayerId
-				);
+				for (const period of [...floodHazardPeriods].reverse()) {
+					const sourceId = `calapan-flood-hazard-${period.key}`;
+					mapInstance.addSource(sourceId, {
+						type: 'vector',
+						tiles: [period.tilePath],
+						minzoom: 10,
+						maxzoom: 15,
+						bounds: [121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054]
+					});
+					mapInstance.addLayer(
+						{
+							id: sourceId,
+							type: 'fill',
+							source: sourceId,
+							'source-layer': 'flood',
+							layout: {
+								visibility: enabledFloodPeriods.includes(period.key) ? 'visible' : 'none'
+							},
+							paint: {
+								'fill-color': [
+									'match',
+									['get', 'Var'],
+									1,
+									period.colors.Low,
+									2,
+									period.colors.Medium,
+									3,
+									period.colors.High,
+									'#000000'
+								] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+								'fill-opacity': 0.85
+							}
+						},
+						firstSymbolLayerId
+					);
+				}
+
+				updateFloodVisibility = (period, visible) => {
+					const layerId = `calapan-flood-hazard-${period}`;
+					if (mapInstance.getLayer(layerId)) {
+						mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+					}
+				};
 				mapInstance.addLayer(
 					{
 						id: 'calapan-city-mask-overlay',
@@ -531,24 +566,39 @@
 
 <div class="map-shell">
 	<div class="map-toolbar" aria-label="Map controls">
-		<span class="toolbar-label">View</span>
-		<div class="view-toggle" role="group" aria-label="Map view mode">
-			<button
-				class:active={viewMode === '3d'}
-				aria-pressed={viewMode === '3d'}
-				type="button"
-				onclick={() => setViewMode('3d')}
-			>
-				3D
-			</button>
-			<button
-				class:active={viewMode === '2d'}
-				aria-pressed={viewMode === '2d'}
-				type="button"
-				onclick={() => setViewMode('2d')}
-			>
-				2D
-			</button>
+		<div class="map-control-groups">
+			<div class="view-toggle" role="group" aria-label="Map view mode">
+				<button
+					class:active={viewMode === '3d'}
+					aria-pressed={viewMode === '3d'}
+					type="button"
+					onclick={() => setViewMode('3d')}
+				>
+					3D
+				</button>
+				<button
+					class:active={viewMode === '2d'}
+					aria-pressed={viewMode === '2d'}
+					type="button"
+					onclick={() => setViewMode('2d')}
+				>
+					2D
+				</button>
+			</div>
+
+			<div class="flood-toggle" role="group" aria-label="Flood return period layers">
+				{#each floodHazardPeriods as period (period.key)}
+					<label class:active={enabledFloodPeriods.includes(period.key)}>
+						<input
+							type="checkbox"
+							checked={enabledFloodPeriods.includes(period.key)}
+							onchange={(event) => setFloodPeriodEnabled(period.key, event.currentTarget.checked)}
+						/>
+						<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}></span>
+						<span>{period.shortName}</span>
+					</label>
+				{/each}
+			</div>
 		</div>
 	</div>
 
@@ -559,9 +609,7 @@
 		{mapReady ? 'Map ready' : 'Loading map'}
 	</div>
 
-	<div class="boundary-note">
-		NOAH 25-year flood hazard classes. 3D elevation uses Mapzen Terrain Tiles.
-	</div>
+	<div class="boundary-note">NOAH flood hazard layers. 3D elevation uses Mapzen Terrain Tiles.</div>
 </div>
 
 <style>
@@ -605,13 +653,11 @@
 		backdrop-filter: blur(12px);
 	}
 
-	.toolbar-label {
-		padding-left: 0.55rem;
-		color: #476563;
-		font-size: 0.68rem;
-		font-weight: 700;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
+	.map-control-groups {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.3rem;
 	}
 
 	.view-toggle {
@@ -634,6 +680,50 @@
 	.view-toggle button.active {
 		background: #173e3b;
 		color: #fffdf7;
+	}
+
+	.flood-toggle {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.2rem;
+	}
+
+	.flood-toggle label {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.35rem;
+		border-radius: 999px;
+		padding: 0.45rem 0.6rem;
+		color: #476563;
+		font-size: 0.72rem;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.flood-toggle label.active {
+		background: rgb(23 62 59 / 10%);
+		color: #173e3b;
+	}
+
+	.flood-toggle input {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		white-space: nowrap;
+	}
+
+	.flood-toggle label:has(input:focus-visible) {
+		outline: 2px solid #d18f38;
+		outline-offset: 2px;
+	}
+
+	.flood-toggle-swatch {
+		width: 0.65rem;
+		height: 0.65rem;
+		border: 1px solid rgb(23 62 59 / 20%);
+		border-radius: 50%;
 	}
 
 	.map-status {
@@ -688,6 +778,7 @@
 			top: 0.75rem;
 			left: 0.75rem;
 			max-width: calc(100% - 1.5rem);
+			border-radius: 0.85rem;
 		}
 
 		.map-status {

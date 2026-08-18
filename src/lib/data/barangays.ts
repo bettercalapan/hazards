@@ -1,7 +1,10 @@
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
-import type { FloodHazardClass } from './flood';
+import type { FloodHazardClass, FloodHazardSummary, ReturnPeriod } from './flood';
 import barangayData from './calapan-barangays.json';
 import barangayLabelPointData from './calapan-barangay-label-points.json';
+import floodSummaryData from './calapan-flood-summaries.json';
+
+type FloodSummaryData = Record<string, Record<ReturnPeriod, FloodHazardSummary>>;
 
 export type BarangayProperties = {
 	id: string;
@@ -9,13 +12,29 @@ export type BarangayProperties = {
 	sourceName: string;
 	floodHazardClasses: FloodHazardClass[];
 	floodHazardSummary: FloodHazardClass | 'Mixed' | 'NoData';
+	floodHazards: Record<ReturnPeriod, FloodHazardSummary>;
 };
 
-export const calapanBarangays = barangayData as FeatureCollection<MultiPolygon, BarangayProperties>;
+const floodSummaries = floodSummaryData as FloodSummaryData;
+const rawBarangays = barangayData as FeatureCollection<
+	MultiPolygon,
+	Omit<BarangayProperties, 'floodHazards'>
+>;
+
+export const calapanBarangays = {
+	...rawBarangays,
+	features: rawBarangays.features.map((feature) => ({
+		...feature,
+		properties: {
+			...feature.properties,
+			floodHazards: floodSummaries[feature.properties.id]
+		}
+	}))
+} as FeatureCollection<MultiPolygon, BarangayProperties>;
 
 export const calapanBarangayLabelPoints = barangayLabelPointData as FeatureCollection<
 	Point,
-	BarangayProperties
+	Pick<BarangayProperties, 'id' | 'name' | 'sourceName'>
 >;
 
 export const calapanBarangayAttribution =

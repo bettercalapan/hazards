@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
-	import { floodHazardMetadata } from '$lib/data/flood';
+	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
 	import { formatAlertDate } from '$lib/data/alerts';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
@@ -50,18 +50,35 @@
 			<section class="info-card active-layer">
 				<div class="card-kicker">
 					<span class="layer-dot"></span>
-					Active layer
+					Flood layers
 				</div>
-				<h2>{floodHazardMetadata.name}</h2>
+				<h2>Flood hazard periods</h2>
 				<p>
-					Source-provided flood hazard classes for a {floodHazardMetadata.returnPeriodYears}-year
-					return period.
+					Source-provided flood hazard classes for three return periods. Use the map controls to
+					stack them. Only the 5-year period is enabled by default.
 				</p>
-				<div class="legend" aria-label="Map legend">
-					<div><span class="legend-swatch low"></span>Low</div>
-					<div><span class="legend-swatch medium"></span>Medium</div>
-					<div><span class="legend-swatch high"></span>High</div>
-					<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
+				<div class="period-legends" aria-label="Flood hazard legends">
+					{#each floodHazardPeriods as period (period.key)}
+						<div class="period-legend">
+							<strong>{period.shortName}</strong>
+							<div class="legend">
+								<div>
+									<span class="legend-swatch" style={`background: ${period.colors.Low}`}></span>Low
+								</div>
+								<div>
+									<span class="legend-swatch" style={`background: ${period.colors.Medium}`}
+									></span>Medium
+								</div>
+								<div>
+									<span class="legend-swatch" style={`background: ${period.colors.High}`}
+									></span>High
+								</div>
+							</div>
+						</div>
+					{/each}
+					<div class="legend boundary-legend">
+						<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
+					</div>
 				</div>
 				<p class="selection-source">
 					Source: {floodHazardMetadata.source}. {floodHazardMetadata.classification}
@@ -75,14 +92,17 @@
 					<p class="selection-source">
 						Source name: {selectedArea.sourceName}. Administrative boundary data.
 					</p>
-					<p class="selection-source">
-						25-year flood hazard: {selectedArea.floodHazardSummary}.
-					</p>
-					{#if selectedArea.floodHazardClasses.length > 0}
+					{#each floodHazardPeriods as period (period.key)}
+						{@const hazard = selectedArea.floodHazards[period.key]}
 						<p class="selection-source">
-							Classes mapped in this barangay: {selectedArea.floodHazardClasses.join(', ')}.
+							{period.shortName} flood hazard: {hazard.summary}.
 						</p>
-					{/if}
+						{#if hazard.classes.length > 0}
+							<p class="selection-source">
+								Classes mapped: {hazard.classes.join(', ')}.
+							</p>
+						{/if}
+					{/each}
 				{:else}
 					<div class="card-kicker">Area details</div>
 					<h2>Select an area</h2>
@@ -289,9 +309,27 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.5rem;
-		margin-top: 1.5rem;
 		color: var(--fg-secondary);
 		font-size: 0.85rem;
+	}
+
+	.period-legends {
+		display: grid;
+		gap: 0.9rem;
+		margin-top: 1.5rem;
+	}
+
+	.period-legend strong {
+		display: block;
+		margin-bottom: 0.45rem;
+		color: var(--fg);
+		font-size: 0.82rem;
+	}
+
+	.period-legend .legend {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.45rem;
 	}
 
 	.legend div {
@@ -310,16 +348,8 @@
 		background: var(--accent);
 	}
 
-	.legend-swatch.low {
-		background: #f2c94c;
-	}
-
-	.legend-swatch.medium {
-		background: #f2994a;
-	}
-
-	.legend-swatch.high {
-		background: #eb5757;
+	.boundary-legend {
+		margin-top: 0.2rem;
 	}
 
 	.selection-source {
