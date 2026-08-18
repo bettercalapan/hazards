@@ -17,6 +17,13 @@
 	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
+	import {
+		criticalFacilitiesAttribution,
+		criticalFacilityColors,
+		criticalFacilitySources,
+		emptyCriticalFacilities,
+		type CriticalFacilityCollection
+	} from '$lib/data/critical-facilities';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
@@ -35,6 +42,35 @@
 		onHazardFamilyChange
 	}: Props = $props();
 
+	let criticalFacilitiesEnabled = $state(false);
+	let criticalFacilitiesState = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
+	let loadCriticalFacilities: () => void = () => {};
+	let setCriticalFacilitiesVisibility: (visible: boolean) => void = () => {};
+	const criticalFacilityColorExpression = [
+		'match',
+		['get', 'category'],
+		'police',
+		criticalFacilityColors.police,
+		'fire',
+		criticalFacilityColors.fire,
+		'hospital',
+		criticalFacilityColors.hospital,
+		'school',
+		criticalFacilityColors.school,
+		'#249b61'
+	] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
+
+	function toggleCriticalFacilities() {
+		criticalFacilitiesEnabled = !criticalFacilitiesEnabled;
+		setCriticalFacilitiesVisibility(criticalFacilitiesEnabled);
+		if (
+			criticalFacilitiesEnabled &&
+			(criticalFacilitiesState === 'idle' || criticalFacilitiesState === 'error')
+		) {
+			loadCriticalFacilities();
+		}
+	}
+
 	function getBarangayProperties(object: unknown): BarangayProperties | null {
 		if (!object || typeof object !== 'object') return null;
 		const properties = object as Partial<BarangayProperties>;
@@ -48,6 +84,15 @@
 		}
 
 		return properties as BarangayProperties;
+	}
+
+	function escapeHtml(value: string): string {
+		return value.replace(
+			/[&<>'"]/g,
+			(character) =>
+				({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] ??
+				character
+		);
 	}
 
 	function getPanBounds(map: import('maplibre-gl').Map): MapBounds {
@@ -259,9 +304,12 @@
 		let map: import('maplibre-gl').Map | undefined;
 		let selectedBarangayId: string | null = null;
 		let terrainReady = false;
+		let facilityPulseFrame: number | null = null;
+		let facilityPopup: import('maplibre-gl').Popup | null = null;
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const initialize = async () => {
-			const { setWorkerUrl, Map: MapLibreMap } = await import('maplibre-gl');
+			const { setWorkerUrl, Map: MapLibreMap, Popup } = await import('maplibre-gl');
 
 			if (disposed) return;
 			setWorkerUrl(workerUrl);
@@ -785,6 +833,170 @@
 					},
 					firstSymbolLayerId
 				);
+				const criticalFacilityLayerIds = [
+					'critical-facilities-clusters',
+					'critical-facilities-cluster-count',
+					'critical-facilities-pulse',
+					'critical-facilities-points',
+					'critical-facilities-labels'
+				];
+				mapInstance.addSource('calapan-critical-facilities', {
+					type: 'geojson',
+					data: emptyCriticalFacilities,
+					cluster: true,
+					clusterMaxZoom: 12,
+					clusterMinPoints: 3,
+					clusterRadius: 48
+				});
+				mapInstance.addLayer(
+					{
+						id: 'critical-facilities-clusters',
+						type: 'circle',
+						source: 'calapan-critical-facilities',
+						filter: ['has', 'point_count'],
+						layout: { visibility: 'none' },
+						paint: {
+							'circle-color': '#173e3b',
+							'circle-radius': ['step', ['get', 'point_count'], 3, 14, 10, 18, 25, 23],
+							'circle-opacity': 0.9,
+							'circle-stroke-color': '#f7fff9',
+							'circle-stroke-width': 1.5
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'critical-facilities-cluster-count',
+						type: 'symbol',
+						source: 'calapan-critical-facilities',
+						filter: ['has', 'point_count'],
+						layout: {
+							visibility: 'none',
+							'text-field': ['get', 'point_count_abbreviated'],
+							'text-size': 10,
+							'text-allow-overlap': true
+						},
+						paint: { 'text-color': '#ffffff' }
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'critical-facilities-pulse',
+						type: 'circle',
+						source: 'calapan-critical-facilities',
+						filter: ['!', ['has', 'point_count']],
+						layout: { visibility: 'none' },
+						paint: {
+							'circle-radius': 9,
+							'circle-color': criticalFacilityColorExpression,
+							'circle-opacity': 0.22,
+							'circle-blur': 0.8
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'critical-facilities-points',
+						type: 'circle',
+						source: 'calapan-critical-facilities',
+						filter: ['!', ['has', 'point_count']],
+						layout: { visibility: 'none' },
+						paint: {
+							'circle-radius': 5,
+							'circle-color': criticalFacilityColorExpression,
+							'circle-opacity': 1,
+							'circle-stroke-color': '#f7fff9',
+							'circle-stroke-width': 1.5
+						}
+					},
+					firstSymbolLayerId
+				);
+				mapInstance.addLayer(
+					{
+						id: 'critical-facilities-labels',
+						type: 'symbol',
+						source: 'calapan-critical-facilities',
+						minzoom: 12,
+						filter: ['!', ['has', 'point_count']],
+						layout: {
+							visibility: 'none',
+							'text-field': ['coalesce', ['get', 'name'], ['get', 'Name']],
+							'text-size': 10,
+							'text-anchor': 'top',
+							'text-offset': [0, 1.25],
+							'text-optional': true,
+							'text-allow-overlap': false
+						},
+						paint: {
+							'text-color': criticalFacilityColorExpression,
+							'text-halo-color': '#f7fff9',
+							'text-halo-width': 1.25
+						}
+					},
+					firstSymbolLayerId
+				);
+
+				const stopFacilityPulse = () => {
+					if (facilityPulseFrame !== null) cancelAnimationFrame(facilityPulseFrame);
+					facilityPulseFrame = null;
+				};
+				const startFacilityPulse = () => {
+					if (reducedMotion || facilityPulseFrame !== null) return;
+					const animate = (time: number) => {
+						if (!criticalFacilitiesEnabled || !mapInstance.getLayer('critical-facilities-pulse')) {
+							stopFacilityPulse();
+							return;
+						}
+						const wave = (Math.sin(time / 700) + 1) / 2;
+						mapInstance.setPaintProperty(
+							'critical-facilities-pulse',
+							'circle-radius',
+							8 + wave * 8
+						);
+						mapInstance.setPaintProperty(
+							'critical-facilities-pulse',
+							'circle-opacity',
+							0.3 - wave * 0.18
+						);
+						facilityPulseFrame = requestAnimationFrame(animate);
+					};
+					facilityPulseFrame = requestAnimationFrame(animate);
+				};
+				setCriticalFacilitiesVisibility = (visible) => {
+					for (const layerId of criticalFacilityLayerIds) {
+						if (mapInstance.getLayer(layerId)) {
+							mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+						}
+					}
+					if (visible) startFacilityPulse();
+					else stopFacilityPulse();
+				};
+
+				let facilityRequest: Promise<void> | null = null;
+				loadCriticalFacilities = () => {
+					if (facilityRequest) return;
+					criticalFacilitiesState = 'loading';
+					facilityRequest = fetch('/api/critical-facilities')
+						.then(async (response) => {
+							if (!response.ok) throw new Error(`Critical facilities returned ${response.status}`);
+							const data = (await response.json()) as CriticalFacilityCollection;
+							const source = mapInstance.getSource('calapan-critical-facilities') as
+								import('maplibre-gl').GeoJSONSource | undefined;
+							if (!source) throw new Error('Critical facility map source is unavailable');
+							source.setData(data);
+							criticalFacilitiesState = 'ready';
+						})
+						.catch(() => {
+							criticalFacilitiesState = 'error';
+						})
+						.finally(() => {
+							facilityRequest = null;
+						});
+				};
+
 				mapInstance.addSource('calapan-barangays', {
 					type: 'geojson',
 					data: calapanBarangays,
@@ -845,6 +1057,9 @@
 					}
 				});
 				restrictSymbolLayers(mapInstance);
+				for (const layerId of criticalFacilityLayerIds) {
+					mapInstance.moveLayer(layerId);
+				}
 
 				mapInstance.on('click', 'calapan-barangay-fill', (event) => {
 					const properties = getBarangayProperties(event.features?.[0]?.properties);
@@ -864,6 +1079,40 @@
 				mapInstance.on('mouseleave', 'calapan-barangay-fill', () => {
 					mapInstance.getCanvas().style.cursor = '';
 				});
+				mapInstance.on('click', 'critical-facilities-clusters', (event) => {
+					const cluster = event.features?.[0];
+					const clusterId = Number(cluster?.properties?.cluster_id);
+					if (!Number.isFinite(clusterId)) return;
+					const source = mapInstance.getSource('calapan-critical-facilities') as
+						import('maplibre-gl').GeoJSONSource | undefined;
+					if (!source) return;
+					void source
+						.getClusterExpansionZoom(clusterId)
+						.then((zoom) => mapInstance.easeTo({ center: event.lngLat, zoom }))
+						.catch(() => {});
+				});
+				mapInstance.on('click', 'critical-facilities-points', (event) => {
+					const properties = event.features?.[0]?.properties as Record<string, unknown> | undefined;
+					if (!properties) return;
+					const name = typeof properties.name === 'string' ? properties.name : 'Unnamed facility';
+					const category =
+						typeof properties.categoryLabel === 'string'
+							? properties.categoryLabel
+							: 'Critical facility';
+					facilityPopup?.remove();
+					facilityPopup = new Popup({ closeButton: true, closeOnClick: true, offset: 12 })
+						.setLngLat(event.lngLat)
+						.setHTML(`<strong>${escapeHtml(name)}</strong><small>${escapeHtml(category)}</small>`)
+						.addTo(mapInstance);
+				});
+				for (const layerId of ['critical-facilities-clusters', 'critical-facilities-points']) {
+					mapInstance.on('mouseenter', layerId, () => {
+						mapInstance.getCanvas().style.cursor = 'pointer';
+					});
+					mapInstance.on('mouseleave', layerId, () => {
+						mapInstance.getCanvas().style.cursor = '';
+					});
+				}
 
 				mapInstance.fitBounds(cityBounds, {
 					padding: 32,
@@ -882,6 +1131,10 @@
 		return () => {
 			disposed = true;
 			updateMapCamera = () => {};
+			setCriticalFacilitiesVisibility = () => {};
+			loadCriticalFacilities = () => {};
+			if (facilityPulseFrame !== null) cancelAnimationFrame(facilityPulseFrame);
+			facilityPopup?.remove();
 			map?.remove();
 		};
 	});
@@ -1034,24 +1287,57 @@
 
 	<div bind:this={mapElement} class="map" aria-label="Interactive map of Calapan City"></div>
 
-	<div class="map-status" class:ready={mapReady && !loadingHazardFamily} aria-live="polite">
-		<span class="status-dot"></span>
-		{#if !mapReady}
-			Loading map
-		{:else if loadingHazardFamily === 'flood'}
-			Loading flood tiles
-		{:else if loadingHazardFamily === 'storm-surge'}
-			Loading storm-surge tiles
-		{:else if loadingHazardFamily === 'landslide'}
-			Loading landslide tiles
-		{:else if loadingHazardFamily === 'earthquake'}
-			Loading earthquake tiles
-		{:else if loadingHazardFamily === 'typhoon'}
-			Loading typhoon track
-		{:else}
-			Map ready
-		{/if}
-	</div>
+	{#if !mapReady || loadingHazardFamily}
+		<div class="map-status" aria-live="polite">
+			<span class="status-dot"></span>
+			{#if !mapReady}
+				Loading map
+			{:else if loadingHazardFamily === 'flood'}
+				Loading flood tiles
+			{:else if loadingHazardFamily === 'storm-surge'}
+				Loading storm-surge tiles
+			{:else if loadingHazardFamily === 'landslide'}
+				Loading landslide tiles
+			{:else if loadingHazardFamily === 'earthquake'}
+				Loading earthquake tiles
+			{:else}
+				Loading typhoon track
+			{/if}
+		</div>
+	{:else}
+		<button
+			class="facility-toggle"
+			class:active={criticalFacilitiesEnabled}
+			class:error={criticalFacilitiesState === 'error'}
+			aria-pressed={criticalFacilitiesEnabled}
+			aria-busy={criticalFacilitiesState === 'loading'}
+			type="button"
+			onclick={toggleCriticalFacilities}
+		>
+			<span class="facility-toggle-dot"></span>
+			<span>
+				{criticalFacilitiesState === 'loading'
+					? 'Loading facilities'
+					: criticalFacilitiesState === 'error'
+						? 'Facilities unavailable'
+						: 'Critical facilities'}
+			</span>
+		</button>
+	{/if}
+
+	{#if criticalFacilitiesEnabled}
+		<div class="facility-legend" aria-label="Critical facility colors">
+			{#each criticalFacilitySources as facility (facility.category)}
+				<div>
+					<span
+						class="facility-legend-swatch"
+						style={`background: ${criticalFacilityColors[facility.category]}`}
+					></span>
+					{facility.label}
+				</div>
+			{/each}
+		</div>
+	{/if}
 
 	<div class="boundary-note">
 		{#if activeHazardFamily === 'earthquake'}
@@ -1066,6 +1352,9 @@
 					: 'landslide hazard'} layers.
 		{/if}
 		3D elevation uses Mapzen Terrain Tiles.
+		{#if criticalFacilitiesEnabled}
+			<br />{criticalFacilitiesAttribution}
+		{/if}
 	</div>
 </div>
 
@@ -1089,6 +1378,8 @@
 
 	.map-toolbar,
 	.map-status,
+	.facility-toggle,
+	.facility-legend,
 	.boundary-note {
 		position: absolute;
 		z-index: 2;
@@ -1230,8 +1521,72 @@
 		background: #d18f38;
 	}
 
-	.map-status.ready .status-dot {
-		background: #3c9276;
+	.facility-toggle {
+		top: 1rem;
+		right: 1rem;
+		display: flex;
+		align-items: center;
+		gap: 0.45rem;
+		border: 1px solid rgb(46 157 104 / 35%);
+		padding: 0.55rem 0.75rem;
+		border-radius: 999px;
+		background: rgb(250 248 242 / 92%);
+		color: #476563;
+		font: inherit;
+		font-size: 0.72rem;
+		font-weight: 700;
+		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
+		backdrop-filter: blur(12px);
+		cursor: pointer;
+	}
+
+	.facility-toggle.active {
+		background: #e7f6ed;
+		color: #145a3c;
+	}
+
+	.facility-toggle.error {
+		border-color: rgb(190 77 77 / 35%);
+		color: #9a3d3d;
+	}
+
+	.facility-toggle-dot {
+		width: 0.55rem;
+		height: 0.55rem;
+		border: 2px solid #249b61;
+		border-radius: 50%;
+		background: #35c978;
+		box-shadow: 0 0 0 3px rgb(53 201 120 / 18%);
+	}
+
+	.facility-legend {
+		top: 3.5rem;
+		right: 1rem;
+		display: grid;
+		gap: 0.35rem;
+		padding: 0.55rem 0.7rem;
+		border: 1px solid rgb(255 255 255 / 65%);
+		border-radius: 0.65rem;
+		background: rgb(250 248 242 / 92%);
+		color: #476563;
+		font-size: 0.68rem;
+		font-weight: 700;
+		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
+		backdrop-filter: blur(12px);
+	}
+
+	.facility-legend div {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+	}
+
+	.facility-legend-swatch {
+		width: 0.6rem;
+		height: 0.6rem;
+		border: 1px solid rgb(255 255 255 / 90%);
+		border-radius: 50%;
+		box-shadow: 0 0 0 1px rgb(23 62 59 / 18%);
 	}
 
 	.boundary-note {
@@ -1266,6 +1621,18 @@
 			top: auto;
 			right: 0.75rem;
 			bottom: 0.75rem;
+		}
+
+		.facility-toggle {
+			top: auto;
+			right: 0.75rem;
+			bottom: 0.75rem;
+		}
+
+		.facility-legend {
+			top: auto;
+			right: 0.75rem;
+			bottom: 3.7rem;
 		}
 
 		.boundary-note {
