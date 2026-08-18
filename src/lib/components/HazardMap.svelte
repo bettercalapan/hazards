@@ -303,6 +303,11 @@
 		transitionHazardFamily(nextFamily);
 	}
 
+	function hazardFamilyLabel(family: HazardFamily): string {
+		if (family === 'storm-surge') return 'Storm surge';
+		return family.charAt(0).toUpperCase() + family.slice(1);
+	}
+
 	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
 		enabledFloodPeriods = enabled
 			? [...new Set([...enabledFloodPeriods, period])]
@@ -771,7 +776,21 @@
 							if (!mapInstance.getLayer(layerId)) continue;
 							mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
 							if (layerId === 'calapan-typhoon-grid') {
-								mapInstance.setPaintProperty(layerId, 'fill-opacity', visible ? opacity : 0.72);
+								mapInstance.setPaintProperty(
+									layerId,
+									'fill-opacity',
+									visible && opacity > 0
+										? ([
+												'interpolate',
+												['linear'],
+												['get', 'proximity'],
+												1,
+												0.18,
+												4,
+												0.78
+											] as unknown as import('maplibre-gl').PropertyValueSpecification<number>)
+										: 0
+								);
 							}
 						}
 						return;
@@ -1221,145 +1240,165 @@
 <div class="map-shell">
 	<div class="map-toolbar" aria-label="Map controls">
 		<div class="map-control-groups">
-			<div class="view-toggle" role="group" aria-label="Map view mode">
-				<button
-					class:active={viewMode === '3d'}
-					aria-pressed={viewMode === '3d'}
-					type="button"
-					onclick={() => setViewMode('3d')}
-				>
-					3D
-				</button>
-				<button
-					class:active={viewMode === '2d'}
-					aria-pressed={viewMode === '2d'}
-					type="button"
-					onclick={() => setViewMode('2d')}
-				>
-					2D
-				</button>
+			<div class="control-header">
+				<div class="control-heading">
+					<span class="control-kicker">Map view</span>
+					<strong>Explore Calapan</strong>
+				</div>
+				<div class="view-toggle" role="group" aria-label="Map view mode">
+					<button
+						class:active={viewMode === '3d'}
+						aria-pressed={viewMode === '3d'}
+						type="button"
+						onclick={() => setViewMode('3d')}
+					>
+						3D
+					</button>
+					<button
+						class:active={viewMode === '2d'}
+						aria-pressed={viewMode === '2d'}
+						type="button"
+						onclick={() => setViewMode('2d')}
+					>
+						2D
+					</button>
+				</div>
 			</div>
 
-			<div class="hazard-family-toggle" role="group" aria-label="Hazard type">
-				<button
-					class:active={activeHazardFamily === 'flood'}
-					aria-pressed={activeHazardFamily === 'flood'}
-					type="button"
-					onclick={() => setHazardFamily('flood')}
-					onmouseenter={() => preloadHazardFamily('flood')}
-					onfocus={() => preloadHazardFamily('flood')}
-				>
-					Flood
-				</button>
-				<button
-					class:active={activeHazardFamily === 'storm-surge'}
-					aria-pressed={activeHazardFamily === 'storm-surge'}
-					type="button"
-					onclick={() => setHazardFamily('storm-surge')}
-					onmouseenter={() => preloadHazardFamily('storm-surge')}
-					onfocus={() => preloadHazardFamily('storm-surge')}
-				>
-					Storm surge
-				</button>
-				<button
-					class:active={activeHazardFamily === 'landslide'}
-					aria-pressed={activeHazardFamily === 'landslide'}
-					type="button"
-					onclick={() => setHazardFamily('landslide')}
-					onmouseenter={() => preloadHazardFamily('landslide')}
-					onfocus={() => preloadHazardFamily('landslide')}
-				>
-					Landslide
-				</button>
-				<button
-					class:active={activeHazardFamily === 'earthquake'}
-					aria-pressed={activeHazardFamily === 'earthquake'}
-					type="button"
-					onclick={() => setHazardFamily('earthquake')}
-					onmouseenter={() => preloadHazardFamily('earthquake')}
-					onfocus={() => preloadHazardFamily('earthquake')}
-				>
-					Earthquake
-				</button>
-				<button
-					class:active={activeHazardFamily === 'typhoon'}
-					aria-pressed={activeHazardFamily === 'typhoon'}
-					type="button"
-					onclick={() => setHazardFamily('typhoon')}
-					onmouseenter={() => preloadHazardFamily('typhoon')}
-					onfocus={() => preloadHazardFamily('typhoon')}
-				>
-					Typhoon
-				</button>
-			</div>
+			<div class="control-section">
+				<div class="control-section-heading">
+					<div class="control-heading">
+						<span class="control-kicker">Hazard layers</span>
+						<strong>{hazardFamilyLabel(activeHazardFamily)}</strong>
+					</div>
+					<span class="control-hint">Choose a view</span>
+				</div>
+				<div class="hazard-family-toggle" role="group" aria-label="Hazard type">
+					<button
+						class:active={activeHazardFamily === 'flood'}
+						aria-pressed={activeHazardFamily === 'flood'}
+						type="button"
+						onclick={() => setHazardFamily('flood')}
+						onmouseenter={() => preloadHazardFamily('flood')}
+						onfocus={() => preloadHazardFamily('flood')}
+					>
+						Flood
+					</button>
+					<button
+						class:active={activeHazardFamily === 'storm-surge'}
+						aria-pressed={activeHazardFamily === 'storm-surge'}
+						type="button"
+						onclick={() => setHazardFamily('storm-surge')}
+						onmouseenter={() => preloadHazardFamily('storm-surge')}
+						onfocus={() => preloadHazardFamily('storm-surge')}
+					>
+						Storm surge
+					</button>
+					<button
+						class:active={activeHazardFamily === 'landslide'}
+						aria-pressed={activeHazardFamily === 'landslide'}
+						type="button"
+						onclick={() => setHazardFamily('landslide')}
+						onmouseenter={() => preloadHazardFamily('landslide')}
+						onfocus={() => preloadHazardFamily('landslide')}
+					>
+						Landslide
+					</button>
+					<button
+						class:active={activeHazardFamily === 'earthquake'}
+						aria-pressed={activeHazardFamily === 'earthquake'}
+						type="button"
+						onclick={() => setHazardFamily('earthquake')}
+						onmouseenter={() => preloadHazardFamily('earthquake')}
+						onfocus={() => preloadHazardFamily('earthquake')}
+					>
+						Earthquake
+					</button>
+					<button
+						class:active={activeHazardFamily === 'typhoon'}
+						aria-pressed={activeHazardFamily === 'typhoon'}
+						type="button"
+						onclick={() => setHazardFamily('typhoon')}
+						onmouseenter={() => preloadHazardFamily('typhoon')}
+						onfocus={() => preloadHazardFamily('typhoon')}
+					>
+						Typhoon
+					</button>
+				</div>
 
-			{#if activeHazardFamily === 'flood'}
-				<div class="flood-toggle" role="group" aria-label="Flood return period layers">
-					{#each floodHazardPeriods as period (period.key)}
-						<label class:active={enabledFloodPeriods.includes(period.key)}>
-							<input
-								type="checkbox"
-								checked={enabledFloodPeriods.includes(period.key)}
-								onchange={(event) => setFloodPeriodEnabled(period.key, event.currentTarget.checked)}
-							/>
-							<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}
-							></span>
-							<span>{period.shortName}</span>
-						</label>
-					{/each}
+				<div class="context-controls">
+					{#if activeHazardFamily === 'flood'}
+						<div class="flood-toggle" role="group" aria-label="Flood return period layers">
+							{#each floodHazardPeriods as period (period.key)}
+								<label class:active={enabledFloodPeriods.includes(period.key)}>
+									<input
+										type="checkbox"
+										checked={enabledFloodPeriods.includes(period.key)}
+										onchange={(event) =>
+											setFloodPeriodEnabled(period.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}
+									></span>
+									<span>{period.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'storm-surge'}
+						<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
+							{#each stormSurgeAdvisories as advisory (advisory.key)}
+								<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
+									<input
+										type="checkbox"
+										checked={enabledStormSurgeAdvisories.includes(advisory.key)}
+										onchange={(event) =>
+											setStormSurgeAdvisoryEnabled(advisory.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${advisory.colors.Medium}`}
+									></span>
+									<span>{advisory.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'landslide'}
+						<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
+							{#each landslideHazards as layer (layer.key)}
+								<label class:active={enabledLandslideLayers.includes(layer.key)}>
+									<input
+										type="checkbox"
+										checked={enabledLandslideLayers.includes(layer.key)}
+										onchange={(event) =>
+											setLandslideLayerEnabled(layer.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${layer.colors.Medium}`}
+									></span>
+									<span>{layer.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'earthquake'}
+						<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
+							{#each seismicHazards as layer (layer.key)}
+								<label class:active={enabledSeismicLayers.includes(layer.key)}>
+									<input
+										type="checkbox"
+										checked={enabledSeismicLayers.includes(layer.key)}
+										onchange={(event) =>
+											setSeismicLayerEnabled(layer.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${layer.classes[0].color}`}
+									></span>
+									<span>{layer.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else}
+						<div class="flood-toggle typhoon-toggle" aria-label="Typhoon track status">
+							<span class="typhoon-toggle-swatch"></span>
+							<span>Track proximity</span>
+						</div>
+					{/if}
 				</div>
-			{:else if activeHazardFamily === 'storm-surge'}
-				<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
-					{#each stormSurgeAdvisories as advisory (advisory.key)}
-						<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
-							<input
-								type="checkbox"
-								checked={enabledStormSurgeAdvisories.includes(advisory.key)}
-								onchange={(event) =>
-									setStormSurgeAdvisoryEnabled(advisory.key, event.currentTarget.checked)}
-							/>
-							<span class="flood-toggle-swatch" style={`background: ${advisory.colors.Medium}`}
-							></span>
-							<span>{advisory.shortName}</span>
-						</label>
-					{/each}
-				</div>
-			{:else if activeHazardFamily === 'landslide'}
-				<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
-					{#each landslideHazards as layer (layer.key)}
-						<label class:active={enabledLandslideLayers.includes(layer.key)}>
-							<input
-								type="checkbox"
-								checked={enabledLandslideLayers.includes(layer.key)}
-								onchange={(event) =>
-									setLandslideLayerEnabled(layer.key, event.currentTarget.checked)}
-							/>
-							<span class="flood-toggle-swatch" style={`background: ${layer.colors.Medium}`}></span>
-							<span>{layer.shortName}</span>
-						</label>
-					{/each}
-				</div>
-			{:else if activeHazardFamily === 'earthquake'}
-				<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
-					{#each seismicHazards as layer (layer.key)}
-						<label class:active={enabledSeismicLayers.includes(layer.key)}>
-							<input
-								type="checkbox"
-								checked={enabledSeismicLayers.includes(layer.key)}
-								onchange={(event) => setSeismicLayerEnabled(layer.key, event.currentTarget.checked)}
-							/>
-							<span class="flood-toggle-swatch" style={`background: ${layer.classes[0].color}`}
-							></span>
-							<span>{layer.shortName}</span>
-						</label>
-					{/each}
-				</div>
-			{:else}
-				<div class="flood-toggle typhoon-toggle" aria-label="Typhoon track status">
-					<span class="typhoon-toggle-swatch"></span>
-					<span>Track proximity</span>
-				</div>
-			{/if}
+			</div>
 		</div>
 	</div>
 
@@ -1466,24 +1505,68 @@
 	.map-toolbar {
 		top: 1rem;
 		left: 1rem;
-		display: flex;
-		flex-wrap: wrap;
-		align-items: center;
-		gap: 0.7rem;
-		max-width: calc(100% - 2rem);
-		padding: 0.45rem;
-		border: 1px solid rgb(255 255 255 / 65%);
-		border-radius: 999px;
-		background: rgb(250 248 242 / 90%);
-		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
+		width: min(35rem, calc(100% - 2rem));
+		overflow: hidden;
+		border: 1px solid rgb(23 62 59 / 14%);
+		border-radius: 0.9rem;
+		background: rgb(250 248 242 / 96%);
+		box-shadow: 0 0.75rem 2rem rgb(30 56 55 / 18%);
 		backdrop-filter: blur(12px);
 	}
 
 	.map-control-groups {
+		display: grid;
+	}
+
+	.control-header,
+	.control-section-heading {
 		display: flex;
-		flex-wrap: wrap;
 		align-items: center;
-		gap: 0.3rem;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.control-header {
+		padding: 0.75rem 0.85rem;
+		border-bottom: 1px solid rgb(23 62 59 / 12%);
+	}
+
+	.control-heading {
+		display: grid;
+		gap: 0.1rem;
+	}
+
+	.control-heading strong {
+		color: #173e3b;
+		font-size: 0.88rem;
+		line-height: 1.15;
+	}
+
+	.control-kicker {
+		color: #788d88;
+		font-size: 0.61rem;
+		font-weight: 800;
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.control-hint {
+		color: #788d88;
+		font-size: 0.68rem;
+		font-weight: 700;
+	}
+
+	.control-section {
+		display: grid;
+		gap: 0.65rem;
+		padding: 0.8rem 0.85rem 0.85rem;
+	}
+
+	.context-controls {
+		display: grid;
+		gap: 0.65rem;
+		padding-top: 0.65rem;
+		border-top: 1px solid rgb(23 62 59 / 12%);
 	}
 
 	.view-toggle {
@@ -1492,9 +1575,9 @@
 	}
 
 	.view-toggle button {
-		border: 0;
+		border: 1px solid rgb(23 62 59 / 14%);
 		border-radius: 999px;
-		padding: 0.45rem 0.75rem;
+		padding: 0.4rem 0.7rem;
 		background: transparent;
 		color: #476563;
 		font: inherit;
@@ -1510,16 +1593,22 @@
 
 	.hazard-family-toggle {
 		display: flex;
-		gap: 0.15rem;
-		border-left: 1px solid rgb(71 101 99 / 20%);
-		padding-left: 0.3rem;
+		gap: 0.3rem;
+		overflow-x: auto;
+		padding-bottom: 0.1rem;
+		scrollbar-width: none;
+	}
+
+	.hazard-family-toggle::-webkit-scrollbar {
+		display: none;
 	}
 
 	.hazard-family-toggle button {
-		border: 0;
+		flex: 0 0 auto;
+		border: 1px solid rgb(23 62 59 / 14%);
 		border-radius: 999px;
-		padding: 0.45rem 0.65rem;
-		background: transparent;
+		padding: 0.42rem 0.72rem;
+		background: rgb(255 255 255 / 35%);
 		color: #476563;
 		font: inherit;
 		font-size: 0.72rem;
@@ -1535,15 +1624,17 @@
 	.flood-toggle {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.2rem;
+		gap: 0.35rem;
 	}
 
 	.flood-toggle label {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		border-radius: 999px;
-		padding: 0.45rem 0.6rem;
+		border: 1px solid rgb(23 62 59 / 12%);
+		border-radius: 0.5rem;
+		padding: 0.42rem 0.6rem;
+		background: rgb(255 255 255 / 42%);
 		color: #476563;
 		font-size: 0.72rem;
 		font-weight: 700;
@@ -1551,7 +1642,8 @@
 	}
 
 	.flood-toggle label.active {
-		background: rgb(23 62 59 / 10%);
+		border-color: rgb(23 62 59 / 30%);
+		background: rgb(23 62 59 / 9%);
 		color: #173e3b;
 	}
 
@@ -1691,8 +1783,17 @@
 		.map-toolbar {
 			top: 0.75rem;
 			left: 0.75rem;
+			width: calc(100% - 1.5rem);
 			max-width: calc(100% - 1.5rem);
 			border-radius: 0.85rem;
+		}
+
+		.control-section-heading {
+			align-items: flex-start;
+		}
+
+		.control-hint {
+			display: none;
 		}
 
 		.map-status {
