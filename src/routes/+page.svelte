@@ -2,6 +2,7 @@
 	import { resolve } from '$app/paths';
 	import {
 		calapanBarangayAttribution,
+		calapanBarangayMetadata,
 		searchCalapanBarangays,
 		type BarangayProperties
 	} from '$lib/data/barangays';
@@ -12,6 +13,7 @@
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
 	import { emergencyContacts, safetyGuidance, type HazardFamily } from '$lib/data/safety';
 	import { formatDataDate, freshnessLabel, getFreshnessStatus } from '$lib/data/freshness';
+	import hazardDataManifest from '$lib/data/hazard-data-manifest.json';
 	import { typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
@@ -396,6 +398,10 @@
 							This dataset may need review.
 						{/if}
 					</p>
+					<p class="provenance-note">
+						{activeHazardMetadata?.sourceDateNote} Coverage: {activeHazardMetadata?.coverage}
+						Prepared in app: {formatDataDate(hazardDataManifest.generatedAt)}.
+					</p>
 				{/if}
 			</section>
 
@@ -449,6 +455,10 @@
 					<h2>{selectedArea.name}</h2>
 					<p class="selection-source">
 						Source name: {selectedArea.sourceName}. Administrative boundary data.
+					</p>
+					<p class="provenance-note">
+						{calapanBarangayMetadata.sourceDateNote} Coverage: {calapanBarangayMetadata.coverage}
+						Prepared in app: {formatDataDate(calapanBarangayMetadata.preparedAt)}.
 					</p>
 					{#if activeHazardFamily === 'flood'}
 						{#each floodHazardPeriods as period (period.key)}
@@ -514,6 +524,10 @@
 								{freshnessLabel(activeHazardFreshness)}
 							</span>
 							Source date: {formatDataDate(activeHazardMetadata?.sourceDate ?? null)}.
+						</p>
+						<p class="provenance-note">
+							{activeHazardMetadata?.sourceDateNote} Prepared in app:
+							{formatDataDate(hazardDataManifest.generatedAt)}.
 						</p>
 					{/if}
 				{:else}
@@ -986,6 +1000,13 @@
 		margin-top: 1rem;
 		padding-top: 0.75rem;
 		border-top: 1px solid var(--gray);
+	}
+
+	.provenance-note {
+		margin-top: 0.55rem;
+		color: var(--fg-secondary);
+		font-size: 0.72rem !important;
+		line-height: 1.45;
 	}
 
 	.card-heading {

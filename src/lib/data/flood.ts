@@ -58,6 +58,9 @@ export const floodHazardMetadata = {
 	source: 'UP Resilience Institute NOAH Center',
 	sourceUrl: 'https://noah.up.edu.ph/know-your-hazards',
 	sourceDate: null,
+	sourceDateNote: 'The downloaded shapefile metadata does not include a source date.',
+	coverage: 'Oriental Mindoro source layers clipped to Calapan City.',
+	licenseNote: 'Confirm current NOAH dataset licensing before redistribution.',
 	classification: 'Low, Medium, and High values are provided by the source dataset.',
 	caveat: 'This is modeled flood hazard information, not a guarantee of future flooding.'
 } as const;

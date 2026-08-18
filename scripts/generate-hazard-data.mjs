@@ -21,6 +21,7 @@ const mapshaperBin = path.join(projectRoot, 'node_modules/mapshaper/bin/mapshape
 const minZoom = 10;
 const maxZoom = 15;
 const cityBounds = [121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054];
+const generatedAt = new Date().toISOString();
 
 const hazardSets = [
 	{
@@ -414,6 +415,19 @@ for (const { hazardSet, periods } of loadedHazards) {
 		`${JSON.stringify(summaries, null, 2)}\n`
 	);
 }
+
+await writeFile(
+	path.join(dataRoot, 'hazard-data-manifest.json'),
+	`${JSON.stringify(
+		{
+			generatedAt,
+			coverage: 'Calapan City',
+			hazardSets: hazardSets.map(({ key, summaryFile }) => ({ key, summaryFile }))
+		},
+		null,
+		'\t'
+	)}\n`
+);
 
 console.log(
 	`Wrote ${loadedHazards.reduce((total, { periods }) => total + periods.length, 0)} localized hazard tile sets and summaries`

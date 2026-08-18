@@ -1,0 +1,30 @@
+{
+	"generatedAt": "2026-08-18T12:07:11.057Z",
+	"coverage": "Calapan City",
+	"hazardSets": [
+		{
+			"key": "flood",
+			"summaryFile": "calapan-flood-summaries.json"
+		},
+		{
+			"key": "storm-surge",
+			"summaryFile": "calapan-storm-surge-summaries.json"
+		},
+		{
+			"key": "landslide",
+			"summaryFile": "calapan-landslide-summaries.json"
+		},
+		{
+			"key": "ground-shaking",
+			"summaryFile": "calapan-ground-shaking-summaries.json"
+		},
+		{
+			"key": "liquefaction",
+			"summaryFile": "calapan-liquefaction-summaries.json"
+		},
+		{
+			"key": "tsunami",
+			"summaryFile": "calapan-tsunami-summaries.json"
+		}
+	]
+}

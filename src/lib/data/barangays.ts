@@ -85,3 +85,12 @@ export function searchCalapanBarangays(query: string): BarangayProperties[] {
 
 export const calapanBarangayAttribution =
 	'Barangay boundaries: OCHA Philippines COD-AB, sourced from NAMRIA and PSA. CC BY-IGO.';
+
+export const calapanBarangayMetadata = {
+	source: 'OCHA Philippines COD-AB, sourced from NAMRIA and PSA',
+	sourceDate: null,
+	sourceDateNote: 'The boundary snapshot does not include a source date.',
+	coverage: '62 barangays in Calapan City.',
+	preparedAt: '2026-08-17',
+	licenseNote: 'CC BY-IGO attribution retained.'
+} as const;
