@@ -4,6 +4,7 @@
 	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
 	import { formatAlertDate } from '$lib/data/alerts';
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
+	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
 	import type { PageData } from './$types';
@@ -11,7 +12,7 @@
 	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
-	type HazardFamily = 'flood' | 'storm-surge';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide';
 	let activeHazardFamily = $state<HazardFamily>('flood');
 
 	function handleAreaSelect(area: BarangayProperties | null) {
@@ -57,7 +58,11 @@
 			<section class="info-card active-layer">
 				<div class="card-kicker">
 					<span class="layer-dot"></span>
-					{activeHazardFamily === 'flood' ? 'Flood layers' : 'Storm-surge layers'}
+					{activeHazardFamily === 'flood'
+						? 'Flood layers'
+						: activeHazardFamily === 'storm-surge'
+							? 'Storm-surge layers'
+							: 'Landslide layers'}
 				</div>
 				{#if activeHazardFamily === 'flood'}
 					<h2>Flood hazard periods</h2>
@@ -92,7 +97,7 @@
 					<p class="selection-source">
 						Source: {floodHazardMetadata.source}. {floodHazardMetadata.classification}
 					</p>
-				{:else}
+				{:else if activeHazardFamily === 'storm-surge'}
 					<h2>Storm-surge advisories</h2>
 					<p>
 						Source-provided storm-surge hazard classes. All four advisories are enabled by default.
@@ -124,6 +129,35 @@
 					<p class="selection-source">
 						Source: {stormSurgeMetadata.source}. {stormSurgeMetadata.classification}
 					</p>
+				{:else}
+					<h2>Landslide hazard</h2>
+					<p>Source-provided landslide hazard classes for Calapan City.</p>
+					<div class="period-legends" aria-label="Landslide hazard legends">
+						{#each landslideHazards as layer (layer.key)}
+							<div class="period-legend">
+								<strong>{layer.shortName}</strong>
+								<div class="legend">
+									<div>
+										<span class="legend-swatch" style={`background: ${layer.colors.Low}`}></span>Low
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${layer.colors.Medium}`}
+										></span>Medium
+									</div>
+									<div>
+										<span class="legend-swatch" style={`background: ${layer.colors.High}`}
+										></span>High
+									</div>
+								</div>
+							</div>
+						{/each}
+						<div class="legend boundary-legend">
+							<div><span class="legend-swatch boundary"></span>Barangay boundary</div>
+						</div>
+					</div>
+					<p class="selection-source">
+						Source: {landslideMetadata.source}. {landslideMetadata.classification}
+					</p>
 				{/if}
 			</section>
 
@@ -146,11 +180,23 @@
 								</p>
 							{/if}
 						{/each}
-					{:else}
+					{:else if activeHazardFamily === 'storm-surge'}
 						{#each stormSurgeAdvisories as advisory (advisory.key)}
 							{@const hazard = selectedArea.stormSurgeHazards[advisory.key]}
 							<p class="selection-source">
 								{advisory.shortName} storm surge: {hazard.summary}.
+							</p>
+							{#if hazard.classes.length > 0}
+								<p class="selection-source">
+									Classes mapped: {hazard.classes.join(', ')}.
+								</p>
+							{/if}
+						{/each}
+					{:else}
+						{#each landslideHazards as layer (layer.key)}
+							{@const hazard = selectedArea.landslideHazards[layer.key]}
+							<p class="selection-source">
+								{layer.name}: {hazard.summary}.
 							</p>
 							{#if hazard.classes.length > 0}
 								<p class="selection-source">

@@ -13,6 +13,7 @@ const projectRoot = process.cwd();
 const sourceRoot = process.env.NOAH_DATA_DIR ?? path.join(homedir(), 'downloads/noah');
 const floodRoot = path.join(sourceRoot, 'flood');
 const stormSurgeRoot = path.join(sourceRoot, 'storm-surge');
+const landslideRoot = path.join(sourceRoot, 'landslide');
 const outputRoot = path.join(projectRoot, 'static');
 const dataRoot = path.join(projectRoot, 'src/lib/data');
 const boundaryFile = path.join(dataRoot, 'calapan-city.json');
@@ -26,6 +27,7 @@ const hazardSets = [
 		key: 'flood',
 		tilePrefix: 'calapan-flood-hazard',
 		summaryFile: 'calapan-flood-summaries.json',
+		tileSuffix: (period) => `${period.key}yr`,
 		classField: 'Var',
 		periods: [
 			{
@@ -49,6 +51,7 @@ const hazardSets = [
 		key: 'storm-surge',
 		tilePrefix: 'calapan-storm-surge',
 		summaryFile: 'calapan-storm-surge-summaries.json',
+		tileSuffix: (period) => `advisory-${period.key}`,
 		classField: 'HAZ',
 		periods: [1, 2, 3, 4].map((advisory) => ({
 			key: String(advisory),
@@ -58,6 +61,20 @@ const hazardSets = [
 				`ss-advisory-${advisory}/OrientalMindoro_StormSurge_SSA${advisory}.shp`
 			)
 		}))
+	},
+	{
+		key: 'landslide',
+		tilePrefix: 'calapan-landslide',
+		summaryFile: 'calapan-landslide-summaries.json',
+		tileSuffix: () => 'hazard',
+		classField: 'LH',
+		periods: [
+			{
+				key: 'main',
+				label: 'Landslide hazard',
+				file: path.join(landslideRoot, 'hazards/OrientalMindoro_LandslideHazards.shp')
+			}
+		]
 	}
 ];
 
@@ -76,7 +93,7 @@ function getHazardClass(properties, field) {
 	const value = Number(entry?.[1]);
 
 	if (![1, 2, 3].includes(value)) {
-		throw new Error(`Unsupported flood class: ${entry?.[1] ?? 'missing'}`);
+		throw new Error(`Unsupported hazard class: ${entry?.[1] ?? 'missing'}`);
 	}
 
 	return value;
@@ -200,7 +217,7 @@ function latitudeToTileY(latitude, zoom) {
 }
 
 async function writeVectorTiles(hazardSet, period, collection) {
-	const suffix = hazardSet.key === 'flood' ? `${period.key}yr` : `advisory-${period.key}`;
+	const suffix = hazardSet.tileSuffix(period);
 	const outputDirectory = path.join(outputRoot, `${hazardSet.tilePrefix}-${suffix}-tiles`);
 	await rm(outputDirectory, { recursive: true, force: true });
 

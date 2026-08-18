@@ -5,9 +5,12 @@ import barangayLabelPointData from './calapan-barangay-label-points.json';
 import floodSummaryData from './calapan-flood-summaries.json';
 import stormSurgeSummaryData from './calapan-storm-surge-summaries.json';
 import type { StormSurgeAdvisory, StormSurgeSummary } from './storm-surge';
+import landslideSummaryData from './calapan-landslide-summaries.json';
+import type { LandslideHazardSummary, LandslideLayer } from './landslide';
 
 type FloodSummaryData = Record<string, Record<ReturnPeriod, FloodHazardSummary>>;
 type StormSurgeSummaryData = Record<string, Record<StormSurgeAdvisory, StormSurgeSummary>>;
+type LandslideSummaryData = Record<string, Record<LandslideLayer, LandslideHazardSummary>>;
 
 export type BarangayProperties = {
 	id: string;
@@ -17,13 +20,15 @@ export type BarangayProperties = {
 	floodHazardSummary: FloodHazardClass | 'Mixed' | 'NoData';
 	floodHazards: Record<ReturnPeriod, FloodHazardSummary>;
 	stormSurgeHazards: Record<StormSurgeAdvisory, StormSurgeSummary>;
+	landslideHazards: Record<LandslideLayer, LandslideHazardSummary>;
 };
 
 const floodSummaries = floodSummaryData as FloodSummaryData;
 const stormSurgeSummaries = stormSurgeSummaryData as StormSurgeSummaryData;
+const landslideSummaries = landslideSummaryData as LandslideSummaryData;
 const rawBarangays = barangayData as FeatureCollection<
 	MultiPolygon,
-	Omit<BarangayProperties, 'floodHazards' | 'stormSurgeHazards'>
+	Omit<BarangayProperties, 'floodHazards' | 'stormSurgeHazards' | 'landslideHazards'>
 >;
 
 export const calapanBarangays = {
@@ -33,7 +38,8 @@ export const calapanBarangays = {
 		properties: {
 			...feature.properties,
 			floodHazards: floodSummaries[feature.properties.id],
-			stormSurgeHazards: stormSurgeSummaries[feature.properties.id]
+			stormSurgeHazards: stormSurgeSummaries[feature.properties.id],
+			landslideHazards: landslideSummaries[feature.properties.id]
 		}
 	}))
 } as FeatureCollection<MultiPolygon, BarangayProperties>;

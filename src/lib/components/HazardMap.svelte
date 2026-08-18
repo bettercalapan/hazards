@@ -12,12 +12,13 @@
 	} from '$lib/data/barangays';
 	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
 	import { stormSurgeAdvisories, type StormSurgeAdvisory } from '$lib/data/storm-surge';
+	import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
 	type ViewMode = '3d' | '2d';
-	type HazardFamily = 'flood' | 'storm-surge';
+	type HazardFamily = 'flood' | 'storm-surge' | 'landslide';
 	type Props = {
 		onSelectArea?: (area: BarangayProperties | null) => void;
 		onHazardFamilyChange?: (family: HazardFamily) => void;
@@ -192,6 +193,7 @@
 	let activeHazardFamily = $state<HazardFamily>('flood');
 	let enabledFloodPeriods = $state<ReturnPeriod[]>([5, 25, 100]);
 	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([1, 2, 3, 4]);
+	let enabledLandslideLayers = $state<LandslideLayer[]>(['main']);
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 	let updateHazardVisibility: () => void = () => {};
 
@@ -217,6 +219,13 @@
 		enabledStormSurgeAdvisories = enabled
 			? [...new Set([...enabledStormSurgeAdvisories, advisory])]
 			: enabledStormSurgeAdvisories.filter((value) => value !== advisory);
+		updateHazardVisibility();
+	}
+
+	function setLandslideLayerEnabled(layer: LandslideLayer, enabled: boolean) {
+		enabledLandslideLayers = enabled
+			? [...new Set([...enabledLandslideLayers, layer])]
+			: enabledLandslideLayers.filter((value) => value !== layer);
 		updateHazardVisibility();
 	}
 
@@ -415,9 +424,9 @@
 				const addHazardLayers = (
 					family: HazardFamily,
 					layers: readonly {
-						key: number;
+						key: string | number;
 						tilePath: string;
-						colors: { Low: string; Medium: string; High: string };
+						colors: { readonly Low: string; readonly Medium: string; readonly High: string };
 					}[],
 					sourceLayer: string
 				) => {
@@ -425,7 +434,9 @@
 						const sourceId =
 							family === 'flood'
 								? `calapan-flood-hazard-${layer.key}`
-								: `calapan-storm-surge-advisory-${layer.key}`;
+								: family === 'storm-surge'
+									? `calapan-storm-surge-advisory-${layer.key}`
+									: `calapan-landslide-hazard-${layer.key}`;
 						mapInstance.addSource(sourceId, {
 							type: 'vector',
 							tiles: [layer.tilePath],
@@ -464,6 +475,7 @@
 
 				addHazardLayers('flood', floodHazardPeriods, 'flood');
 				addHazardLayers('storm-surge', stormSurgeAdvisories, 'storm-surge');
+				addHazardLayers('landslide', landslideHazards, 'landslide');
 				updateHazardVisibility = () => {
 					for (const period of floodHazardPeriods) {
 						const layerId = `calapan-flood-hazard-${period.key}`;
@@ -485,6 +497,18 @@
 								'visibility',
 								activeHazardFamily === 'storm-surge' &&
 									enabledStormSurgeAdvisories.includes(advisory.key)
+									? 'visible'
+									: 'none'
+							);
+						}
+					}
+					for (const layer of landslideHazards) {
+						const layerId = `calapan-landslide-hazard-${layer.key}`;
+						if (mapInstance.getLayer(layerId)) {
+							mapInstance.setLayoutProperty(
+								layerId,
+								'visibility',
+								activeHazardFamily === 'landslide' && enabledLandslideLayers.includes(layer.key)
 									? 'visible'
 									: 'none'
 							);
@@ -658,6 +682,14 @@
 				>
 					Storm surge
 				</button>
+				<button
+					class:active={activeHazardFamily === 'landslide'}
+					aria-pressed={activeHazardFamily === 'landslide'}
+					type="button"
+					onclick={() => setHazardFamily('landslide')}
+				>
+					Landslide
+				</button>
 			</div>
 
 			{#if activeHazardFamily === 'flood'}
@@ -675,7 +707,7 @@
 						</label>
 					{/each}
 				</div>
-			{:else}
+			{:else if activeHazardFamily === 'storm-surge'}
 				<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
 					{#each stormSurgeAdvisories as advisory (advisory.key)}
 						<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
@@ -691,6 +723,21 @@
 						</label>
 					{/each}
 				</div>
+			{:else}
+				<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
+					{#each landslideHazards as layer (layer.key)}
+						<label class:active={enabledLandslideLayers.includes(layer.key)}>
+							<input
+								type="checkbox"
+								checked={enabledLandslideLayers.includes(layer.key)}
+								onchange={(event) =>
+									setLandslideLayerEnabled(layer.key, event.currentTarget.checked)}
+							/>
+							<span class="flood-toggle-swatch" style={`background: ${layer.colors.Medium}`}></span>
+							<span>{layer.shortName}</span>
+						</label>
+					{/each}
+				</div>
 			{/if}
 		</div>
 	</div>
@@ -703,8 +750,11 @@
 	</div>
 
 	<div class="boundary-note">
-		NOAH {activeHazardFamily === 'flood' ? 'flood hazard' : 'storm-surge'} layers. 3D elevation uses Mapzen
-		Terrain Tiles.
+		NOAH {activeHazardFamily === 'flood'
+			? 'flood hazard'
+			: activeHazardFamily === 'storm-surge'
+				? 'storm-surge'
+				: 'landslide hazard'} layers. 3D elevation uses Mapzen Terrain Tiles.
 	</div>
 </div>
 

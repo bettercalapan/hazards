@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { calapanBarangayLabelPoints, calapanBarangays } from './barangays';
 import { floodHazardPeriods } from './flood';
+import { landslideHazards } from './landslide';
 
 describe('Calapan barangays', () => {
 	it('contains the 62 barangays listed by BetterCalapan', () => {
@@ -15,6 +16,20 @@ describe('Calapan barangays', () => {
 				feature.properties.floodHazardClasses.every((hazardClass) =>
 					['Low', 'Medium', 'High'].includes(hazardClass)
 				)
+			)
+		).toBe(true);
+		expect(
+			calapanBarangays.features.every((feature) =>
+				landslideHazards.every((layer) => {
+					const hazard = feature.properties.landslideHazards[layer.key];
+					return (
+						Boolean(hazard) &&
+						hazard.classes.every((hazardClass) =>
+							['Low', 'Medium', 'High'].includes(hazardClass)
+						) &&
+						['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(hazard.summary)
+					);
+				})
 			)
 		).toBe(true);
 		expect(
