@@ -10,6 +10,7 @@
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
+	import { emergencyContacts, safetyGuidance, type HazardFamily } from '$lib/data/safety';
 	import { typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
@@ -22,9 +23,9 @@
 	let barangayQuery = $state('');
 	let barangaySearchOpen = $state(false);
 	let highlightedBarangayIndex = $state(0);
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	let activeHazardFamily = $state<HazardFamily>('flood');
 	let barangayMatches = $derived(searchCalapanBarangays(barangayQuery).slice(0, 8));
+	let activeSafetyGuidance = $derived(safetyGuidance[activeHazardFamily]);
 
 	function handleAreaSelect(area: BarangayProperties | null) {
 		selectedArea = area;
@@ -340,6 +341,50 @@
 				{/if}
 			</section>
 
+			<section class="info-card safety-card" aria-labelledby="safety-heading">
+				<div class="card-kicker">Safety guidance</div>
+				<h2 id="safety-heading">{activeSafetyGuidance.title}</h2>
+				<p>{activeSafetyGuidance.summary}</p>
+				<ul class="safety-list">
+					{#each activeSafetyGuidance.actions as action (action)}
+						<li>{action}</li>
+					{/each}
+				</ul>
+				<p class="selection-source">
+					Based on
+					<!-- External source links do not pass through SvelteKit routing. -->
+					<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+					<a href={activeSafetyGuidance.sourceUrl} target="_blank" rel="noreferrer"
+						>{activeSafetyGuidance.sourceLabel}</a
+					>. General guidance only. Follow current instructions from local authorities.
+				</p>
+			</section>
+
+			<section class="info-card emergency-card" aria-labelledby="emergency-heading">
+				<div class="card-kicker">Emergency contacts</div>
+				<h2 id="emergency-heading">Get help or official information</h2>
+				<div class="contact-list">
+					{#each emergencyContacts as contact (contact.value)}
+						<div class="contact-row">
+							<div>
+								<strong>{contact.label}</strong>
+								<span>{contact.note}</span>
+							</div>
+							<!-- Telephone links do not pass through SvelteKit routing. -->
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a class="contact-value" href={contact.href}>{contact.value}</a>
+						</div>
+						<p class="selection-source contact-source">
+							Source:
+							<!-- External source links do not pass through SvelteKit routing. -->
+							<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
+							<a href={contact.sourceUrl} target="_blank" rel="noreferrer">{contact.sourceLabel}</a
+							>.
+						</p>
+					{/each}
+				</div>
+			</section>
+
 			<section class="info-card selection-card" class:selected={selectedArea} aria-live="polite">
 				{#if selectedArea}
 					<div class="card-kicker">Selected area</div>
@@ -552,6 +597,77 @@
 	.active-layer {
 		border-color: var(--accent-light);
 		background: var(--bg);
+	}
+
+	.safety-card {
+		border-color: #b8d8c7;
+		background: #f6fbf7;
+	}
+
+	.safety-list {
+		display: grid;
+		gap: 0.6rem;
+		margin: 1rem 0 0;
+		padding-left: 1.15rem;
+		color: var(--fg-secondary);
+		font-size: 0.9rem;
+		line-height: 1.45;
+	}
+
+	.emergency-card {
+		border-color: #e5c995;
+		background: #fffaf0;
+	}
+
+	.contact-list {
+		display: grid;
+		gap: 0.85rem;
+		margin-top: 1rem;
+	}
+
+	.contact-row {
+		display: flex;
+		align-items: start;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+
+	.contact-row strong,
+	.contact-row span {
+		display: block;
+	}
+
+	.contact-row strong {
+		margin-bottom: 0.25rem;
+		font-size: 0.88rem;
+	}
+
+	.contact-row span {
+		max-width: 15rem;
+		color: var(--fg-secondary);
+		font-size: 0.78rem;
+		line-height: 1.4;
+	}
+
+	.contact-value {
+		flex: 0 0 auto;
+		color: var(--accent-dark);
+		font-size: 1rem;
+		font-weight: 800;
+		text-decoration: none;
+		white-space: nowrap;
+	}
+
+	.contact-value:hover,
+	.contact-value:focus-visible {
+		text-decoration: underline;
+		text-underline-offset: 0.15em;
+	}
+
+	.contact-source {
+		margin-top: 0.35rem !important;
+		padding-top: 0.5rem;
+		border-top: 1px solid rgb(71 101 99 / 16%);
 	}
 
 	.active-layer .card-kicker {
