@@ -239,8 +239,7 @@ async function writeVectorTiles(hazardSet, period, collection) {
 
 		for (let x = minX; x <= maxX; x += 1) {
 			for (let y = minY; y <= maxY; y += 1) {
-				const tile = tileIndex.getTile(zoom, x, y);
-				if (!tile || tile.features.length === 0) continue;
+				const tile = tileIndex.getTile(zoom, x, y) ?? { features: [] };
 
 				const tilePath = path.join(outputDirectory, String(zoom), String(x), `${y}.pbf`);
 				await mkdir(path.dirname(tilePath), { recursive: true });
