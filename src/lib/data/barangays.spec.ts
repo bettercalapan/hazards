@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { calapanBarangayLabelPoints, calapanBarangays } from './barangays';
+import { calapanBarangayLabelPoints, calapanBarangays, searchCalapanBarangays } from './barangays';
 import { floodHazardPeriods } from './flood';
 import { landslideHazards } from './landslide';
 
@@ -75,5 +75,14 @@ describe('Calapan barangays', () => {
 		expect(
 			calapanBarangayLabelPoints.features.every((feature) => feature.geometry.type === 'Point')
 		).toBe(true);
+	});
+
+	it('searches barangays by name', () => {
+		expect(searchCalapanBarangays('Bayanan').map((barangay) => barangay.name)).toEqual([
+			'Bayanan I',
+			'Bayanan II'
+		]);
+		expect(searchCalapanBarangays('nino').map((barangay) => barangay.name)).toEqual(['Sto. Niño']);
+		expect(searchCalapanBarangays('unknown')).toEqual([]);
 	});
 });

@@ -1,6 +1,10 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { calapanBarangayAttribution, type BarangayProperties } from '$lib/data/barangays';
+	import {
+		calapanBarangayAttribution,
+		searchCalapanBarangays,
+		type BarangayProperties
+	} from '$lib/data/barangays';
 	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
 	import { formatAlertDate } from '$lib/data/alerts';
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
@@ -14,11 +18,71 @@
 	let { data }: { data: PageData } = $props();
 
 	let selectedArea = $state<BarangayProperties | null>(null);
+	let selectedBarangayId = $state<string | null>(null);
+	let barangayQuery = $state('');
+	let barangaySearchOpen = $state(false);
+	let highlightedBarangayIndex = $state(0);
 	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	let activeHazardFamily = $state<HazardFamily>('flood');
+	let barangayMatches = $derived(searchCalapanBarangays(barangayQuery).slice(0, 8));
 
 	function handleAreaSelect(area: BarangayProperties | null) {
 		selectedArea = area;
+		selectedBarangayId = area?.id ?? null;
+		barangayQuery = area?.name ?? '';
+		barangaySearchOpen = false;
+		highlightedBarangayIndex = 0;
+	}
+
+	function handleBarangaySearchInput(event: Event) {
+		barangayQuery = (event.currentTarget as HTMLInputElement).value;
+		barangaySearchOpen = true;
+		highlightedBarangayIndex = 0;
+	}
+
+	function selectSearchBarangay(area: BarangayProperties) {
+		selectedArea = area;
+		selectedBarangayId = area.id;
+		barangayQuery = area.name;
+		barangaySearchOpen = false;
+		highlightedBarangayIndex = 0;
+	}
+
+	function clearBarangaySearch() {
+		selectedArea = null;
+		selectedBarangayId = null;
+		barangayQuery = '';
+		barangaySearchOpen = false;
+		highlightedBarangayIndex = 0;
+	}
+
+	function handleBarangaySearchKeydown(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			barangaySearchOpen = false;
+			return;
+		}
+		if (event.key === 'ArrowDown') {
+			event.preventDefault();
+			barangaySearchOpen = true;
+			if (barangayMatches.length > 0) {
+				highlightedBarangayIndex = Math.min(
+					highlightedBarangayIndex + 1,
+					barangayMatches.length - 1
+				);
+			}
+			return;
+		}
+		if (event.key === 'ArrowUp') {
+			event.preventDefault();
+			if (barangayMatches.length > 0) {
+				highlightedBarangayIndex = Math.max(highlightedBarangayIndex - 1, 0);
+			}
+			return;
+		}
+		if (event.key === 'Enter' && barangaySearchOpen && barangayMatches.length > 0) {
+			event.preventDefault();
+			selectSearchBarangay(barangayMatches[highlightedBarangayIndex]);
+		}
 	}
 
 	function handleHazardFamilyChange(family: HazardFamily) {
@@ -38,6 +102,7 @@
 	<section class="map-pane" aria-label="Hazard map">
 		<HazardMap
 			typhoonMapData={data.typhoonMapData}
+			{selectedBarangayId}
 			onSelectArea={handleAreaSelect}
 			onHazardFamilyChange={handleHazardFamilyChange}
 		/>
@@ -53,14 +118,57 @@
 				<span class="product-label">Hazards</span>
 			</div>
 
-			<header class="sidebar-intro">
-				<p class="eyebrow">Calapan City hazard map</p>
-				<h1>Understand the risks around you.</h1>
-				<p class="intro-copy">
-					Explore hazard-risk zones across Calapan and check active official alerts from PAGASA.
-				</p>
-			</header>
-
+			<section class="info-card search-card">
+				<label class="search-label" for="barangay-search">Find a barangay</label>
+				<div class="search-input-wrap">
+					<input
+						id="barangay-search"
+						value={barangayQuery}
+						placeholder="Search by name"
+						role="combobox"
+						aria-autocomplete="list"
+						aria-controls="barangay-search-results"
+						aria-expanded={barangaySearchOpen && barangayMatches.length > 0}
+						aria-activedescendant={barangaySearchOpen && barangayMatches.length > 0
+							? `barangay-result-${barangayMatches[highlightedBarangayIndex].id}`
+							: undefined}
+						oninput={handleBarangaySearchInput}
+						onkeydown={handleBarangaySearchKeydown}
+						onfocus={() => (barangaySearchOpen = barangayMatches.length > 0)}
+						onblur={() => setTimeout(() => (barangaySearchOpen = false), 100)}
+					/>
+					{#if barangayQuery}
+						<button
+							class="search-clear"
+							type="button"
+							aria-label="Clear barangay search"
+							onclick={clearBarangaySearch}
+						>
+							Clear
+						</button>
+					{/if}
+				</div>
+				{#if barangaySearchOpen && barangayMatches.length > 0}
+					<div id="barangay-search-results" class="search-results" role="listbox">
+						{#each barangayMatches as barangay, index (barangay.id)}
+							<button
+								id={`barangay-result-${barangay.id}`}
+								class:highlighted={highlightedBarangayIndex === index}
+								class="search-result"
+								role="option"
+								aria-selected={selectedBarangayId === barangay.id}
+								type="button"
+								onclick={() => selectSearchBarangay(barangay)}
+								onmouseenter={() => (highlightedBarangayIndex = index)}
+							>
+								{barangay.name}
+							</button>
+						{/each}
+					</div>
+				{:else if barangaySearchOpen && barangayQuery.trim()}
+					<p class="search-empty" role="status">No barangays found.</p>
+				{/if}
+			</section>
 			<section class="info-card active-layer">
 				<div class="card-kicker">
 					<span class="layer-dot"></span>
@@ -399,7 +507,6 @@
 		justify-content: space-between;
 		gap: 1rem;
 		padding-bottom: 1.5rem;
-		border-bottom: 1px solid var(--gray);
 	}
 
 	.brand-link {
@@ -422,11 +529,6 @@
 		text-transform: uppercase;
 	}
 
-	.sidebar-intro {
-		padding: 2rem 0 1.5rem;
-	}
-
-	.eyebrow,
 	.card-kicker {
 		margin-bottom: 0.75rem;
 		color: var(--accent-dark);
@@ -434,19 +536,6 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
-	}
-
-	h1 {
-		font-size: 2.25rem;
-		font-weight: 700;
-		line-height: 1.1;
-		text-wrap: balance;
-	}
-
-	.intro-copy {
-		margin-top: 1rem;
-		color: var(--fg-secondary);
-		font-size: 1rem;
 	}
 
 	.info-card {
@@ -484,6 +573,92 @@
 		color: var(--fg-secondary);
 		font-size: 0.95rem;
 		line-height: 1.5;
+	}
+
+	.search-label {
+		display: block;
+		margin-bottom: 0.65rem;
+		color: var(--fg);
+		font-size: 0.85rem;
+		font-weight: 700;
+	}
+
+	.search-input-wrap {
+		position: relative;
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.search-input-wrap input {
+		width: 100%;
+		min-width: 0;
+		border: 1px solid var(--gray);
+		border-radius: 0.5rem;
+		padding: 0.7rem 0.8rem;
+		background: var(--neutral-lightest);
+		color: var(--fg);
+		font: inherit;
+		font-size: 0.9rem;
+	}
+
+	.search-input-wrap input:focus-visible {
+		outline: 2px solid var(--accent);
+		outline-offset: 2px;
+	}
+
+	.search-clear {
+		flex: 0 0 auto;
+		border: 0;
+		padding: 0.35rem 0;
+		background: transparent;
+		color: var(--fg-secondary);
+		font: inherit;
+		font-size: 0.75rem;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.search-clear:hover,
+	.search-clear:focus-visible {
+		color: var(--accent-dark);
+		text-decoration: underline;
+	}
+
+	.search-results {
+		display: grid;
+		gap: 0.2rem;
+		max-height: 14rem;
+		margin-top: 0.5rem;
+		overflow-y: auto;
+		padding: 0.25rem;
+		border: 1px solid var(--gray);
+		border-radius: 0.5rem;
+		background: var(--neutral-lightest);
+	}
+
+	.search-result {
+		border: 0;
+		border-radius: 0.35rem;
+		padding: 0.55rem 0.6rem;
+		background: transparent;
+		color: var(--fg);
+		font: inherit;
+		font-size: 0.85rem;
+		text-align: left;
+		cursor: pointer;
+	}
+
+	.search-result:hover,
+	.search-result.highlighted,
+	.search-result:focus-visible {
+		background: var(--neutral-light);
+		color: var(--accent-dark);
+	}
+
+	.search-empty {
+		margin: 0.6rem 0 0 !important;
+		font-size: 0.8rem !important;
 	}
 
 	.layer-dot {
@@ -700,10 +875,6 @@
 	@media (min-width: 851px) and (max-width: 1100px) {
 		.sidebar-inner {
 			padding: 1.25rem;
-		}
-
-		h1 {
-			font-size: 2rem;
 		}
 	}
 

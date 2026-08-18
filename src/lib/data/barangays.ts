@@ -66,5 +66,22 @@ export const calapanBarangayLabelPoints = barangayLabelPointData as FeatureColle
 	Pick<BarangayProperties, 'id' | 'name' | 'sourceName'>
 >;
 
+function normalizeBarangaySearch(value: string): string {
+	return value
+		.normalize('NFKD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.toLocaleLowerCase('en-PH')
+		.trim();
+}
+
+export function searchCalapanBarangays(query: string): BarangayProperties[] {
+	const normalizedQuery = normalizeBarangaySearch(query);
+	if (!normalizedQuery) return [];
+
+	return calapanBarangays.features
+		.filter((feature) => normalizeBarangaySearch(feature.properties.name).includes(normalizedQuery))
+		.map((feature) => feature.properties);
+}
+
 export const calapanBarangayAttribution =
 	'Barangay boundaries: OCHA Philippines COD-AB, sourced from NAMRIA and PSA. CC BY-IGO.';

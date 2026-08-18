@@ -31,6 +31,7 @@
 	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	type Props = {
 		typhoonMapData?: TyphoonMapData;
+		selectedBarangayId?: string | null;
 		onSelectArea?: (area: BarangayProperties | null) => void;
 		onHazardFamilyChange?: (family: HazardFamily) => void;
 	};
@@ -38,9 +39,11 @@
 
 	let {
 		typhoonMapData = emptyTyphoonMapData,
+		selectedBarangayId = null,
 		onSelectArea,
 		onHazardFamilyChange
 	}: Props = $props();
+	let syncSelectedBarangay: (id: string | null) => void = () => {};
 
 	let criticalFacilitiesEnabled = $state(false);
 	let criticalFacilitiesState = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
@@ -84,6 +87,35 @@
 		}
 
 		return properties as BarangayProperties;
+	}
+
+	function getBarangayBounds(id: string): MapBounds | null {
+		const feature = calapanBarangays.features.find((item) => item.properties.id === id);
+		if (!feature) return null;
+
+		let minLongitude = Infinity;
+		let minLatitude = Infinity;
+		let maxLongitude = -Infinity;
+		let maxLatitude = -Infinity;
+
+		const visit = (value: unknown): void => {
+			if (!Array.isArray(value)) return;
+			if (typeof value[0] === 'number' && typeof value[1] === 'number') {
+				minLongitude = Math.min(minLongitude, value[0]);
+				minLatitude = Math.min(minLatitude, value[1]);
+				maxLongitude = Math.max(maxLongitude, value[0]);
+				maxLatitude = Math.max(maxLatitude, value[1]);
+				return;
+			}
+			for (const child of value) visit(child);
+		};
+
+		visit(feature.geometry.coordinates);
+		if (!Number.isFinite(minLongitude) || !Number.isFinite(minLatitude)) return null;
+		return [
+			[minLongitude, minLatitude],
+			[maxLongitude, maxLatitude]
+		];
 	}
 
 	function escapeHtml(value: string): string {
@@ -299,10 +331,15 @@
 		updateHazardVisibility();
 	}
 
+	$effect(() => {
+		const id = selectedBarangayId;
+		if (mapReady) syncSelectedBarangay(id);
+	});
+
 	onMount(() => {
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
-		let selectedBarangayId: string | null = null;
+		let selectedMapBarangayId: string | null = null;
 		let terrainReady = false;
 		let facilityPulseFrame: number | null = null;
 		let facilityPopup: import('maplibre-gl').Popup | null = null;
@@ -332,31 +369,31 @@
 			map = mapInstance;
 
 			const clearSelection = () => {
-				if (selectedBarangayId) {
+				if (selectedMapBarangayId) {
 					mapInstance.setFeatureState(
-						{ source: 'calapan-barangays', id: selectedBarangayId },
+						{ source: 'calapan-barangays', id: selectedMapBarangayId },
 						{ selected: false }
 					);
 				}
 				if (mapInstance.getLayer('calapan-barangay-dim')) {
 					mapInstance.setPaintProperty('calapan-barangay-dim', 'fill-opacity', 0);
 				}
-				selectedBarangayId = null;
+				selectedMapBarangayId = null;
 				onSelectArea?.(null);
 			};
 
 			const selectBarangay = (properties: BarangayProperties) => {
-				if (selectedBarangayId === properties.id) {
+				if (selectedMapBarangayId === properties.id) {
 					clearSelection();
 					return;
 				}
-				if (selectedBarangayId && selectedBarangayId !== properties.id) {
+				if (selectedMapBarangayId && selectedMapBarangayId !== properties.id) {
 					mapInstance.setFeatureState(
-						{ source: 'calapan-barangays', id: selectedBarangayId },
+						{ source: 'calapan-barangays', id: selectedMapBarangayId },
 						{ selected: false }
 					);
 				}
-				selectedBarangayId = properties.id;
+				selectedMapBarangayId = properties.id;
 				mapInstance.setFeatureState(
 					{ source: 'calapan-barangays', id: properties.id },
 					{ selected: true }
@@ -368,6 +405,22 @@
 					0.3
 				] as unknown as import('maplibre-gl').PropertyValueSpecification<number>);
 				onSelectArea?.(properties);
+			};
+
+			syncSelectedBarangay = (id) => {
+				if (!id) {
+					if (selectedMapBarangayId) clearSelection();
+					return;
+				}
+				if (selectedMapBarangayId === id) return;
+
+				const feature = calapanBarangays.features.find((item) => item.properties.id === id);
+				if (!feature) return;
+				selectBarangay(feature.properties);
+				const bounds = getBarangayBounds(id);
+				if (bounds) {
+					mapInstance.fitBounds(bounds, { padding: 48, maxZoom: 13.5, duration: 650 });
+				}
 			};
 
 			updateMapCamera = (nextMode) => {
