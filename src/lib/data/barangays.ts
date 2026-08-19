@@ -1,5 +1,5 @@
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
-import type { FloodHazardClass, FloodHazardSummary, ReturnPeriod } from './flood';
+import type { FloodHazardSummary, ReturnPeriod } from './flood';
 import barangayDataUrl from './calapan-barangays.json?url';
 import barangayLabelPointData from './calapan-barangay-label-points.json';
 import floodSummaryData from './calapan-flood-summaries.json';
@@ -21,8 +21,6 @@ export type BarangayProperties = {
 	id: string;
 	name: string;
 	sourceName: string;
-	floodHazardClasses: FloodHazardClass[];
-	floodHazardSummary: FloodHazardClass | 'Mixed' | 'NoData';
 	floodHazards: Record<ReturnPeriod, FloodHazardSummary>;
 	stormSurgeHazards: Record<StormSurgeAdvisory, StormSurgeSummary>;
 	landslideHazards: Record<LandslideLayer, LandslideHazardSummary>;

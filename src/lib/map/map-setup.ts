@@ -1,9 +1,11 @@
 import { calapanCityBoundary, calapanCityMask } from '$lib/data/calapan-boundary';
-import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 import type { BarangayCollection } from '$lib/data/barangays';
 import type { ViewMode } from '$lib/map-state';
 
 type MapInstance = import('maplibre-gl').Map;
+const calapanContourDataUrl = '/calapan-contours.json';
+const terrainAttribution =
+	'Elevation data © Mapzen, sourced from USGS, NASA, and other contributors.';
 
 export type MapBounds = [[number, number], [number, number]];
 

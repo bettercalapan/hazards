@@ -46,13 +46,6 @@ export const floodHazardPeriods = [
 	}
 ] as const;
 
-export const calapanFloodHazardCoordinates = [
-	[121.10036758600006, 13.467073836000054],
-	[121.28920787700008, 13.467073836000054],
-	[121.28920787700008, 13.296270203000063],
-	[121.10036758600006, 13.296270203000063]
-] as [[number, number], [number, number], [number, number], [number, number]];
-
 export const floodHazardMetadata = {
 	cellSizeMeters: 25,
 	source: 'UP Resilience Institute NOAH Center',

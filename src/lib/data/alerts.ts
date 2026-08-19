@@ -21,10 +21,8 @@ export type OfficialAlert = {
 	severity: string;
 	certainty: string;
 	urgency: string;
-	areas: string[];
 	localAreas: string[];
 	instruction: string;
-	description: string;
 };
 
 export type PagasaAlertsResult = {
@@ -157,10 +155,8 @@ export function parsePagasaCap(
 		severity: readTag(info, 'severity'),
 		certainty: readTag(info, 'certainty'),
 		urgency: readTag(info, 'urgency'),
-		areas,
 		localAreas,
-		instruction: cleanAlertText(readTag(info, 'instruction')),
-		description: cleanAlertText(readTag(info, 'description'))
+		instruction: cleanAlertText(readTag(info, 'instruction'))
 	};
 }
 

@@ -21,12 +21,6 @@ type Options = {
 	onSelectArea?: (area: BarangayProperties | null) => void;
 };
 
-export type BarangayLayerManager = {
-	addLayers: () => void;
-	syncSelection: (id: string | null) => void;
-	dispose: () => void;
-};
-
 export function getBarangayProperties(object: unknown): BarangayProperties | null {
 	if (!object || typeof object !== 'object') return null;
 	const properties = object as Partial<BarangayProperties>;
@@ -77,7 +71,7 @@ export function createBarangayLayerManager({
 	barangayLabelPoints = calapanBarangayLabelPoints,
 	firstSymbolLayerId,
 	onSelectArea
-}: Options): BarangayLayerManager {
+}: Options) {
 	let disposed = false;
 	let selectedBarangayId: string | null = null;
 

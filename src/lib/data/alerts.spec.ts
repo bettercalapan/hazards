@@ -82,7 +82,6 @@ describe('PAGASA alerts', () => {
 			title: 'General Flood Advisory',
 			event: 'General Flood Advisory (Moderate)',
 			severity: 'Moderate',
-			areas: ['Oriental Mindoro', 'Romblon'],
 			localAreas: ['Oriental Mindoro'],
 			instruction: 'Take necessary precautionary measures.'
 		});

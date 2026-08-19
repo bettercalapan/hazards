@@ -48,9 +48,6 @@
 		"wrangler": "^4.97.0"
 	},
 	"dependencies": {
-		"@deck.gl/core": "^9.3.10",
-		"@deck.gl/layers": "^9.3.10",
-		"@deck.gl/mapbox": "^9.3.10",
 		"maplibre-gl": "^6.4.0"
 	}
 }

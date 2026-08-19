@@ -21,13 +21,6 @@ describe('Calapan barangays', () => {
 		expect(new Set(ids).size).toBe(62);
 		expect(
 			calapanBarangays.features.every((feature) =>
-				feature.properties.floodHazardClasses.every((hazardClass) =>
-					['Low', 'Medium', 'High'].includes(hazardClass)
-				)
-			)
-		).toBe(true);
-		expect(
-			calapanBarangays.features.every((feature) =>
 				landslideHazards.every((layer) => {
 					const hazard = feature.properties.landslideHazards[layer.key];
 					return (
@@ -52,11 +45,6 @@ describe('Calapan barangays', () => {
 						['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(hazard.summary)
 					);
 				})
-			)
-		).toBe(true);
-		expect(
-			calapanBarangays.features.every((feature) =>
-				['Low', 'Medium', 'High', 'Mixed', 'NoData'].includes(feature.properties.floodHazardSummary)
 			)
 		).toBe(true);
 		expect(

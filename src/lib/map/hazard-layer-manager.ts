@@ -30,14 +30,6 @@ type FamilyLoad = {
 	cancel: () => void;
 };
 
-export type HazardLayerManager = {
-	addLayers: () => void;
-	updateVisibility: () => void;
-	transition: (nextFamily: HazardFamily) => void;
-	preload: (family: HazardFamily) => void;
-	dispose: () => void;
-};
-
 export function createHazardLayerManager({
 	map,
 	firstSymbolLayerId,
@@ -45,7 +37,7 @@ export function createHazardLayerManager({
 	getActiveFamily,
 	getEnabledLayers,
 	setLoadingFamily
-}: Options): HazardLayerManager {
+}: Options) {
 	let disposed = false;
 	let renderedHazardFamily = getActiveFamily();
 	let transitionSequence = 0;

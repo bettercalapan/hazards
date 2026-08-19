@@ -1,10 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-	calapanFloodHazardCoordinates,
-	floodHazardColors,
-	floodHazardMetadata,
-	floodHazardPeriods
-} from './flood';
+import { floodHazardColors, floodHazardMetadata, floodHazardPeriods } from './flood';
 
 describe('Calapan flood hazard', () => {
 	it('contains all source-provided return periods', () => {
@@ -14,7 +9,6 @@ describe('Calapan flood hazard', () => {
 			'/calapan-flood-hazard-25yr-tiles/{z}/{x}/{y}.pbf',
 			'/calapan-flood-hazard-100yr-tiles/{z}/{x}/{y}.pbf'
 		]);
-		expect(calapanFloodHazardCoordinates).toHaveLength(4);
 		expect(floodHazardColors).toEqual({ Low: '#f2c94c', Medium: '#f2994a', High: '#eb5757' });
 		expect(floodHazardMetadata.cellSizeMeters).toBe(25);
 		expect(floodHazardMetadata.source).toBe('UP Resilience Institute NOAH Center');

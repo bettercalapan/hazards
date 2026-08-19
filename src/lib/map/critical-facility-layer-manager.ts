@@ -42,21 +42,12 @@ type Options = {
 	setState: (state: LoadState) => void;
 };
 
-export type CriticalFacilityLayerManager = {
-	addLayers: () => void;
-	bindInteractions: (Popup: typeof import('maplibre-gl').Popup) => void;
-	moveLayersToTop: () => void;
-	setVisibility: (visible: boolean) => void;
-	load: () => void;
-	dispose: () => void;
-};
-
 export function createCriticalFacilityLayerManager({
 	map,
 	firstSymbolLayerId,
 	reducedMotion,
 	setState
-}: Options): CriticalFacilityLayerManager {
+}: Options) {
 	let disposed = false;
 	let facilityPulseFrame: number | null = null;
 	let facilityRequest: Promise<void> | null = null;

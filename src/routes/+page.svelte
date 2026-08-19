@@ -48,6 +48,7 @@
 		landslide: landslideMetadata,
 		earthquake: seismicMetadata
 	} as const;
+	const hazardClassLevels = ['Low', 'Medium', 'High'] as const;
 	let activeHazardMetadata = $derived(
 		activeHazardFamily === 'typhoon'
 			? null
@@ -81,10 +82,6 @@
 		highlightedBarangayIndex = 0;
 		mapShareState = { ...mapShareState, selectedBarangayId: selectedBarangayId };
 		updateMapUrl(mapShareState);
-	}
-
-	function handleAreaSelect(area: BarangayProperties | null) {
-		updateSelectedArea(area);
 	}
 
 	function handleBarangaySearchInput(event: Event) {
@@ -144,10 +141,6 @@
 		}
 	}
 
-	function handleHazardFamilyChange(family: HazardFamily) {
-		activeHazardFamily = family;
-	}
-
 	function handleMapStateChange(nextState: MapShareState) {
 		mapShareState = nextState;
 		activeHazardFamily = nextState.activeHazardFamily;
@@ -204,8 +197,8 @@
 			typhoonMapData={data.typhoonMapData}
 			{selectedBarangayId}
 			{initialMapState}
-			onSelectArea={handleAreaSelect}
-			onHazardFamilyChange={handleHazardFamilyChange}
+			onSelectArea={updateSelectedArea}
+			onHazardFamilyChange={(family) => (activeHazardFamily = family)}
 			onMapStateChange={handleMapStateChange}
 		/>
 	</section>
@@ -303,18 +296,12 @@
 							<div class="period-legend">
 								<strong>{period.shortName}</strong>
 								<div class="legend">
-									<div>
-										<span class="legend-swatch" style={`background: ${period.colors.Low}`}
-										></span>Low
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${period.colors.Medium}`}
-										></span>Medium
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${period.colors.High}`}
-										></span>High
-									</div>
+									{#each hazardClassLevels as level (level)}
+										<div>
+											<span class="legend-swatch" style={`background: ${period.colors[level]}`}
+											></span>{level}
+										</div>
+									{/each}
 								</div>
 							</div>
 						{/each}
@@ -335,18 +322,12 @@
 							<div class="period-legend">
 								<strong>{advisory.shortName}, {advisory.height}</strong>
 								<div class="legend">
-									<div>
-										<span class="legend-swatch" style={`background: ${advisory.colors.Low}`}
-										></span>Low
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${advisory.colors.Medium}`}
-										></span>Medium
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${advisory.colors.High}`}
-										></span>High
-									</div>
+									{#each hazardClassLevels as level (level)}
+										<div>
+											<span class="legend-swatch" style={`background: ${advisory.colors[level]}`}
+											></span>{level}
+										</div>
+									{/each}
 								</div>
 							</div>
 						{/each}
@@ -365,17 +346,12 @@
 							<div class="period-legend">
 								<strong>{layer.shortName}</strong>
 								<div class="legend">
-									<div>
-										<span class="legend-swatch" style={`background: ${layer.colors.Low}`}></span>Low
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${layer.colors.Medium}`}
-										></span>Medium
-									</div>
-									<div>
-										<span class="legend-swatch" style={`background: ${layer.colors.High}`}
-										></span>High
-									</div>
+									{#each hazardClassLevels as level (level)}
+										<div>
+											<span class="legend-swatch" style={`background: ${layer.colors[level]}`}
+											></span>{level}
+										</div>
+									{/each}
 								</div>
 							</div>
 						{/each}

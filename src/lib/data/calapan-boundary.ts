@@ -7,9 +7,6 @@ export const calapanCityBounds = [
 	121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054
 ] as const;
 
-export const calapanBoundaryAttribution =
-	'Boundary: geoBoundaries, sourced from NAMRIA, PSA, and OCHA Philippines. CC BY 3.0 IGO.';
-
 const worldRing = [
 	[-180, -85],
 	[180, -85],

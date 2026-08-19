@@ -41,6 +41,14 @@
 		if (family === 'storm-surge') return 'Storm surge';
 		return family.charAt(0).toUpperCase() + family.slice(1);
 	}
+
+	const hazardFamilies = [
+		{ family: 'flood', label: 'Flood' },
+		{ family: 'storm-surge', label: 'Storm surge' },
+		{ family: 'landslide', label: 'Landslide' },
+		{ family: 'earthquake', label: 'Earthquake' },
+		{ family: 'typhoon', label: 'Typhoon' }
+	] as const satisfies readonly { family: HazardFamily; label: string }[];
 </script>
 
 <div class="map-toolbar" role="region" aria-label="Map controls">
@@ -79,56 +87,18 @@
 				<span class="control-hint">Choose a view</span>
 			</div>
 			<div class="hazard-family-toggle" role="group" aria-label="Hazard type">
-				<button
-					class:active={activeHazardFamily === 'flood'}
-					aria-pressed={activeHazardFamily === 'flood'}
-					type="button"
-					onclick={() => onHazardFamilyChange('flood')}
-					onmouseenter={() => onPreloadHazardFamily('flood')}
-					onfocus={() => onPreloadHazardFamily('flood')}
-				>
-					Flood
-				</button>
-				<button
-					class:active={activeHazardFamily === 'storm-surge'}
-					aria-pressed={activeHazardFamily === 'storm-surge'}
-					type="button"
-					onclick={() => onHazardFamilyChange('storm-surge')}
-					onmouseenter={() => onPreloadHazardFamily('storm-surge')}
-					onfocus={() => onPreloadHazardFamily('storm-surge')}
-				>
-					Storm surge
-				</button>
-				<button
-					class:active={activeHazardFamily === 'landslide'}
-					aria-pressed={activeHazardFamily === 'landslide'}
-					type="button"
-					onclick={() => onHazardFamilyChange('landslide')}
-					onmouseenter={() => onPreloadHazardFamily('landslide')}
-					onfocus={() => onPreloadHazardFamily('landslide')}
-				>
-					Landslide
-				</button>
-				<button
-					class:active={activeHazardFamily === 'earthquake'}
-					aria-pressed={activeHazardFamily === 'earthquake'}
-					type="button"
-					onclick={() => onHazardFamilyChange('earthquake')}
-					onmouseenter={() => onPreloadHazardFamily('earthquake')}
-					onfocus={() => onPreloadHazardFamily('earthquake')}
-				>
-					Earthquake
-				</button>
-				<button
-					class:active={activeHazardFamily === 'typhoon'}
-					aria-pressed={activeHazardFamily === 'typhoon'}
-					type="button"
-					onclick={() => onHazardFamilyChange('typhoon')}
-					onmouseenter={() => onPreloadHazardFamily('typhoon')}
-					onfocus={() => onPreloadHazardFamily('typhoon')}
-				>
-					Typhoon
-				</button>
+				{#each hazardFamilies as item (item.family)}
+					<button
+						class:active={activeHazardFamily === item.family}
+						aria-pressed={activeHazardFamily === item.family}
+						type="button"
+						onclick={() => onHazardFamilyChange(item.family)}
+						onmouseenter={() => onPreloadHazardFamily(item.family)}
+						onfocus={() => onPreloadHazardFamily(item.family)}
+					>
+						{item.label}
+					</button>
+				{/each}
 			</div>
 
 			<div class="context-controls">
