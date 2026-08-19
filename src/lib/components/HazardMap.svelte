@@ -500,6 +500,9 @@
 				attributionControl: { compact: true }
 			});
 			map = mapInstance;
+			mapInstance.on('error', ({ error }) => {
+				console.error(`[MapLibre] ${error.message}`);
+			});
 
 			const clearSelection = () => {
 				if (selectedMapBarangayId) {

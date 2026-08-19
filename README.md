@@ -21,6 +21,15 @@ pnpm run test
 
 `pnpm run gen` regenerates Cloudflare Worker types after changing `wrangler.jsonc`.
 
+Browser smoke tests use Playwright and Chromium:
+
+```sh
+pnpm exec playwright install chromium
+pnpm run test:browser
+```
+
+The browser suite checks map startup, critical facilities, hazard controls, barangay search, and map asset failures.
+
 ## Deployment
 
 The app uses SvelteKit with the Cloudflare adapter and deploys to Workers through Wrangler.

@@ -24,3 +24,8 @@ vite.config.ts.timestamp-*
 
 # Generated Cloudflare bindings
 /worker-configuration.d.ts
+
+# Playwright
+/test-results
+/playwright-report
+/blob-report

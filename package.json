@@ -14,6 +14,7 @@
 		"lint": "prettier --check . && eslint .",
 		"format": "prettier --write .",
 		"test:unit": "vitest",
+		"test:browser": "playwright test",
 		"test": "pnpm run test:unit -- --run",
 		"gen": "wrangler types",
 		"generate:critical-facilities": "node scripts/generate-critical-facilities.mjs",
@@ -22,6 +23,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
+		"@playwright/test": "^1.62.1",
 		"@sveltejs/adapter-cloudflare": "^7.2.8",
 		"@sveltejs/kit": "^2.63.0",
 		"@sveltejs/vite-plugin-svelte": "^7.1.2",
