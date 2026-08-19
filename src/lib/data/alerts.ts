@@ -167,7 +167,8 @@ export async function fetchPagasaAlerts(
 	now = Date.now()
 ): Promise<PagasaAlertsResult> {
 	const feedResponse = await fetcher(pagasaAlertFeedUrl, {
-		headers: { accept: 'application/atom+xml, application/xml' }
+		headers: { accept: 'application/atom+xml, application/xml' },
+		cf: { cacheTtlByStatus: { '200-299': 300, '400-599': 0 } }
 	});
 	if (!feedResponse.ok) throw new Error(`PAGASA alert feed returned ${feedResponse.status}`);
 

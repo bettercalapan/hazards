@@ -344,7 +344,8 @@ export async function fetchPanahonTyphoonTracks(
 	now = Date.now()
 ): Promise<TyphoonMapData> {
 	const response = await fetcher(panahonCycloneTrackUrl, {
-		headers: { accept: 'application/json' }
+		headers: { accept: 'application/json' },
+		cf: { cacheTtlByStatus: { '200-299': 300, '400-599': 0 } }
 	});
 	if (!response.ok) throw new Error(`PANaHON cyclone track returned ${response.status}`);
 

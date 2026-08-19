@@ -194,6 +194,7 @@ export function setupBaseMap(map: MapInstance, barangays: BarangayCollection) {
 			id: 'calapan-terrain-hillshade',
 			type: 'hillshade',
 			source: 'calapan-terrain-hillshade',
+			layout: { visibility: 'none' },
 			paint: {
 				'hillshade-exaggeration': 0.18,
 				'hillshade-shadow-color': '#756c5f',

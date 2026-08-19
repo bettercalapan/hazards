@@ -163,6 +163,8 @@
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
 		let terrainReady = false;
+		let terrainEnabled = false;
+		let terrainTimer: ReturnType<typeof setTimeout> | undefined;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const initialize = async () => {
@@ -198,7 +200,7 @@
 			});
 
 			updateMapCamera = (nextMode) => {
-				setMapCamera(mapInstance, terrainReady, nextMode);
+				setMapCamera(mapInstance, terrainReady && terrainEnabled, nextMode);
 			};
 
 			mapInstance.once('load', () => {
@@ -283,6 +285,12 @@
 				mapInstance.setMinZoom(mapInstance.getZoom());
 				updateMapCamera(viewMode);
 				mapReady = true;
+				terrainTimer = setTimeout(() => {
+					if (disposed) return;
+					terrainEnabled = true;
+					mapInstance.setLayoutProperty('calapan-terrain-hillshade', 'visibility', 'visible');
+					updateMapCamera(viewMode);
+				}, 1500);
 			});
 		};
 
@@ -297,6 +305,7 @@
 			disposeCriticalFacilityLayerManager = () => {};
 			disposeHazardLayerManager();
 			disposeHazardLayerManager = () => {};
+			if (terrainTimer) clearTimeout(terrainTimer);
 			setCriticalFacilitiesVisibility = () => {};
 			loadCriticalFacilities = () => {};
 			map?.remove();
