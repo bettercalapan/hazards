@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount, untrack } from 'svelte';
-	import { SvelteMap } from 'svelte/reactivity';
 	import { calapanCityBounds } from '$lib/data/calapan-boundary';
 	import {
 		calapanBarangayLabelPoints,
@@ -8,17 +7,15 @@
 		type BarangayCollection,
 		type BarangayProperties
 	} from '$lib/data/barangays';
-	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
-	import { stormSurgeAdvisories, type StormSurgeAdvisory } from '$lib/data/storm-surge';
-	import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
+	import { type ReturnPeriod } from '$lib/data/flood';
+	import { type StormSurgeAdvisory } from '$lib/data/storm-surge';
+	import { type LandslideLayer } from '$lib/data/landslide';
 	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
 	import {
 		criticalFacilityCategories,
 		criticalFacilitiesAttribution,
-		criticalFacilityColors,
-		emptyCriticalFacilities,
-		type CriticalFacilityCollection
+		criticalFacilityColors
 	} from '$lib/data/critical-facilities';
 	import {
 		createDefaultMapShareState,
@@ -34,18 +31,8 @@
 		updateMapCamera as setMapCamera,
 		type MapBounds
 	} from '$lib/map/map-setup';
-	import {
-		fillColorForLayer,
-		hazardFamilies,
-		hazardTileBounds,
-		isLayerEnabled,
-		layerIdFor,
-		layersForFamily,
-		sourceIdsForFamily,
-		sourceLayerFor,
-		type EnabledHazardLayers,
-		type HazardLayerDefinition
-	} from '$lib/map/hazard-layers';
+	import { createCriticalFacilityLayerManager } from '$lib/map/critical-facility-layer-manager';
+	import { createHazardLayerManager } from '$lib/map/hazard-layer-manager';
 	import MapControls from './MapControls.svelte';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -73,21 +60,7 @@
 	let criticalFacilitiesState = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
 	let loadCriticalFacilities: () => void = () => {};
 	let setCriticalFacilitiesVisibility: (visible: boolean) => void = () => {};
-	const criticalFacilityColorExpression = [
-		'match',
-		['get', 'category'],
-		'police',
-		criticalFacilityColors.police,
-		'fire',
-		criticalFacilityColors.fire,
-		'hospital',
-		criticalFacilityColors.hospital,
-		'school',
-		criticalFacilityColors.school,
-		'evacuation-center',
-		criticalFacilityColors['evacuation-center'],
-		'#249b61'
-	] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
+	let disposeCriticalFacilityLayerManager = () => {};
 
 	function toggleCriticalFacilities() {
 		criticalFacilitiesEnabled = !criticalFacilitiesEnabled;
@@ -169,6 +142,7 @@
 	let updateHazardVisibility: () => void = () => {};
 	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
 	let preloadHazardFamily = $state<(family: HazardFamily) => void>(() => {});
+	let disposeHazardLayerManager = () => {};
 
 	function reportMapState() {
 		onMapStateChange?.({
@@ -242,7 +216,6 @@
 		let map: import('maplibre-gl').Map | undefined;
 		let selectedMapBarangayId: string | null = null;
 		let terrainReady = false;
-		let facilityPulseFrame: number | null = null;
 		let facilityPopup: import('maplibre-gl').Popup | null = null;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -340,281 +313,25 @@
 				const baseMap = setupBaseMap(mapInstance, calapanBarangays);
 				terrainReady = baseMap.terrainReady;
 				const { firstSymbolLayerId } = baseMap;
-				const addHazardLayers = (
-					family: HazardFamily,
-					layers: readonly HazardLayerDefinition[]
-				) => {
-					for (const layer of [...layers].reverse()) {
-						const sourceId = layerIdFor(family, layer.key);
-						mapInstance.addSource(sourceId, {
-							type: 'vector',
-							tiles: [layer.tilePath],
-							minzoom: 10,
-							maxzoom: 15,
-							bounds: hazardTileBounds
-						});
-						mapInstance.addLayer(
-							{
-								id: sourceId,
-								type: 'fill',
-								source: sourceId,
-								'source-layer': sourceLayerFor(family, layer),
-								layout: { visibility: 'none' },
-								paint: {
-									'fill-color': fillColorForLayer(layer),
-									'fill-opacity': 0.85
-								}
-							},
-							firstSymbolLayerId
-						);
-					}
-				};
-				addHazardLayers('flood', floodHazardPeriods);
-				addHazardLayers('storm-surge', stormSurgeAdvisories);
-				addHazardLayers('landslide', landslideHazards);
-				for (const layer of seismicHazards) {
-					addHazardLayers('earthquake', [layer]);
-				}
-				const typhoonLayerIds = [
-					'calapan-typhoon-grid',
-					'calapan-typhoon-track-observed',
-					'calapan-typhoon-track-forecast',
-					'calapan-typhoon-points'
-				];
-				mapInstance.addSource('calapan-typhoon-grid', {
-					type: 'geojson',
-					data: typhoonMapData.grid
+				const hazardLayerManager = createHazardLayerManager({
+					map: mapInstance,
+					firstSymbolLayerId,
+					typhoonMapData,
+					getActiveFamily: () => activeHazardFamily,
+					getEnabledLayers: () => ({
+						enabledFloodPeriods,
+						enabledStormSurgeAdvisories,
+						enabledLandslideLayers,
+						enabledSeismicLayers
+					}),
+					setLoadingFamily: (family) => (loadingHazardFamily = family)
 				});
-				mapInstance.addLayer(
-					{
-						id: 'calapan-typhoon-grid',
-						type: 'fill',
-						source: 'calapan-typhoon-grid',
-						layout: { visibility: 'none' },
-						paint: {
-							'fill-color': [
-								'match',
-								['get', 'type'],
-								'LPA',
-								'#9aa5b1',
-								'TD',
-								'#00e400',
-								'TS',
-								'#ffe400',
-								'STS',
-								'#ff9800',
-								'TY',
-								'#ff2020',
-								'STY',
-								'#e000e0',
-								'#9aa5b1'
-							] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
-							'fill-opacity': [
-								'interpolate',
-								['linear'],
-								['get', 'proximity'],
-								1,
-								0.18,
-								4,
-								0.78
-							] as unknown as import('maplibre-gl').PropertyValueSpecification<number>,
-							'fill-outline-color': '#fff8df'
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addSource('calapan-typhoon-track', {
-					type: 'geojson',
-					data: typhoonMapData.tracks
-				});
-				mapInstance.addLayer(
-					{
-						id: 'calapan-typhoon-track-observed',
-						type: 'line',
-						source: 'calapan-typhoon-track',
-						filter: ['==', ['get', 'forecast'], false],
-						layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' },
-						paint: { 'line-color': '#b83355', 'line-width': 3, 'line-opacity': 0.9 }
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'calapan-typhoon-track-forecast',
-						type: 'line',
-						source: 'calapan-typhoon-track',
-						filter: ['==', ['get', 'forecast'], true],
-						layout: { visibility: 'none', 'line-cap': 'round', 'line-join': 'round' },
-						paint: {
-							'line-color': '#b83355',
-							'line-width': 3,
-							'line-opacity': 0.9,
-							'line-dasharray': [1.5, 1.5]
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addSource('calapan-typhoon-points', {
-					type: 'geojson',
-					data: typhoonMapData.points
-				});
-				mapInstance.addLayer(
-					{
-						id: 'calapan-typhoon-points',
-						type: 'circle',
-						source: 'calapan-typhoon-points',
-						layout: { visibility: 'none' },
-						paint: {
-							'circle-radius': 4,
-							'circle-color': [
-								'match',
-								['get', 'type'],
-								'LPA',
-								'#9aa5b1',
-								'TD',
-								'#00e400',
-								'TS',
-								'#ffe400',
-								'STS',
-								'#ff9800',
-								'TY',
-								'#ff2020',
-								'STY',
-								'#e000e0',
-								'#9aa5b1'
-							] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
-							'circle-stroke-color': '#b83355',
-							'circle-stroke-width': 2
-						}
-					},
-					firstSymbolLayerId
-				);
-
-				const getEnabledLayers = (): EnabledHazardLayers => ({
-					enabledFloodPeriods,
-					enabledStormSurgeAdvisories,
-					enabledLandslideLayers,
-					enabledSeismicLayers
-				});
-				const setFamilyVisibility = (family: HazardFamily, visible: boolean, opacity = 0.85) => {
-					if (family === 'typhoon') {
-						for (const layerId of typhoonLayerIds) {
-							if (!mapInstance.getLayer(layerId)) continue;
-							mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
-							if (layerId === 'calapan-typhoon-grid') {
-								mapInstance.setPaintProperty(
-									layerId,
-									'fill-opacity',
-									visible && opacity > 0
-										? ([
-												'interpolate',
-												['linear'],
-												['get', 'proximity'],
-												1,
-												0.18,
-												4,
-												0.78
-											] as unknown as import('maplibre-gl').PropertyValueSpecification<number>)
-										: 0
-								);
-							}
-						}
-						return;
-					}
-					for (const layer of layersForFamily(family)) {
-						const layerId = layerIdFor(family, layer.key);
-						const shouldShow = visible && isLayerEnabled(family, layer.key, getEnabledLayers());
-						if (!mapInstance.getLayer(layerId)) continue;
-						mapInstance.setLayoutProperty(layerId, 'visibility', shouldShow ? 'visible' : 'none');
-						mapInstance.setPaintProperty(layerId, 'fill-opacity', shouldShow ? opacity : 0.85);
-					}
-				};
-				const familyLoads = new SvelteMap<HazardFamily, Promise<void>>();
-				const loadFamilyTiles = (family: HazardFamily) => {
-					const existingLoad = familyLoads.get(family);
-					if (existingLoad) return existingLoad;
-
-					const sourceIds = sourceIdsForFamily(family, getEnabledLayers());
-					if (sourceIds.length === 0) return Promise.resolve();
-
-					const load = new Promise<void>((resolve) => {
-						let timeout: ReturnType<typeof setTimeout>;
-						let settled = false;
-						const finish = () => {
-							if (settled) return;
-							settled = true;
-							clearTimeout(timeout);
-							mapInstance.off('sourcedata', onSourceData);
-							mapInstance.off('idle', onIdle);
-							resolve();
-						};
-						const check = () => {
-							if (sourceIds.every((sourceId) => mapInstance.isSourceLoaded(sourceId))) finish();
-						};
-						const onSourceData = () => check();
-						const onIdle = () => check();
-
-						mapInstance.on('sourcedata', onSourceData);
-						mapInstance.on('idle', onIdle);
-						timeout = setTimeout(finish, 10000);
-						check();
-					});
-
-					familyLoads.set(family, load);
-					void load.finally(() => {
-						if (familyLoads.get(family) === load) familyLoads.delete(family);
-					});
-					return load;
-				};
-				let renderedHazardFamily: HazardFamily = activeHazardFamily;
-				let transitionSequence = 0;
-				transitionHazardFamily = (nextFamily) => {
-					const previousFamily = renderedHazardFamily;
-					if (nextFamily === previousFamily) {
-						loadingHazardFamily = null;
-						updateHazardVisibility();
-						return;
-					}
-
-					const sequence = ++transitionSequence;
-					loadingHazardFamily = nextFamily;
-					for (const family of hazardFamilies) {
-						if (family !== previousFamily && family !== nextFamily) {
-							setFamilyVisibility(family, false);
-						}
-					}
-					setFamilyVisibility(nextFamily, true, 0);
-
-					void loadFamilyTiles(nextFamily).then(() => {
-						if (sequence !== transitionSequence) return;
-						setFamilyVisibility(previousFamily, false);
-						setFamilyVisibility(nextFamily, true);
-						for (const family of hazardFamilies) {
-							if (family !== nextFamily) setFamilyVisibility(family, false);
-						}
-						renderedHazardFamily = nextFamily;
-						loadingHazardFamily = null;
-					});
-				};
-				preloadHazardFamily = (family) => {
-					if (family === renderedHazardFamily || family === activeHazardFamily) return;
-					setFamilyVisibility(family, true, 0);
-					void loadFamilyTiles(family).then(() => {
-						if (renderedHazardFamily !== family && activeHazardFamily !== family) {
-							setFamilyVisibility(family, false);
-						}
-					});
-				};
-				updateHazardVisibility = () => {
-					for (const family of hazardFamilies) {
-						setFamilyVisibility(
-							family,
-							family === renderedHazardFamily || family === loadingHazardFamily,
-							family === loadingHazardFamily ? 0 : 0.85
-						);
-					}
-				};
-				updateHazardVisibility();
+				hazardLayerManager.addLayers();
+				disposeHazardLayerManager = hazardLayerManager.dispose;
+				transitionHazardFamily = hazardLayerManager.transition;
+				preloadHazardFamily = hazardLayerManager.preload;
+				updateHazardVisibility = hazardLayerManager.updateVisibility;
+				hazardLayerManager.updateVisibility();
 				mapInstance.addLayer(
 					{
 						id: 'calapan-city-mask-overlay',
@@ -640,169 +357,17 @@
 					},
 					firstSymbolLayerId
 				);
-				const criticalFacilityLayerIds = [
-					'critical-facilities-clusters',
-					'critical-facilities-cluster-count',
-					'critical-facilities-pulse',
-					'critical-facilities-points',
-					'critical-facilities-labels'
-				];
-				mapInstance.addSource('calapan-critical-facilities', {
-					type: 'geojson',
-					data: emptyCriticalFacilities,
-					cluster: true,
-					clusterMaxZoom: 12,
-					clusterMinPoints: 3,
-					clusterRadius: 48
+				const criticalFacilityLayerManager = createCriticalFacilityLayerManager({
+					map: mapInstance,
+					firstSymbolLayerId,
+					reducedMotion,
+					setState: (state) => (criticalFacilitiesState = state)
 				});
-				mapInstance.addLayer(
-					{
-						id: 'critical-facilities-clusters',
-						type: 'circle',
-						source: 'calapan-critical-facilities',
-						filter: ['has', 'point_count'],
-						layout: { visibility: 'none' },
-						paint: {
-							'circle-color': '#173e3b',
-							'circle-radius': ['step', ['get', 'point_count'], 3, 14, 10, 18, 25],
-							'circle-opacity': 0.9,
-							'circle-stroke-color': '#f7fff9',
-							'circle-stroke-width': 1.5
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'critical-facilities-cluster-count',
-						type: 'symbol',
-						source: 'calapan-critical-facilities',
-						filter: ['has', 'point_count'],
-						layout: {
-							visibility: 'none',
-							'text-field': ['get', 'point_count_abbreviated'],
-							'text-size': 10,
-							'text-allow-overlap': true
-						},
-						paint: { 'text-color': '#ffffff' }
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'critical-facilities-pulse',
-						type: 'circle',
-						source: 'calapan-critical-facilities',
-						filter: ['!', ['has', 'point_count']],
-						layout: { visibility: 'none' },
-						paint: {
-							'circle-radius': 9,
-							'circle-color': criticalFacilityColorExpression,
-							'circle-opacity': 0.22,
-							'circle-blur': 0.8
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'critical-facilities-points',
-						type: 'circle',
-						source: 'calapan-critical-facilities',
-						filter: ['!', ['has', 'point_count']],
-						layout: { visibility: 'none' },
-						paint: {
-							'circle-radius': 5,
-							'circle-color': criticalFacilityColorExpression,
-							'circle-opacity': 1,
-							'circle-stroke-color': '#f7fff9',
-							'circle-stroke-width': 1.5
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'critical-facilities-labels',
-						type: 'symbol',
-						source: 'calapan-critical-facilities',
-						minzoom: 12,
-						filter: ['!', ['has', 'point_count']],
-						layout: {
-							visibility: 'none',
-							'text-field': ['coalesce', ['get', 'name'], ['get', 'Name']],
-							'text-size': 10,
-							'text-anchor': 'top',
-							'text-offset': [0, 1.25],
-							'text-optional': true,
-							'text-allow-overlap': false
-						},
-						paint: {
-							'text-color': criticalFacilityColorExpression,
-							'text-halo-color': '#f7fff9',
-							'text-halo-width': 1.25
-						}
-					},
-					firstSymbolLayerId
-				);
-
-				const stopFacilityPulse = () => {
-					if (facilityPulseFrame !== null) cancelAnimationFrame(facilityPulseFrame);
-					facilityPulseFrame = null;
-				};
-				const startFacilityPulse = () => {
-					if (reducedMotion || facilityPulseFrame !== null) return;
-					const animate = (time: number) => {
-						if (!criticalFacilitiesEnabled || !mapInstance.getLayer('critical-facilities-pulse')) {
-							stopFacilityPulse();
-							return;
-						}
-						const wave = (Math.sin(time / 700) + 1) / 2;
-						mapInstance.setPaintProperty(
-							'critical-facilities-pulse',
-							'circle-radius',
-							8 + wave * 8
-						);
-						mapInstance.setPaintProperty(
-							'critical-facilities-pulse',
-							'circle-opacity',
-							0.3 - wave * 0.18
-						);
-						facilityPulseFrame = requestAnimationFrame(animate);
-					};
-					facilityPulseFrame = requestAnimationFrame(animate);
-				};
-				setCriticalFacilitiesVisibility = (visible) => {
-					for (const layerId of criticalFacilityLayerIds) {
-						if (mapInstance.getLayer(layerId)) {
-							mapInstance.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
-						}
-					}
-					if (visible) startFacilityPulse();
-					else stopFacilityPulse();
-				};
-
-				let facilityRequest: Promise<void> | null = null;
-				loadCriticalFacilities = () => {
-					if (facilityRequest) return;
-					criticalFacilitiesState = 'loading';
-					facilityRequest = fetch('/critical-facilities.json')
-						.then(async (response) => {
-							if (!response.ok) throw new Error(`Critical facilities returned ${response.status}`);
-							const data = (await response.json()) as CriticalFacilityCollection;
-							const source = mapInstance.getSource('calapan-critical-facilities') as
-								import('maplibre-gl').GeoJSONSource | undefined;
-							if (!source) throw new Error('Critical facility map source is unavailable');
-							source.setData(data);
-							criticalFacilitiesState = 'ready';
-						})
-						.catch(() => {
-							criticalFacilitiesState = 'error';
-						})
-						.finally(() => {
-							facilityRequest = null;
-						});
-				};
+				criticalFacilityLayerManager.addLayers();
+				disposeCriticalFacilityLayerManager = criticalFacilityLayerManager.dispose;
+				setCriticalFacilitiesVisibility = criticalFacilityLayerManager.setVisibility;
+				loadCriticalFacilities = criticalFacilityLayerManager.load;
+				const criticalFacilityLayerIds = criticalFacilityLayerManager.layerIds;
 
 				mapInstance.addSource('calapan-barangays', {
 					type: 'geojson',
@@ -902,8 +467,7 @@
 					const cluster = event.features?.[0];
 					const clusterId = Number(cluster?.properties?.cluster_id);
 					if (!Number.isFinite(clusterId)) return;
-					const source = mapInstance.getSource('calapan-critical-facilities') as
-						import('maplibre-gl').GeoJSONSource | undefined;
+					const source = criticalFacilityLayerManager.getSource();
 					if (!source) return;
 					void source
 						.getClusterExpansionZoom(clusterId)
@@ -970,9 +534,12 @@
 		return () => {
 			disposed = true;
 			updateMapCamera = () => {};
+			disposeCriticalFacilityLayerManager();
+			disposeCriticalFacilityLayerManager = () => {};
+			disposeHazardLayerManager();
+			disposeHazardLayerManager = () => {};
 			setCriticalFacilitiesVisibility = () => {};
 			loadCriticalFacilities = () => {};
-			if (facilityPulseFrame !== null) cancelAnimationFrame(facilityPulseFrame);
 			facilityPopup?.remove();
 			map?.remove();
 		};
