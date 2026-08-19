@@ -73,15 +73,6 @@
 		}
 	}
 
-	function escapeHtml(value: string): string {
-		return value.replace(
-			/[&<>'"]/g,
-			(character) =>
-				({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] ??
-				character
-		);
-	}
-
 	let mapElement: HTMLDivElement;
 	let viewMode = $state<ViewMode>(initialState.viewMode);
 	let mapReady = $state(false);
@@ -172,7 +163,6 @@
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
 		let terrainReady = false;
-		let facilityPopup: import('maplibre-gl').Popup | null = null;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const initialize = async () => {
@@ -268,7 +258,6 @@
 				disposeCriticalFacilityLayerManager = criticalFacilityLayerManager.dispose;
 				setCriticalFacilitiesVisibility = criticalFacilityLayerManager.setVisibility;
 				loadCriticalFacilities = criticalFacilityLayerManager.load;
-				const criticalFacilityLayerIds = criticalFacilityLayerManager.layerIds;
 				const barangayLayerManager = createBarangayLayerManager({
 					map: mapInstance,
 					barangays: calapanBarangays,
@@ -280,62 +269,8 @@
 				disposeBarangayLayerManager = barangayLayerManager.dispose;
 				syncSelectedBarangay = barangayLayerManager.syncSelection;
 				restrictSymbolLayers(mapInstance);
-				for (const layerId of criticalFacilityLayerIds) {
-					mapInstance.moveLayer(layerId);
-				}
-				mapInstance.on('click', 'critical-facilities-clusters', (event) => {
-					const cluster = event.features?.[0];
-					const clusterId = Number(cluster?.properties?.cluster_id);
-					if (!Number.isFinite(clusterId)) return;
-					const source = criticalFacilityLayerManager.getSource();
-					if (!source) return;
-					void source
-						.getClusterExpansionZoom(clusterId)
-						.then((zoom) => mapInstance.easeTo({ center: event.lngLat, zoom }))
-						.catch(() => {});
-				});
-				mapInstance.on('click', 'critical-facilities-points', (event) => {
-					const properties = event.features?.[0]?.properties as Record<string, unknown> | undefined;
-					if (!properties) return;
-					const name = typeof properties.name === 'string' ? properties.name : 'Unnamed facility';
-					const category =
-						typeof properties.categoryLabel === 'string'
-							? properties.categoryLabel
-							: 'Critical facility';
-					const verification =
-						properties.verificationStatus === 'map-listed-unverified'
-							? 'Map-listed, unverified'
-							: null;
-					const sourceUrl =
-						typeof properties.sourceUrl === 'string' && /^https?:\/\//.test(properties.sourceUrl)
-							? properties.sourceUrl
-							: null;
-					const sourceLabel =
-						typeof properties.sourceLabel === 'string' ? properties.sourceLabel : 'Source';
-					const checkedAt =
-						typeof properties.checkedAt === 'string' ? `Checked ${properties.checkedAt}` : null;
-					const popupDetails = [
-						`<small>${escapeHtml(category)}</small>`,
-						verification ? `<small>${escapeHtml(verification)}</small>` : '',
-						checkedAt ? `<small>${escapeHtml(checkedAt)}</small>` : '',
-						sourceUrl
-							? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(sourceLabel)}</a>`
-							: ''
-					].join('');
-					facilityPopup?.remove();
-					facilityPopup = new Popup({ closeButton: true, closeOnClick: true, offset: 12 })
-						.setLngLat(event.lngLat)
-						.setHTML(`<strong>${escapeHtml(name)}</strong>${popupDetails}`)
-						.addTo(mapInstance);
-				});
-				for (const layerId of ['critical-facilities-clusters', 'critical-facilities-points']) {
-					mapInstance.on('mouseenter', layerId, () => {
-						mapInstance.getCanvas().style.cursor = 'pointer';
-					});
-					mapInstance.on('mouseleave', layerId, () => {
-						mapInstance.getCanvas().style.cursor = '';
-					});
-				}
+				criticalFacilityLayerManager.bindInteractions(Popup);
+				criticalFacilityLayerManager.moveLayersToTop();
 
 				mapInstance.fitBounds(cityBounds, {
 					padding: 32,
@@ -362,7 +297,6 @@
 			disposeHazardLayerManager = () => {};
 			setCriticalFacilitiesVisibility = () => {};
 			loadCriticalFacilities = () => {};
-			facilityPopup?.remove();
 			map?.remove();
 		};
 	});

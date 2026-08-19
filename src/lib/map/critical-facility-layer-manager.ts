@@ -7,6 +7,9 @@ import {
 type MapInstance = import('maplibre-gl').Map;
 type FirstSymbolLayerId = string | undefined;
 type LoadState = 'idle' | 'loading' | 'ready' | 'error';
+type LayerMouseEvent = import('maplibre-gl').MapMouseEvent & {
+	features?: Array<{ properties?: unknown }>;
+};
 
 const layerIds = [
 	'critical-facilities-clusters',
@@ -40,11 +43,11 @@ type Options = {
 };
 
 export type CriticalFacilityLayerManager = {
-	layerIds: readonly string[];
 	addLayers: () => void;
+	bindInteractions: (Popup: typeof import('maplibre-gl').Popup) => void;
+	moveLayersToTop: () => void;
 	setVisibility: (visible: boolean) => void;
 	load: () => void;
-	getSource: () => import('maplibre-gl').GeoJSONSource | undefined;
 	dispose: () => void;
 };
 
@@ -57,6 +60,17 @@ export function createCriticalFacilityLayerManager({
 	let disposed = false;
 	let facilityPulseFrame: number | null = null;
 	let facilityRequest: Promise<void> | null = null;
+	let facilityPopup: import('maplibre-gl').Popup | null = null;
+	let facilityPopupConstructor: typeof import('maplibre-gl').Popup;
+	let interactionsBound = false;
+
+	const escapeHtml = (value: string): string =>
+		value.replace(
+			/[&<>'"]/g,
+			(character) =>
+				({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' })[character] ??
+				character
+		);
 
 	const stopPulse = () => {
 		if (facilityPulseFrame !== null) cancelAnimationFrame(facilityPulseFrame);
@@ -189,6 +203,83 @@ export function createCriticalFacilityLayerManager({
 		else stopPulse();
 	};
 
+	const onClusterClick = (event: LayerMouseEvent) => {
+		const properties = event.features?.[0]?.properties;
+		const clusterId = Number(
+			properties && typeof properties === 'object'
+				? (properties as Record<string, unknown>).cluster_id
+				: undefined
+		);
+		if (!Number.isFinite(clusterId)) return;
+		const source = map.getSource('calapan-critical-facilities') as
+			import('maplibre-gl').GeoJSONSource | undefined;
+		if (!source) return;
+		void source
+			.getClusterExpansionZoom(clusterId)
+			.then((zoom) => {
+				if (!disposed) map.easeTo({ center: event.lngLat, zoom });
+			})
+			.catch(() => {});
+	};
+
+	const onFacilityClick = (event: LayerMouseEvent) => {
+		const properties = event.features?.[0]?.properties;
+		if (!properties || typeof properties !== 'object') return;
+		const values = properties as Record<string, unknown>;
+		const name = typeof values.name === 'string' ? values.name : 'Unnamed facility';
+		const category =
+			typeof values.categoryLabel === 'string' ? values.categoryLabel : 'Critical facility';
+		const verification =
+			values.verificationStatus === 'map-listed-unverified' ? 'Map-listed, unverified' : null;
+		const sourceUrl =
+			typeof values.sourceUrl === 'string' && /^https?:\/\//.test(values.sourceUrl)
+				? values.sourceUrl
+				: null;
+		const sourceLabel = typeof values.sourceLabel === 'string' ? values.sourceLabel : 'Source';
+		const checkedAt = typeof values.checkedAt === 'string' ? `Checked ${values.checkedAt}` : null;
+		const popupDetails = [
+			`<small>${escapeHtml(category)}</small>`,
+			verification ? `<small>${escapeHtml(verification)}</small>` : '',
+			checkedAt ? `<small>${escapeHtml(checkedAt)}</small>` : '',
+			sourceUrl
+				? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(sourceLabel)}</a>`
+				: ''
+		].join('');
+		facilityPopup?.remove();
+		facilityPopup = new facilityPopupConstructor({
+			closeButton: true,
+			closeOnClick: true,
+			offset: 12
+		})
+			.setLngLat(event.lngLat)
+			.setHTML(`<strong>${escapeHtml(name)}</strong>${popupDetails}`)
+			.addTo(map);
+	};
+
+	const onFacilityMouseEnter = () => {
+		map.getCanvas().style.cursor = 'pointer';
+	};
+	const onFacilityMouseLeave = () => {
+		map.getCanvas().style.cursor = '';
+	};
+
+	const bindInteractions = (Popup: typeof import('maplibre-gl').Popup) => {
+		if (disposed || interactionsBound) return;
+		facilityPopupConstructor = Popup;
+		interactionsBound = true;
+		map.on('click', 'critical-facilities-clusters', onClusterClick);
+		map.on('click', 'critical-facilities-points', onFacilityClick);
+		map.on('mouseenter', 'critical-facilities-clusters', onFacilityMouseEnter);
+		map.on('mouseleave', 'critical-facilities-clusters', onFacilityMouseLeave);
+		map.on('mouseenter', 'critical-facilities-points', onFacilityMouseEnter);
+		map.on('mouseleave', 'critical-facilities-points', onFacilityMouseLeave);
+	};
+
+	const moveLayersToTop = () => {
+		if (disposed) return;
+		for (const layerId of layerIds) map.moveLayer(layerId);
+	};
+
 	const load = () => {
 		if (disposed || facilityRequest) return;
 		setState('loading');
@@ -212,16 +303,24 @@ export function createCriticalFacilityLayerManager({
 	};
 
 	return {
-		layerIds,
 		addLayers,
+		bindInteractions,
+		moveLayersToTop,
 		setVisibility,
 		load,
-		getSource: () =>
-			map.getSource('calapan-critical-facilities') as
-				import('maplibre-gl').GeoJSONSource | undefined,
 		dispose: () => {
 			disposed = true;
 			stopPulse();
+			if (interactionsBound) {
+				map.off('click', 'critical-facilities-clusters', onClusterClick);
+				map.off('click', 'critical-facilities-points', onFacilityClick);
+				map.off('mouseenter', 'critical-facilities-clusters', onFacilityMouseEnter);
+				map.off('mouseleave', 'critical-facilities-clusters', onFacilityMouseLeave);
+				map.off('mouseenter', 'critical-facilities-points', onFacilityMouseEnter);
+				map.off('mouseleave', 'critical-facilities-points', onFacilityMouseLeave);
+			}
+			facilityPopup?.remove();
+			facilityPopup = null;
 		}
 	};
 }
