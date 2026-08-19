@@ -173,6 +173,8 @@
 
 			if (disposed) return;
 			setWorkerUrl(workerUrl);
+			const style = await loadOpenFreeMapStyle();
+			if (disposed) return;
 			const cityBounds: MapBounds = [
 				[calapanCityBounds[0], calapanCityBounds[1]],
 				[calapanCityBounds[2], calapanCityBounds[3]]
@@ -180,7 +182,7 @@
 
 			const mapInstance = new MapLibreMap({
 				container: mapElement,
-				style: await loadOpenFreeMapStyle(),
+				style,
 				transformRequest: transformOpenFreeMapRequest,
 				center: [121.1783, 13.4117],
 				zoom: 11.5,
