@@ -46,6 +46,27 @@ describe('hazard layer manager', () => {
 		manager.dispose();
 	});
 
+	it('adds earthquake layers from bottom to top', () => {
+		const map = createMapMock();
+		const { manager } = createManager(map);
+
+		manager.addLayers();
+
+		const earthquakeLayerIds = vi
+			.mocked(map.addLayer)
+			.mock.calls.map(([layer]) => (layer as { id: string }).id)
+			.filter((id) =>
+				['calapan-ground-shaking', 'calapan-liquefaction', 'calapan-tsunami'].includes(id)
+			);
+
+		expect(earthquakeLayerIds).toEqual([
+			'calapan-ground-shaking',
+			'calapan-liquefaction',
+			'calapan-tsunami'
+		]);
+		manager.dispose();
+	});
+
 	it('transitions families and clears loading state after sources load', async () => {
 		const map = createMapMock();
 		const { manager, loadingFamilies } = createManager(map);

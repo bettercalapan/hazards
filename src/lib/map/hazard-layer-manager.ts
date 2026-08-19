@@ -57,8 +57,13 @@ export function createHazardLayerManager({
 		'calapan-typhoon-points'
 	];
 
-	const addHazardLayers = (family: HazardFamily, layers: readonly HazardLayerDefinition[]) => {
-		for (const layer of [...layers].reverse()) {
+	const addHazardLayers = (
+		family: HazardFamily,
+		layers: readonly HazardLayerDefinition[],
+		reverseOrder = true
+	) => {
+		const orderedLayers = reverseOrder ? [...layers].reverse() : layers;
+		for (const layer of orderedLayers) {
 			const sourceId = layerIdFor(family, layer.key);
 			map.addSource(sourceId, {
 				type: 'vector',
@@ -287,7 +292,7 @@ export function createHazardLayerManager({
 		addHazardLayers('flood', layersForFamily('flood'));
 		addHazardLayers('storm-surge', layersForFamily('storm-surge'));
 		addHazardLayers('landslide', layersForFamily('landslide'));
-		addHazardLayers('earthquake', layersForFamily('earthquake'));
+		addHazardLayers('earthquake', layersForFamily('earthquake'), false);
 		addTyphoonLayers();
 	};
 
