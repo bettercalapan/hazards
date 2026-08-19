@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import { SvelteMap } from 'svelte/reactivity';
 	import {
 		calapanCityBoundary,
@@ -25,16 +25,22 @@
 		emptyCriticalFacilities,
 		type CriticalFacilityCollection
 	} from '$lib/data/critical-facilities';
+	import {
+		createDefaultMapShareState,
+		type HazardFamily,
+		type MapShareState,
+		type ViewMode
+	} from '$lib/map-state';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
 
-	type ViewMode = '3d' | '2d';
-	type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';
 	type Props = {
 		typhoonMapData?: TyphoonMapData;
 		selectedBarangayId?: string | null;
+		initialMapState?: MapShareState;
 		onSelectArea?: (area: BarangayProperties | null) => void;
 		onHazardFamilyChange?: (family: HazardFamily) => void;
+		onMapStateChange?: (state: MapShareState) => void;
 	};
 	type MapBounds = [[number, number], [number, number]];
 	type RemoteStyleLayer = {
@@ -130,9 +136,12 @@
 	let {
 		typhoonMapData = emptyTyphoonMapData,
 		selectedBarangayId = null,
+		initialMapState = createDefaultMapShareState(),
 		onSelectArea,
-		onHazardFamilyChange
+		onHazardFamilyChange,
+		onMapStateChange
 	}: Props = $props();
+	const initialState = untrack(() => initialMapState);
 	let syncSelectedBarangay: (id: string | null) => void = () => {};
 
 	let criticalFacilitiesEnabled = $state(false);
@@ -368,23 +377,38 @@
 	}
 
 	let mapElement: HTMLDivElement;
-	let viewMode = $state<ViewMode>('3d');
+	let viewMode = $state<ViewMode>(initialState.viewMode);
 	let mapReady = $state(false);
-	let activeHazardFamily = $state<HazardFamily>('flood');
+	let activeHazardFamily = $state<HazardFamily>(initialState.activeHazardFamily);
 	let loadingHazardFamily = $state<HazardFamily | null>(null);
-	let enabledFloodPeriods = $state<ReturnPeriod[]>([5, 25, 100]);
-	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([1, 2, 3, 4]);
-	let enabledLandslideLayers = $state<LandslideLayer[]>(['main']);
-	let enabledSeismicLayers = $state<SeismicLayer[]>(['ground-shaking']);
-	let hasInitializedSeismicLayers = $state(false);
+	let enabledFloodPeriods = $state<ReturnPeriod[]>([...initialState.enabledFloodPeriods]);
+	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([
+		...initialState.enabledStormSurgeAdvisories
+	]);
+	let enabledLandslideLayers = $state<LandslideLayer[]>([...initialState.enabledLandslideLayers]);
+	let enabledSeismicLayers = $state<SeismicLayer[]>([...initialState.enabledSeismicLayers]);
+	let hasInitializedSeismicLayers = $state(initialState.activeHazardFamily === 'earthquake');
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 	let updateHazardVisibility: () => void = () => {};
 	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
 	let preloadHazardFamily: (family: HazardFamily) => void = () => {};
 
+	function reportMapState() {
+		onMapStateChange?.({
+			viewMode,
+			activeHazardFamily,
+			selectedBarangayId,
+			enabledFloodPeriods: [...enabledFloodPeriods],
+			enabledStormSurgeAdvisories: [...enabledStormSurgeAdvisories],
+			enabledLandslideLayers: [...enabledLandslideLayers],
+			enabledSeismicLayers: [...enabledSeismicLayers]
+		});
+	}
+
 	function setViewMode(nextMode: ViewMode) {
 		viewMode = nextMode;
 		updateMapCamera(nextMode);
+		reportMapState();
 	}
 
 	function setHazardFamily(nextFamily: HazardFamily) {
@@ -396,6 +420,7 @@
 		activeHazardFamily = nextFamily;
 		onHazardFamilyChange?.(nextFamily);
 		transitionHazardFamily(nextFamily);
+		reportMapState();
 	}
 
 	function hazardFamilyLabel(family: HazardFamily): string {
@@ -408,6 +433,7 @@
 			? [...new Set([...enabledFloodPeriods, period])]
 			: enabledFloodPeriods.filter((value) => value !== period);
 		updateHazardVisibility();
+		reportMapState();
 	}
 
 	function setStormSurgeAdvisoryEnabled(advisory: StormSurgeAdvisory, enabled: boolean) {
@@ -415,6 +441,7 @@
 			? [...new Set([...enabledStormSurgeAdvisories, advisory])]
 			: enabledStormSurgeAdvisories.filter((value) => value !== advisory);
 		updateHazardVisibility();
+		reportMapState();
 	}
 
 	function setLandslideLayerEnabled(layer: LandslideLayer, enabled: boolean) {
@@ -422,6 +449,7 @@
 			? [...new Set([...enabledLandslideLayers, layer])]
 			: enabledLandslideLayers.filter((value) => value !== layer);
 		updateHazardVisibility();
+		reportMapState();
 	}
 
 	function setSeismicLayerEnabled(layer: SeismicLayer, enabled: boolean) {
@@ -429,6 +457,7 @@
 			? [...new Set([...enabledSeismicLayers, layer])]
 			: enabledSeismicLayers.filter((value) => value !== layer);
 		updateHazardVisibility();
+		reportMapState();
 	}
 
 	$effect(() => {

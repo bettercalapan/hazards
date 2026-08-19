@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { replaceState } from '$app/navigation';
 	import { resolve } from '$app/paths';
-	import { onMount } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import {
 		calapanBarangayAttribution,
 		calapanBarangayMetadata,
@@ -14,30 +15,29 @@
 	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
 	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
 	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
-	import {
-		emergencyContactGroups,
-		emergencyContacts,
-		safetyGuidance,
-		type HazardFamily
-	} from '$lib/data/safety';
+	import { emergencyContactGroups, emergencyContacts, safetyGuidance } from '$lib/data/safety';
 	import { formatDataDate, freshnessLabel, getFreshnessStatus } from '$lib/data/freshness';
 	import hazardDataManifest from '$lib/data/hazard-data-manifest.json';
 	import { typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
+	import { serializeMapShareState, type HazardFamily, type MapShareState } from '$lib/map-state';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
+	const initialMapState = untrack(() => data.initialMapState);
 
 	let selectedArea = $state<BarangayProperties | null>(null);
-	let selectedBarangayId = $state<string | null>(null);
+	let selectedBarangayId = $state<string | null>(initialMapState.selectedBarangayId);
 	let barangayQuery = $state('');
 	let barangaySearchOpen = $state(false);
 	let highlightedBarangayIndex = $state(0);
 	let barangays = $state<BarangayCollection | null>(null);
 	let barangaySearchInput: HTMLInputElement;
 	let barangaySearchBlurTimeout: ReturnType<typeof setTimeout> | undefined;
-	let activeHazardFamily = $state<HazardFamily>('flood');
+	let activeHazardFamily = $state<HazardFamily>(initialMapState.activeHazardFamily);
+	let mapShareState = $state<MapShareState>(initialMapState);
+	let shareStatus = $state<'idle' | 'copied' | 'error'>('idle');
 	let barangayMatches = $derived(
 		barangays ? searchCalapanBarangays(barangays, barangayQuery).slice(0, 8) : []
 	);
@@ -67,12 +67,24 @@
 			: getFreshnessStatus(data.typhoonMapData.latestDataAt)
 	);
 
-	function handleAreaSelect(area: BarangayProperties | null) {
+	function updateMapUrl(state: MapShareState) {
+		// resolve() is used for the app base path, then the query string is replaced in place.
+		// eslint-disable-next-line svelte/no-navigation-without-resolve
+		replaceState(`${resolve('/')}${serializeMapShareState(state)}`, {});
+	}
+
+	function updateSelectedArea(area: BarangayProperties | null) {
 		selectedArea = area;
 		selectedBarangayId = area?.id ?? null;
 		barangayQuery = area?.name ?? '';
 		barangaySearchOpen = false;
 		highlightedBarangayIndex = 0;
+		mapShareState = { ...mapShareState, selectedBarangayId: selectedBarangayId };
+		updateMapUrl(mapShareState);
+	}
+
+	function handleAreaSelect(area: BarangayProperties | null) {
+		updateSelectedArea(area);
 	}
 
 	function handleBarangaySearchInput(event: Event) {
@@ -94,20 +106,12 @@
 	}
 
 	function selectSearchBarangay(area: BarangayProperties) {
-		selectedArea = area;
-		selectedBarangayId = area.id;
-		barangayQuery = area.name;
-		barangaySearchOpen = false;
-		highlightedBarangayIndex = 0;
+		updateSelectedArea(area);
 		barangaySearchInput?.focus();
 	}
 
 	function clearBarangaySearch() {
-		selectedArea = null;
-		selectedBarangayId = null;
-		barangayQuery = '';
-		barangaySearchOpen = false;
-		highlightedBarangayIndex = 0;
+		updateSelectedArea(null);
 		barangaySearchInput?.focus();
 	}
 
@@ -144,10 +148,41 @@
 		activeHazardFamily = family;
 	}
 
+	function handleMapStateChange(nextState: MapShareState) {
+		mapShareState = nextState;
+		activeHazardFamily = nextState.activeHazardFamily;
+		selectedBarangayId = nextState.selectedBarangayId;
+		updateMapUrl(nextState);
+	}
+
+	async function copyMapLink() {
+		try {
+			await navigator.clipboard.writeText(window.location.href);
+			shareStatus = 'copied';
+		} catch {
+			shareStatus = 'error';
+		}
+	}
+
 	onMount(() => {
 		loadCalapanBarangays()
 			.then((data) => {
 				barangays = data;
+				const initialAreaId = mapShareState.selectedBarangayId;
+				if (!initialAreaId) return;
+
+				const initialArea = data.features.find(
+					(feature) => feature.properties.id === initialAreaId
+				)?.properties;
+				if (initialArea) {
+					selectedArea = initialArea;
+					barangayQuery = initialArea.name;
+					return;
+				}
+
+				selectedBarangayId = null;
+				mapShareState = { ...mapShareState, selectedBarangayId: null };
+				updateMapUrl(mapShareState);
 			})
 			.catch(() => {
 				barangays = null;
@@ -168,8 +203,10 @@
 		<HazardMap
 			typhoonMapData={data.typhoonMapData}
 			{selectedBarangayId}
+			{initialMapState}
 			onSelectArea={handleAreaSelect}
 			onHazardFamilyChange={handleHazardFamilyChange}
+			onMapStateChange={handleMapStateChange}
 		/>
 	</section>
 
@@ -181,6 +218,13 @@
 					<span>BetterCalapan</span>
 				</a>
 				<span class="product-label">Hazards</span>
+				<button class="share-button" type="button" onclick={copyMapLink}>
+					{shareStatus === 'copied'
+						? 'Link copied'
+						: shareStatus === 'error'
+							? 'Copy failed'
+							: 'Copy link'}
+				</button>
 			</div>
 
 			<section class="info-card search-card">
@@ -728,6 +772,23 @@
 		font-weight: 700;
 		letter-spacing: 0.08em;
 		text-transform: uppercase;
+	}
+
+	.share-button {
+		padding: 0.45rem 0.65rem;
+		border: 1px solid var(--gray);
+		border-radius: 0.45rem;
+		background: var(--bg);
+		color: var(--fg);
+		font: inherit;
+		font-size: 0.75rem;
+		font-weight: 700;
+		cursor: pointer;
+	}
+
+	.share-button:hover {
+		border-color: var(--accent);
+		color: var(--accent-dark);
 	}
 
 	.card-kicker {
