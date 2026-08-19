@@ -4,7 +4,6 @@
 	import {
 		calapanBarangayLabelPoints,
 		loadCalapanBarangays,
-		type BarangayCollection,
 		type BarangayProperties
 	} from '$lib/data/barangays';
 	import { type ReturnPeriod } from '$lib/data/flood';
@@ -31,6 +30,7 @@
 		updateMapCamera as setMapCamera,
 		type MapBounds
 	} from '$lib/map/map-setup';
+	import { createBarangayLayerManager } from '$lib/map/barangay-layer-manager';
 	import { createCriticalFacilityLayerManager } from '$lib/map/critical-facility-layer-manager';
 	import { createHazardLayerManager } from '$lib/map/hazard-layer-manager';
 	import MapControls from './MapControls.svelte';
@@ -73,50 +73,6 @@
 		}
 	}
 
-	function getBarangayProperties(object: unknown): BarangayProperties | null {
-		if (!object || typeof object !== 'object') return null;
-		const properties = object as Partial<BarangayProperties>;
-
-		if (
-			typeof properties.id !== 'string' ||
-			typeof properties.name !== 'string' ||
-			typeof properties.sourceName !== 'string'
-		) {
-			return null;
-		}
-
-		return properties as BarangayProperties;
-	}
-
-	function getBarangayBounds(barangays: BarangayCollection, id: string): MapBounds | null {
-		const feature = barangays.features.find((item) => item.properties.id === id);
-		if (!feature) return null;
-
-		let minLongitude = Infinity;
-		let minLatitude = Infinity;
-		let maxLongitude = -Infinity;
-		let maxLatitude = -Infinity;
-
-		const visit = (value: unknown): void => {
-			if (!Array.isArray(value)) return;
-			if (typeof value[0] === 'number' && typeof value[1] === 'number') {
-				minLongitude = Math.min(minLongitude, value[0]);
-				minLatitude = Math.min(minLatitude, value[1]);
-				maxLongitude = Math.max(maxLongitude, value[0]);
-				maxLatitude = Math.max(maxLatitude, value[1]);
-				return;
-			}
-			for (const child of value) visit(child);
-		};
-
-		visit(feature.geometry.coordinates);
-		if (!Number.isFinite(minLongitude) || !Number.isFinite(minLatitude)) return null;
-		return [
-			[minLongitude, minLatitude],
-			[maxLongitude, maxLatitude]
-		];
-	}
-
 	function escapeHtml(value: string): string {
 		return value.replace(
 			/[&<>'"]/g,
@@ -142,6 +98,7 @@
 	let updateHazardVisibility: () => void = () => {};
 	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
 	let preloadHazardFamily = $state<(family: HazardFamily) => void>(() => {});
+	let disposeBarangayLayerManager = () => {};
 	let disposeHazardLayerManager = () => {};
 
 	function reportMapState() {
@@ -214,7 +171,6 @@
 	onMount(() => {
 		let disposed = false;
 		let map: import('maplibre-gl').Map | undefined;
-		let selectedMapBarangayId: string | null = null;
 		let terrainReady = false;
 		let facilityPopup: import('maplibre-gl').Popup | null = null;
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -248,61 +204,6 @@
 			mapInstance.on('error', ({ error }) => {
 				console.error(`[MapLibre] ${error.message}`);
 			});
-
-			const clearSelection = () => {
-				if (selectedMapBarangayId) {
-					mapInstance.setFeatureState(
-						{ source: 'calapan-barangays', id: selectedMapBarangayId },
-						{ selected: false }
-					);
-				}
-				if (mapInstance.getLayer('calapan-barangay-dim')) {
-					mapInstance.setPaintProperty('calapan-barangay-dim', 'fill-opacity', 0);
-				}
-				selectedMapBarangayId = null;
-				onSelectArea?.(null);
-			};
-
-			const selectBarangay = (properties: BarangayProperties) => {
-				if (selectedMapBarangayId === properties.id) {
-					clearSelection();
-					return;
-				}
-				if (selectedMapBarangayId && selectedMapBarangayId !== properties.id) {
-					mapInstance.setFeatureState(
-						{ source: 'calapan-barangays', id: selectedMapBarangayId },
-						{ selected: false }
-					);
-				}
-				selectedMapBarangayId = properties.id;
-				mapInstance.setFeatureState(
-					{ source: 'calapan-barangays', id: properties.id },
-					{ selected: true }
-				);
-				mapInstance.setPaintProperty('calapan-barangay-dim', 'fill-opacity', [
-					'case',
-					['boolean', ['feature-state', 'selected'], false],
-					0,
-					0.3
-				] as unknown as import('maplibre-gl').PropertyValueSpecification<number>);
-				onSelectArea?.(properties);
-			};
-
-			syncSelectedBarangay = (id) => {
-				if (!id) {
-					if (selectedMapBarangayId) clearSelection();
-					return;
-				}
-				if (selectedMapBarangayId === id) return;
-
-				const feature = calapanBarangays.features.find((item) => item.properties.id === id);
-				if (!feature) return;
-				selectBarangay(feature.properties);
-				const bounds = getBarangayBounds(calapanBarangays, id);
-				if (bounds) {
-					mapInstance.fitBounds(bounds, { padding: 48, maxZoom: 13.5, duration: 650 });
-				}
-			};
 
 			updateMapCamera = (nextMode) => {
 				setMapCamera(mapInstance, terrainReady, nextMode);
@@ -368,101 +269,20 @@
 				setCriticalFacilitiesVisibility = criticalFacilityLayerManager.setVisibility;
 				loadCriticalFacilities = criticalFacilityLayerManager.load;
 				const criticalFacilityLayerIds = criticalFacilityLayerManager.layerIds;
-
-				mapInstance.addSource('calapan-barangays', {
-					type: 'geojson',
-					data: calapanBarangays,
-					promoteId: 'id'
+				const barangayLayerManager = createBarangayLayerManager({
+					map: mapInstance,
+					barangays: calapanBarangays,
+					barangayLabelPoints: calapanBarangayLabelPoints,
+					firstSymbolLayerId,
+					onSelectArea
 				});
-				mapInstance.addSource('calapan-barangay-labels', {
-					type: 'geojson',
-					data: calapanBarangayLabelPoints,
-					promoteId: 'id'
-				});
-				mapInstance.addLayer(
-					{
-						id: 'calapan-barangay-dim',
-						type: 'fill',
-						source: 'calapan-barangays',
-						paint: {
-							'fill-color': '#000000',
-							'fill-opacity': 0
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'calapan-barangay-fill',
-						type: 'fill',
-						source: 'calapan-barangays',
-						paint: {
-							'fill-color': '#ff5500',
-							'fill-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 0, 0]
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer(
-					{
-						id: 'calapan-barangay-boundaries',
-						type: 'line',
-						source: 'calapan-barangays',
-						paint: {
-							'line-color': [
-								'case',
-								['boolean', ['feature-state', 'selected'], false],
-								'#ff5500',
-								'#6f8881'
-							],
-							'line-width': ['case', ['boolean', ['feature-state', 'selected'], false], 2.5, 1],
-							'line-opacity': ['case', ['boolean', ['feature-state', 'selected'], false], 1, 0.8]
-						}
-					},
-					firstSymbolLayerId
-				);
-				mapInstance.addLayer({
-					id: 'calapan-barangay-labels',
-					type: 'symbol',
-					source: 'calapan-barangay-labels',
-					minzoom: 2,
-					layout: {
-						'symbol-placement': 'point',
-						'text-field': ['get', 'name'],
-						'text-size': 11,
-						'text-allow-overlap': false,
-						'text-ignore-placement': false
-					},
-					paint: {
-						'text-color': '#173e3b',
-						'text-halo-color': '#fffdf7',
-						'text-opacity': ['step', ['zoom'], 0, 2, 1],
-						'text-halo-width': ['step', ['zoom'], 0, 2, 1.5]
-					}
-				});
+				barangayLayerManager.addLayers();
+				disposeBarangayLayerManager = barangayLayerManager.dispose;
+				syncSelectedBarangay = barangayLayerManager.syncSelection;
 				restrictSymbolLayers(mapInstance);
 				for (const layerId of criticalFacilityLayerIds) {
 					mapInstance.moveLayer(layerId);
 				}
-
-				mapInstance.on('click', 'calapan-barangay-fill', (event) => {
-					const properties = getBarangayProperties(event.features?.[0]?.properties);
-					if (properties) selectBarangay(properties);
-				});
-				mapInstance.on('click', (event) => {
-					if (
-						mapInstance.queryRenderedFeatures(event.point, { layers: ['calapan-barangay-fill'] })
-							.length === 0
-					) {
-						clearSelection();
-					}
-				});
-				mapInstance.on('mouseenter', 'calapan-barangay-fill', () => {
-					mapInstance.getCanvas().style.cursor = 'pointer';
-				});
-				mapInstance.on('mouseleave', 'calapan-barangay-fill', () => {
-					mapInstance.getCanvas().style.cursor = '';
-				});
 				mapInstance.on('click', 'critical-facilities-clusters', (event) => {
 					const cluster = event.features?.[0];
 					const clusterId = Number(cluster?.properties?.cluster_id);
@@ -534,6 +354,8 @@
 		return () => {
 			disposed = true;
 			updateMapCamera = () => {};
+			disposeBarangayLayerManager();
+			disposeBarangayLayerManager = () => {};
 			disposeCriticalFacilityLayerManager();
 			disposeCriticalFacilityLayerManager = () => {};
 			disposeHazardLayerManager();
