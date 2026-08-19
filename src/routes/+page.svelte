@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
 	import {
 		calapanBarangayAttribution,
 		calapanBarangayMetadata,
+		loadCalapanBarangays,
 		searchCalapanBarangays,
+		type BarangayCollection,
 		type BarangayProperties
 	} from '$lib/data/barangays';
 	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
@@ -31,10 +34,13 @@
 	let barangayQuery = $state('');
 	let barangaySearchOpen = $state(false);
 	let highlightedBarangayIndex = $state(0);
+	let barangays = $state<BarangayCollection | null>(null);
 	let barangaySearchInput: HTMLInputElement;
 	let barangaySearchBlurTimeout: ReturnType<typeof setTimeout> | undefined;
 	let activeHazardFamily = $state<HazardFamily>('flood');
-	let barangayMatches = $derived(searchCalapanBarangays(barangayQuery).slice(0, 8));
+	let barangayMatches = $derived(
+		barangays ? searchCalapanBarangays(barangays, barangayQuery).slice(0, 8) : []
+	);
 	let activeSafetyGuidance = $derived(safetyGuidance[activeHazardFamily]);
 	const hazardMetadataByFamily = {
 		flood: floodHazardMetadata,
@@ -137,6 +143,16 @@
 	function handleHazardFamilyChange(family: HazardFamily) {
 		activeHazardFamily = family;
 	}
+
+	onMount(() => {
+		loadCalapanBarangays()
+			.then((data) => {
+				barangays = data;
+			})
+			.catch(() => {
+				barangays = null;
+			});
+	});
 </script>
 
 <svelte:head>

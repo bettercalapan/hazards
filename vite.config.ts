@@ -16,6 +16,10 @@ export default defineConfig({
 	optimizeDeps: {
 		exclude: ['maplibre-gl']
 	},
+	build: {
+		// MapLibre is lazy-loaded, but its WebGL bundle is still large by design.
+		chunkSizeWarningLimit: 1000
+	},
 	test: {
 		expect: { requireAssertions: true },
 		projects: [

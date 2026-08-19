@@ -1,7 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { calapanBarangayLabelPoints, calapanBarangays, searchCalapanBarangays } from './barangays';
+import barangayData from './calapan-barangays.json';
+import {
+	calapanBarangayLabelPoints,
+	createCalapanBarangays,
+	searchCalapanBarangays,
+	type RawBarangayCollection
+} from './barangays';
 import { floodHazardPeriods } from './flood';
 import { landslideHazards } from './landslide';
+
+const calapanBarangays = createCalapanBarangays(barangayData as RawBarangayCollection);
 
 describe('Calapan barangays', () => {
 	it('contains the 62 barangays listed by BetterCalapan', () => {
@@ -78,11 +86,12 @@ describe('Calapan barangays', () => {
 	});
 
 	it('searches barangays by name', () => {
-		expect(searchCalapanBarangays('Bayanan').map((barangay) => barangay.name)).toEqual([
-			'Bayanan I',
-			'Bayanan II'
-		]);
-		expect(searchCalapanBarangays('nino').map((barangay) => barangay.name)).toEqual(['Sto. Niño']);
-		expect(searchCalapanBarangays('unknown')).toEqual([]);
+		expect(
+			searchCalapanBarangays(calapanBarangays, 'Bayanan').map((barangay) => barangay.name)
+		).toEqual(['Bayanan I', 'Bayanan II']);
+		expect(
+			searchCalapanBarangays(calapanBarangays, 'nino').map((barangay) => barangay.name)
+		).toEqual(['Sto. Niño']);
+		expect(searchCalapanBarangays(calapanBarangays, 'unknown')).toEqual([]);
 	});
 });

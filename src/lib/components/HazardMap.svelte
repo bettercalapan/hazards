@@ -8,7 +8,8 @@
 	} from '$lib/data/calapan-boundary';
 	import {
 		calapanBarangayLabelPoints,
-		calapanBarangays,
+		loadCalapanBarangays,
+		type BarangayCollection,
 		type BarangayProperties
 	} from '$lib/data/barangays';
 	import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
@@ -36,6 +37,95 @@
 		onHazardFamilyChange?: (family: HazardFamily) => void;
 	};
 	type MapBounds = [[number, number], [number, number]];
+	type RemoteStyleLayer = {
+		id?: string;
+		type?: string;
+		filter?: unknown;
+		layout?: Record<string, unknown>;
+	};
+	type RemoteStyle = {
+		[key: string]: unknown;
+		layers?: RemoteStyleLayer[];
+	};
+
+	const openFreeMapStyleUrl = 'https://tiles.openfreemap.org/styles/liberty';
+
+	function filterUsesProperty(filter: unknown, property: string): boolean {
+		if (!Array.isArray(filter)) return false;
+		return filter.some(
+			(value) => value === property || (Array.isArray(value) && filterUsesProperty(value, property))
+		);
+	}
+
+	function coalesceRefLength(filter: unknown): unknown {
+		if (!Array.isArray(filter)) return filter;
+		if (
+			filter[0] === '<=' &&
+			Array.isArray(filter[1]) &&
+			filter[1][0] === 'get' &&
+			filter[1][1] === 'ref_length'
+		) {
+			return ['<=', ['coalesce', ['get', 'ref_length'], 0], filter[2]];
+		}
+		return filter.map((value) => coalesceRefLength(value));
+	}
+
+	function usesOpenSansFontStack(font: unknown): boolean {
+		if (typeof font === 'string') return font.includes('Open Sans');
+		return Array.isArray(font) && font.some((value) => usesOpenSansFontStack(value));
+	}
+
+	function transformOpenFreeMapRequest(url: string, resourceType?: string) {
+		if (resourceType !== 'Glyphs' || !url.includes('/fonts/')) return { url };
+
+		try {
+			const decodedUrl = decodeURIComponent(url);
+			const brokenFontPrefix = '/fonts/Open Sans Regular,Arial Unicode MS Regular/';
+			const fontStart = decodedUrl.indexOf(brokenFontPrefix);
+			if (fontStart < 0) return { url };
+
+			const rangeStart = fontStart + brokenFontPrefix.length;
+			const range = decodedUrl.slice(rangeStart);
+			return {
+				url: encodeURI(`${decodedUrl.slice(0, fontStart)}/fonts/Noto Sans Regular/${range}`)
+			};
+		} catch {
+			return { url };
+		}
+	}
+
+	function sanitizeOpenFreeMapStyle(style: RemoteStyle): import('maplibre-gl').StyleSpecification {
+		return {
+			...style,
+			layers: style.layers?.map((layer) => {
+				const nextLayer = { ...layer };
+				const textFont = nextLayer.layout?.['text-font'];
+				if (nextLayer.layout && usesOpenSansFontStack(textFont)) {
+					nextLayer.layout = { ...nextLayer.layout, 'text-font': ['Noto Sans Regular'] };
+				}
+				if (filterUsesProperty(nextLayer.filter, 'ref_length')) {
+					const filter = coalesceRefLength(nextLayer.filter);
+					nextLayer.filter =
+						Array.isArray(filter) && filter[0] === 'all'
+							? ['all', ['has', 'ref_length'], ...filter.slice(1)]
+							: ['all', ['has', 'ref_length'], filter];
+				}
+				return nextLayer;
+			})
+		} as unknown as import('maplibre-gl').StyleSpecification;
+	}
+
+	async function loadOpenFreeMapStyle(): Promise<
+		string | import('maplibre-gl').StyleSpecification
+	> {
+		try {
+			const response = await fetch(openFreeMapStyleUrl);
+			if (!response.ok) throw new Error(`Map style returned ${response.status}`);
+			return sanitizeOpenFreeMapStyle((await response.json()) as RemoteStyle);
+		} catch {
+			return openFreeMapStyleUrl;
+		}
+	}
 
 	let {
 		typhoonMapData = emptyTyphoonMapData,
@@ -89,8 +179,8 @@
 		return properties as BarangayProperties;
 	}
 
-	function getBarangayBounds(id: string): MapBounds | null {
-		const feature = calapanBarangays.features.find((item) => item.properties.id === id);
+	function getBarangayBounds(barangays: BarangayCollection, id: string): MapBounds | null {
+		const feature = barangays.features.find((item) => item.properties.id === id);
 		if (!feature) return null;
 
 		let minLongitude = Infinity;
@@ -163,7 +253,10 @@
 		}
 	}
 
-	function dimBaseMapTransportLayers(map: import('maplibre-gl').Map) {
+	function dimBaseMapTransportLayers(
+		map: import('maplibre-gl').Map,
+		barangays: BarangayCollection
+	) {
 		const detailTextOpacity = [
 			'interpolate',
 			['linear'],
@@ -182,7 +275,7 @@
 			15,
 			1
 		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
-		const barangayNames = calapanBarangays.features.map((feature) => feature.properties.name);
+		const barangayNames = barangays.features.map((feature) => feature.properties.name);
 		const excludeBarangayNames = [
 			'!',
 			[
@@ -191,25 +284,25 @@
 				['match', ['get', 'name:latin'], barangayNames, true, false]
 			]
 		] as unknown as import('maplibre-gl').FilterSpecification;
-		const opacityAtZoom = (atReveal: number, zoomedIn: number) => [
+		const roadOpacityForClass = (motorway: number, secondary: number, other: number) => [
+			'match',
+			['get', 'class'],
+			['motorway', 'trunk', 'primary'],
+			motorway,
+			['secondary', 'tertiary'],
+			secondary,
+			other
+		];
+		const roadLineOpacity = [
 			'interpolate',
 			['linear'],
 			['zoom'],
 			12.5,
 			0,
 			13,
-			atReveal,
+			roadOpacityForClass(0.12, 0.08, 0.04),
 			14,
-			zoomedIn
-		];
-		const roadLineOpacity = [
-			'match',
-			['get', 'class'],
-			['motorway', 'trunk', 'primary'],
-			opacityAtZoom(0.12, 0.28),
-			['secondary', 'tertiary'],
-			opacityAtZoom(0.08, 0.18),
-			opacityAtZoom(0.04, 0.1)
+			roadOpacityForClass(0.28, 0.18, 0.1)
 		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
 
 		for (const layer of map.getStyle().layers ?? []) {
@@ -351,7 +444,10 @@
 		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 		const initialize = async () => {
-			const { setWorkerUrl, Map: MapLibreMap, Popup } = await import('maplibre-gl');
+			const [{ setWorkerUrl, Map: MapLibreMap, Popup }, calapanBarangays] = await Promise.all([
+				import('maplibre-gl'),
+				loadCalapanBarangays()
+			]);
 
 			if (disposed) return;
 			setWorkerUrl(workerUrl);
@@ -362,7 +458,8 @@
 
 			const mapInstance = new MapLibreMap({
 				container: mapElement,
-				style: 'https://tiles.openfreemap.org/styles/liberty',
+				style: await loadOpenFreeMapStyle(),
+				transformRequest: transformOpenFreeMapRequest,
 				center: [121.1783, 13.4117],
 				zoom: 11.5,
 				pitch: 45,
@@ -422,7 +519,7 @@
 				const feature = calapanBarangays.features.find((item) => item.properties.id === id);
 				if (!feature) return;
 				selectBarangay(feature.properties);
-				const bounds = getBarangayBounds(id);
+				const bounds = getBarangayBounds(calapanBarangays, id);
 				if (bounds) {
 					mapInstance.fitBounds(bounds, { padding: 48, maxZoom: 13.5, duration: 650 });
 				}
@@ -451,23 +548,25 @@
 
 			mapInstance.once('load', () => {
 				if (disposed) return;
-				dimBaseMapTransportLayers(mapInstance);
+				dimBaseMapTransportLayers(mapInstance, calapanBarangays);
 				const firstSymbolLayerId = mapInstance
 					.getStyle()
 					.layers?.find((layer) => layer.type === 'symbol')?.id;
-				mapInstance.addSource('calapan-terrain', {
+				const terrainSource: import('maplibre-gl').RasterDEMSourceSpecification = {
 					type: 'raster-dem',
 					tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
 					tileSize: 256,
 					maxzoom: 15,
 					encoding: 'terrarium',
 					attribution: terrainAttribution
-				});
+				};
+				mapInstance.addSource('calapan-terrain', terrainSource);
+				mapInstance.addSource('calapan-terrain-hillshade', terrainSource);
 				mapInstance.addLayer(
 					{
 						id: 'calapan-terrain-hillshade',
 						type: 'hillshade',
-						source: 'calapan-terrain',
+						source: 'calapan-terrain-hillshade',
 						paint: {
 							'hillshade-exaggeration': 0.18,
 							'hillshade-shadow-color': '#756c5f',
@@ -942,7 +1041,7 @@
 						layout: { visibility: 'none' },
 						paint: {
 							'circle-color': '#173e3b',
-							'circle-radius': ['step', ['get', 'point_count'], 3, 14, 10, 18, 25, 23],
+							'circle-radius': ['step', ['get', 'point_count'], 3, 14, 10, 18, 25],
 							'circle-opacity': 0.9,
 							'circle-stroke-color': '#f7fff9',
 							'circle-stroke-width': 1.5

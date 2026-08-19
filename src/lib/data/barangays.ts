@@ -1,6 +1,6 @@
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import type { FloodHazardClass, FloodHazardSummary, ReturnPeriod } from './flood';
-import barangayData from './calapan-barangays.json';
+import barangayDataUrl from './calapan-barangays.json?url';
 import barangayLabelPointData from './calapan-barangay-label-points.json';
 import floodSummaryData from './calapan-flood-summaries.json';
 import stormSurgeSummaryData from './calapan-storm-surge-summaries.json';
@@ -29,37 +29,55 @@ export type BarangayProperties = {
 	seismicHazards: Record<SeismicLayer, SeismicHazardSummary>;
 };
 
+export type RawBarangayProperties = Omit<
+	BarangayProperties,
+	'floodHazards' | 'stormSurgeHazards' | 'landslideHazards' | 'seismicHazards'
+>;
+export type RawBarangayCollection = FeatureCollection<MultiPolygon, RawBarangayProperties>;
+export type BarangayCollection = FeatureCollection<MultiPolygon, BarangayProperties>;
+
 const floodSummaries = floodSummaryData as FloodSummaryData;
 const stormSurgeSummaries = stormSurgeSummaryData as StormSurgeSummaryData;
 const landslideSummaries = landslideSummaryData as LandslideSummaryData;
 const groundShakingSummaries = groundShakingSummaryData as SeismicSummaryData;
 const liquefactionSummaries = liquefactionSummaryData as SeismicSummaryData;
 const tsunamiSummaries = tsunamiSummaryData as SeismicSummaryData;
-const rawBarangays = barangayData as FeatureCollection<
-	MultiPolygon,
-	Omit<
-		BarangayProperties,
-		'floodHazards' | 'stormSurgeHazards' | 'landslideHazards' | 'seismicHazards'
-	>
->;
-
-export const calapanBarangays = {
-	...rawBarangays,
-	features: rawBarangays.features.map((feature) => ({
-		...feature,
-		properties: {
-			...feature.properties,
-			floodHazards: floodSummaries[feature.properties.id],
-			stormSurgeHazards: stormSurgeSummaries[feature.properties.id],
-			landslideHazards: landslideSummaries[feature.properties.id],
-			seismicHazards: {
-				'ground-shaking': groundShakingSummaries[feature.properties.id]['ground-shaking']!,
-				liquefaction: liquefactionSummaries[feature.properties.id].liquefaction!,
-				tsunami: tsunamiSummaries[feature.properties.id].tsunami!
+export function createCalapanBarangays(rawBarangays: RawBarangayCollection): BarangayCollection {
+	return {
+		...rawBarangays,
+		features: rawBarangays.features.map((feature) => ({
+			...feature,
+			properties: {
+				...feature.properties,
+				floodHazards: floodSummaries[feature.properties.id],
+				stormSurgeHazards: stormSurgeSummaries[feature.properties.id],
+				landslideHazards: landslideSummaries[feature.properties.id],
+				seismicHazards: {
+					'ground-shaking': groundShakingSummaries[feature.properties.id]['ground-shaking']!,
+					liquefaction: liquefactionSummaries[feature.properties.id].liquefaction!,
+					tsunami: tsunamiSummaries[feature.properties.id].tsunami!
+				}
 			}
-		}
-	}))
-} as FeatureCollection<MultiPolygon, BarangayProperties>;
+		}))
+	};
+}
+
+let barangaysPromise: Promise<BarangayCollection> | null = null;
+
+export function loadCalapanBarangays(): Promise<BarangayCollection> {
+	if (!barangaysPromise) {
+		barangaysPromise = fetch(barangayDataUrl)
+			.then(async (response) => {
+				if (!response.ok) throw new Error(`Barangay data returned ${response.status}`);
+				return createCalapanBarangays((await response.json()) as RawBarangayCollection);
+			})
+			.catch((error) => {
+				barangaysPromise = null;
+				throw error;
+			});
+	}
+	return barangaysPromise;
+}
 
 export const calapanBarangayLabelPoints = barangayLabelPointData as FeatureCollection<
 	Point,
@@ -74,11 +92,14 @@ function normalizeBarangaySearch(value: string): string {
 		.trim();
 }
 
-export function searchCalapanBarangays(query: string): BarangayProperties[] {
+export function searchCalapanBarangays(
+	barangays: BarangayCollection,
+	query: string
+): BarangayProperties[] {
 	const normalizedQuery = normalizeBarangaySearch(query);
 	if (!normalizedQuery) return [];
 
-	return calapanBarangays.features
+	return barangays.features
 		.filter((feature) => normalizeBarangaySearch(feature.properties.name).includes(normalizedQuery))
 		.map((feature) => feature.properties);
 }

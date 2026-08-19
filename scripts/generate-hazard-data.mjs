@@ -355,7 +355,10 @@ async function writeVectorTiles(hazardSet, period, collection) {
 
 				const tilePath = path.join(outputDirectory, String(zoom), String(x), `${y}.pbf`);
 				await mkdir(path.dirname(tilePath), { recursive: true });
-				await writeFile(tilePath, vtpbf.fromGeojsonVt({ [hazardSet.key]: tile }));
+				await writeFile(
+					tilePath,
+					vtpbf.fromGeojsonVt({ [hazardSet.key]: tile }, { version: 2, extent: 4096 })
+				);
 			}
 		}
 	}
