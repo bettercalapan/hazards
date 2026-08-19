@@ -1,0 +1,95 @@
+{
+	"remoteSources": [
+		{
+			"category": "police",
+			"label": "Police station",
+			"sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+			"url": "https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson"
+		},
+		{
+			"category": "fire",
+			"label": "Fire station",
+			"sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+			"url": "https://webgis-static.up.edu.ph/api/critical_facilities/fire_station.geojson"
+		},
+		{
+			"category": "hospital",
+			"label": "Hospital",
+			"sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+			"url": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+		},
+		{
+			"category": "school",
+			"label": "School",
+			"sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+			"url": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+		}
+	],
+	"curatedFeatures": [
+		{
+			"type": "Feature",
+			"properties": {
+				"category": "fire",
+				"categoryLabel": "Fire station",
+				"name": "Calapan City Fire Station, BFP / City Government",
+				"verificationStatus": "map-listed-unverified",
+				"sourceLabel": "Google Maps listing",
+				"sourceUrl": "https://www.google.com/maps/place/Calapan+City+Fire+Station-Bureau+of+Fire+Protection+-+City+Government+of+Calapan/@13.3813607,121.1750508,15.82z/data=!4m10!1m2!2m1!1sfire!3m6!1s0x33bce92544f5c6a5:0x465e4683e5ad62!8m2!3d13.379978!4d121.1838131!15sCgRmaXJlkgERZ292ZXJubWVudF9vZmZpY2XgAQA!16s%2Fg%2F1pzrj15wk?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+				"checkedAt": "2026-08-19"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1838131, 13.379978] }
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"category": "fire",
+				"categoryLabel": "Fire station",
+				"name": "Calapan City Central Fire Station",
+				"verificationStatus": "map-listed-unverified",
+				"sourceLabel": "Google Maps listing",
+				"sourceUrl": "https://www.google.com/maps/place/Calapan+City+Central+Fire+Station/@13.4118494,121.177292,15.51z/data=!4m10!1m2!2m1!1sfire!3m6!1s0x33bce8b0caef0455:0xcc92fcae9bf2c01b!8m2!3d13.4142974!4d121.1809312!15sCgRmaXJlkgEMZmlyZV9zdGF0aW9u4AEA!16s%2Fg%2F11j136625y?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+				"checkedAt": "2026-08-19"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1809312, 13.4142974] }
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"category": "evacuation-center",
+				"categoryLabel": "Evacuation center",
+				"name": "Guinobatan Evacuation Center",
+				"verificationStatus": "map-listed-unverified",
+				"sourceLabel": "Google Maps listing",
+				"sourceUrl": "https://www.google.com/maps/place/Guinobatan+Evacuation+Center/@13.3834677,121.1711193,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bce9b395e5f797:0xd31220de8a75f9b4!8m2!3d13.3912934!4d121.1857514!15sChFldmFjdWF0aW9uIGNlbnRlcpIBEGNvbW11bml0eV9jZW50ZXLgAQA!16s%2Fg%2F11kj0fr1d9?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+				"checkedAt": "2026-08-19"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1857514, 13.3912934] }
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"category": "evacuation-center",
+				"categoryLabel": "Evacuation center",
+				"name": "Balite Evacuation Center",
+				"verificationStatus": "map-listed-unverified",
+				"sourceLabel": "Google Maps listing",
+				"sourceUrl": "https://www.google.com/maps/place/Balite+Evacuation+Center/@13.4080101,121.0826295,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bcef001ad89c9d:0xa1f651d79bf994f9!8m2!3d13.4080101!4d121.1588472!15sChFldmFjdWF0aW9uIGNlbnRlcpIBEGNvbW11bml0eV9jZW50ZXLgAQA!16s%2Fg%2F11yrr29b7n?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+				"checkedAt": "2026-08-19"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1588472, 13.4080101] }
+		},
+		{
+			"type": "Feature",
+			"properties": {
+				"category": "evacuation-center",
+				"categoryLabel": "Evacuation center",
+				"name": "Brgy Bondoc Evacuation and PB Center",
+				"verificationStatus": "map-listed-unverified",
+				"sourceLabel": "Google Maps listing",
+				"sourceUrl": "https://www.google.com/maps/place/Brgy+Bondoc+Evacuation+and+PB+Center/@13.4080101,121.0826295,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bce9004e5e2eab:0xb066cf77284236ed!8m2!3d13.3930841!4d121.1974084!15sChFldmFjdWF0aW9uIGNlbnRlcpIBA2d5beABAA!16s%2Fg%2F11ypnfbyh8?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+				"checkedAt": "2026-08-19"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1974084, 13.3930841] }
+		}
+	]
+}

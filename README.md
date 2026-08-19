@@ -33,6 +33,8 @@ The current map view shows Calapan's 62 barangay boundaries from OCHA Philippine
 
 The localized hazard vector tiles and barangay summaries are generated with `pnpm run generate:hazards`. The script expects flood source files under `~/downloads/noah/flood/{5yr,25yr,100yr}`, storm-surge source files under `~/downloads/noah/storm-surge/ss-advisory-{1,2,3,4}`, and landslide source files under `~/downloads/noah/landslide/hazards` by default, or under the directory set in `NOAH_DATA_DIR`. The PHIVOLCS Feature Layer snapshots are pinned under `src/lib/data/phivolcs-*.json`; they are clipped to Calapan during generation and are not fetched by the browser. PHIVOLCS may revise these source layers, so refresh the snapshots and regenerate the tiles during data reviews.
 
+Critical facilities are refreshed into the static `static/critical-facilities.json` snapshot with `pnpm run generate:critical-facilities`. The generator fetches the configured facility sources, filters them to Calapan City, and adds the manually curated map-listed fire stations and evacuation centers. Review source freshness, licensing, and the verification status of curated points before publishing a refreshed snapshot.
+
 ## Data Provenance
 
 - `sourceDate` is a date supplied by the source metadata, not the local file modification date.

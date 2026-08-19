@@ -1,0 +1,2449 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "category": "fire",
+        "categoryLabel": "Fire station",
+        "name": "Calapan City Fire Station, BFP / City Government",
+        "verificationStatus": "map-listed-unverified",
+        "sourceLabel": "Google Maps listing",
+        "sourceUrl": "https://www.google.com/maps/place/Calapan+City+Fire+Station-Bureau+of+Fire+Protection+-+City+Government+of+Calapan/@13.3813607,121.1750508,15.82z/data=!4m10!1m2!2m1!1sfire!3m6!1s0x33bce92544f5c6a5:0x465e4683e5ad62!8m2!3d13.379978!4d121.1838131!15sCgRmaXJlkgERZ292ZXJubWVudF9vZmZpY2XgAQA!16s%2Fg%2F1pzrj15wk?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+        "checkedAt": "2026-08-19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1838131,
+          13.379978
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "category": "fire",
+        "categoryLabel": "Fire station",
+        "name": "Calapan City Central Fire Station",
+        "verificationStatus": "map-listed-unverified",
+        "sourceLabel": "Google Maps listing",
+        "sourceUrl": "https://www.google.com/maps/place/Calapan+City+Central+Fire+Station/@13.4118494,121.177292,15.51z/data=!4m10!1m2!2m1!1sfire!3m6!1s0x33bce8b0caef0455:0xcc92fcae9bf2c01b!8m2!3d13.4142974!4d121.1809312!15sCgRmaXJlkgEMZmlyZV9zdGF0aW9u4AEA!16s%2Fg%2F11j136625y?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+        "checkedAt": "2026-08-19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1809312,
+          13.4142974
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "category": "evacuation-center",
+        "categoryLabel": "Evacuation center",
+        "name": "Guinobatan Evacuation Center",
+        "verificationStatus": "map-listed-unverified",
+        "sourceLabel": "Google Maps listing",
+        "sourceUrl": "https://www.google.com/maps/place/Guinobatan+Evacuation+Center/@13.3834677,121.1711193,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bce9b395e5f797:0xd31220de8a75f9b4!8m2!3d13.3912934!4d121.1857514!15sChFldmFjdWF0aW9uIGNlbnRlcpIBEGNvbW11bml0eV9jZW50ZXLgAQA!16s%2Fg%2F11kj0fr1d9?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+        "checkedAt": "2026-08-19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1857514,
+          13.3912934
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "category": "evacuation-center",
+        "categoryLabel": "Evacuation center",
+        "name": "Balite Evacuation Center",
+        "verificationStatus": "map-listed-unverified",
+        "sourceLabel": "Google Maps listing",
+        "sourceUrl": "https://www.google.com/maps/place/Balite+Evacuation+Center/@13.4080101,121.0826295,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bcef001ad89c9d:0xa1f651d79bf994f9!8m2!3d13.4080101!4d121.1588472!15sChFldmFjdWF0aW9uIGNlbnRlcpIBEGNvbW11bml0eV9jZW50ZXLgAQA!16s%2Fg%2F11yrr29b7n?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+        "checkedAt": "2026-08-19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1588472,
+          13.4080101
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "category": "evacuation-center",
+        "categoryLabel": "Evacuation center",
+        "name": "Brgy Bondoc Evacuation and PB Center",
+        "verificationStatus": "map-listed-unverified",
+        "sourceLabel": "Google Maps listing",
+        "sourceUrl": "https://www.google.com/maps/place/Brgy+Bondoc+Evacuation+and+PB+Center/@13.4080101,121.0826295,13z/data=!4m10!1m2!2m1!1sevacuation+center!3m6!1s0x33bce9004e5e2eab:0xb066cf77284236ed!8m2!3d13.3930841!4d121.1974084!15sChFldmFjdWF0aW9uIGNlbnRlcpIBA2d5beABAA!16s%2Fg%2F11ypnfbyh8?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D",
+        "checkedAt": "2026-08-19"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1974084,
+          13.3930841
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": "1804661230",
+        "name": "Calapan City Police Station",
+        "category": "police",
+        "categoryLabel": "Police station",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1811786,
+          13.4145299
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": "6082280885",
+        "name": "Camp Efigenio C Navarro",
+        "category": "police",
+        "categoryLabel": "Police station",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1963291,
+          13.4216566
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "osm_id": "7648697885",
+        "name": "BJMP Calapan",
+        "category": "police",
+        "categoryLabel": "Police station",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.181289,
+          13.4142949
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Balingayan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14048,
+          13.32882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Balite Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15733,
+          13.41187
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Baruyan Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13498,
+          13.38312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Batino Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21838,
+          13.34942
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Bayanan I Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16838,
+          13.36772
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Bayanan Ii Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16878,
+          13.36072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Biga Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17308,
+          13.32812
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Bondoc Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19478,
+          13.39062
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Bucayao Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19148,
+          13.30652
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Buhuan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21918,
+          13.31502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Bulusan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19628,
+          13.40572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Calero Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18208,
+          13.41552
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Camansihan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.22698,
+          13.33422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Camilmil Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17788,
+          13.40372
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Canubing I Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14218,
+          13.35332
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Canubing Ii Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.11948,
+          13.32202
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Comunal Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15998,
+          13.30602
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Guinobatan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18458,
+          13.39162
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Gutad Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.24678,
+          13.35922
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Ibaba East Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17758,
+          13.41402
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Ibaba West Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17598,
+          13.41459
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Ilaya Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18198,
+          13.41152
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Lalud Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17378,
+          13.39952
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Lazareto Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19968,
+          13.42902
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Libis Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18418,
+          13.41662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Lumang Bayan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18058,
+          13.40232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Mahal Na Pangalan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15018,
+          13.40702
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Maidlang Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.23388,
+          13.38862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Malad Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15778,
+          13.34232
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Managpi Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19958,
+          13.32832
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Masipit Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15898,
+          13.38422
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Nag-iba I Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.27444,
+          13.33806
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Nag-iba Ii Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.25778,
+          13.35002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Navotas Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.25888,
+          13.36732
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Pachoca Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16878,
+          13.41072
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Palhi Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21028,
+          13.38312
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Panggalaan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19888,
+          13.30122
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Patas Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.12288,
+          13.34352
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Personas Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14048,
+          13.30862
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Putingtubig Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17998,
+          13.34192
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Salong Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18918,
+          13.42062
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "San Vicente Central Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17701,
+          13.40611
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "San Vicente East Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18198,
+          13.41152
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "San Vicente South Barangay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17628,
+          13.40882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Santa Isabel Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15948,
+          13.36762
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Santa Maria Village Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17628,
+          13.40882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Sapul Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18818,
+          13.36632
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Silonay Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.22288,
+          13.40052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Suqui Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.20338,
+          13.41812
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Tawagan Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14218,
+          13.37432
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Tawiran Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16688,
+          13.39572
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Tibag Health Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17168,
+          13.41022
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Calapan City Health Office - Guinobatan",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18358,
+          13.37912
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Oriental Mindoro Provincial Hospital",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17758,
+          13.37492
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Calapan City Health And Sanitation Department - North Section",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17758,
+          13.41402
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Calapan City Health And Sanitation Department - South Section",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18048,
+          13.41402
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Children's Medical Clinic",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18618,
+          13.41852
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Hospital Of The Holy Cross",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18198,
+          13.41152
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Luna Goco Medical Center",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17088,
+          13.40032
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Maria Estrella General Hospital, Inc.",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17088,
+          13.39662
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Medical Mission Group Hospital Multipurpose Cooperative Of O",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16588,
+          13.38932
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "hospital",
+        "name": "Sta. Maria Village Hospital, Inc.",
+        "category": "hospital",
+        "categoryLabel": "Hospital",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17628,
+          13.40882
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Lazareto Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1996,
+          13.42828
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Santo Niño Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18574,
+          13.40637
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Calapan Central School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18031,
+          13.41534
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Maria Estrella P.V. Goco Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16809,
+          13.39349
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Lalud Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17531,
+          13.39792
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Camilmil Central School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17755,
+          13.40439
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Adriatico Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17727,
+          13.41049
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Ibaba Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17543,
+          13.41461
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "F. Samaco Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16077,
+          13.30603
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Oriental Mindoro National High school",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17887,
+          13.40827
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Bucayao National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19205,
+          13.3057
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Pedro V. Panaligan Memorial National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15995,
+          13.30972
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Santa Rita Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13004,
+          13.35032
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "M. Pilot Esig Memorial Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.20657,
+          13.35311
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Maidlang Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.2342,
+          13.38825
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Wawa Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14559,
+          13.40803
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Community Vocational High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15967,
+          13.38436
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Villa Antonio Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.24918,
+          13.37486
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Nag-iba National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.26371,
+          13.34646
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Canubing I Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13556,
+          13.35795
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Baruyan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.1346,
+          13.38073
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Masipit Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16007,
+          13.38835
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Canubing National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14295,
+          13.35464
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Tawagan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14457,
+          13.36883
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Santa Isabel Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15933,
+          13.36811
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Bayanan I Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.16817,
+          13.36751
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Bayanan II Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17021,
+          13.35704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Guinobatan Elementary School;Guinabatan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18382,
+          13.38823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Parang Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21753,
+          13.40183
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Parang National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21873,
+          13.40169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Silonay Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.22414,
+          13.39887
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "N. Aboboto Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.18985,
+          13.36526
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Personas Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14366,
+          13.31182
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Buhuan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21382,
+          13.30877
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Santa Cruz Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.24302,
+          13.32106
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Batino Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21908,
+          13.34895
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Nag-iba Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.26846,
+          13.34172
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Salong Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19014,
+          13.42037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Bucayao Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19229,
+          13.30646
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Gutad Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.24537,
+          13.36161
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Camansihan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.22624,
+          13.33368
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "M. Kalaw Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.21144,
+          13.38386
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Bulusan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.20015,
+          13.40395
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Teresa C. Montellano Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15522,
+          13.40941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Balingayan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.13962,
+          13.33231
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Canubing II Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.11724,
+          13.31749
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Malad Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.15441,
+          13.33797
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Malamig Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14437,
+          13.34183
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Patas Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.12209,
+          13.34039
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "San Antonio Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19563,
+          13.42621
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "P. Tolentino Memorial School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.17908,
+          13.34138
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Caguisikan Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.23021,
+          13.36343
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Managpi National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19761,
+          13.32632
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Managpi Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.19749,
+          13.32733
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Ceriaco A. Abes Memorial National High School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.14888,
+          13.40632
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Suqui Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.20296,
+          13.41726
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "amenity": "school",
+        "name": "Navotas Elementary School",
+        "category": "school",
+        "categoryLabel": "School",
+        "verificationStatus": "source-listed",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "sourceUrl": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          121.25855,
+          13.36805
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "generatedAt": "2026-08-19T00:58:23.583Z",
+    "coverage": "Calapan City",
+    "curatedFeatures": 5,
+    "remoteSources": [
+      {
+        "category": "police",
+        "label": "Police station",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "url": "https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson"
+      },
+      {
+        "category": "fire",
+        "label": "Fire station",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "url": "https://webgis-static.up.edu.ph/api/critical_facilities/fire_station.geojson"
+      },
+      {
+        "category": "hospital",
+        "label": "Hospital",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "url": "https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson"
+      },
+      {
+        "category": "school",
+        "label": "School",
+        "sourceLabel": "NOAH / UP Diliman and OpenStreetMap contributors",
+        "url": "https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson"
+      }
+    ]
+  }
+}

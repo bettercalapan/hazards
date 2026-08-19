@@ -19,9 +19,9 @@
 	import { calapanContourDataUrl, terrainAttribution } from '$lib/data/terrain';
 	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
 	import {
+		criticalFacilityCategories,
 		criticalFacilitiesAttribution,
 		criticalFacilityColors,
-		criticalFacilitySources,
 		emptyCriticalFacilities,
 		type CriticalFacilityCollection
 	} from '$lib/data/critical-facilities';
@@ -150,6 +150,8 @@
 		criticalFacilityColors.hospital,
 		'school',
 		criticalFacilityColors.school,
+		'evacuation-center',
+		criticalFacilityColors['evacuation-center'],
 		'#249b61'
 	] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
 
@@ -1163,7 +1165,7 @@
 				loadCriticalFacilities = () => {
 					if (facilityRequest) return;
 					criticalFacilitiesState = 'loading';
-					facilityRequest = fetch('/api/critical-facilities')
+					facilityRequest = fetch('/critical-facilities.json')
 						.then(async (response) => {
 							if (!response.ok) throw new Error(`Critical facilities returned ${response.status}`);
 							const data = (await response.json()) as CriticalFacilityCollection;
@@ -1295,10 +1297,30 @@
 						typeof properties.categoryLabel === 'string'
 							? properties.categoryLabel
 							: 'Critical facility';
+					const verification =
+						properties.verificationStatus === 'map-listed-unverified'
+							? 'Map-listed, unverified'
+							: null;
+					const sourceUrl =
+						typeof properties.sourceUrl === 'string' && /^https?:\/\//.test(properties.sourceUrl)
+							? properties.sourceUrl
+							: null;
+					const sourceLabel =
+						typeof properties.sourceLabel === 'string' ? properties.sourceLabel : 'Source';
+					const checkedAt =
+						typeof properties.checkedAt === 'string' ? `Checked ${properties.checkedAt}` : null;
+					const popupDetails = [
+						`<small>${escapeHtml(category)}</small>`,
+						verification ? `<small>${escapeHtml(verification)}</small>` : '',
+						checkedAt ? `<small>${escapeHtml(checkedAt)}</small>` : '',
+						sourceUrl
+							? `<a href="${escapeHtml(sourceUrl)}" target="_blank" rel="noreferrer">${escapeHtml(sourceLabel)}</a>`
+							: ''
+					].join('');
 					facilityPopup?.remove();
 					facilityPopup = new Popup({ closeButton: true, closeOnClick: true, offset: 12 })
 						.setLngLat(event.lngLat)
-						.setHTML(`<strong>${escapeHtml(name)}</strong><small>${escapeHtml(category)}</small>`)
+						.setHTML(`<strong>${escapeHtml(name)}</strong>${popupDetails}`)
 						.addTo(mapInstance);
 				});
 				for (const layerId of ['critical-facilities-clusters', 'critical-facilities-points']) {
@@ -1554,7 +1576,7 @@
 
 	{#if criticalFacilitiesEnabled}
 		<div class="facility-legend" role="group" aria-label="Critical facility colors">
-			{#each criticalFacilitySources as facility (facility.category)}
+			{#each criticalFacilityCategories as facility (facility.category)}
 				<div>
 					<span
 						class="facility-legend-swatch"

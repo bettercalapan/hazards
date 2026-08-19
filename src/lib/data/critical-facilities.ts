@@ -1,18 +1,22 @@
 import type { FeatureCollection, Point } from 'geojson';
 import { calapanCityBoundary } from './calapan-boundary';
+import facilitySourceConfig from './critical-facility-sources.json';
 
-export type CriticalFacilityCategory = 'police' | 'fire' | 'hospital' | 'school';
+export type CriticalFacilityCategory =
+	'police' | 'fire' | 'hospital' | 'school' | 'evacuation-center';
 
 export const criticalFacilityColors: Record<CriticalFacilityCategory, string> = {
 	police: '#2563eb',
 	fire: '#dc4c2f',
 	hospital: '#16a34a',
-	school: '#9333ea'
+	school: '#9333ea',
+	'evacuation-center': '#d97706'
 };
 
 export type CriticalFacilitySource = {
 	readonly category: CriticalFacilityCategory;
 	readonly label: string;
+	readonly sourceLabel: string;
 	readonly url: string;
 };
 
@@ -20,40 +24,58 @@ export type CriticalFacilityProperties = {
 	category: CriticalFacilityCategory;
 	categoryLabel: string;
 	name: string;
+	verificationStatus?: 'source-listed' | 'map-listed-unverified';
+	sourceLabel?: string;
+	sourceUrl?: string;
+	checkedAt?: string;
 	[key: string]: unknown;
 };
 
 export type CriticalFacilityCollection = FeatureCollection<Point, CriticalFacilityProperties>;
 
-export const criticalFacilitySources = [
-	{
-		category: 'police',
-		label: 'Police station',
-		url: 'https://webgis-static.up.edu.ph/api/critical_facilities/police_station.geojson'
-	},
-	{
-		category: 'fire',
-		label: 'Fire station',
-		url: 'https://webgis-static.up.edu.ph/api/critical_facilities/fire_station.geojson'
-	},
-	{
-		category: 'hospital',
-		label: 'Hospital',
-		url: 'https://webgis-static.up.edu.ph/api/critical_facilities/hospitals.geojson'
-	},
-	{
-		category: 'school',
-		label: 'School',
-		url: 'https://webgis-static.up.edu.ph/api/critical_facilities/schools.geojson'
-	}
-] as const satisfies readonly CriticalFacilitySource[];
+const configuredFacilitySources = facilitySourceConfig as unknown as {
+	remoteSources: CriticalFacilitySource[];
+	curatedFeatures: CriticalFacilityCollection['features'];
+};
+
+export const criticalFacilitySources = configuredFacilitySources.remoteSources;
+
+export const criticalFacilityCategories = [
+	{ category: 'police', label: 'Police station' },
+	{ category: 'fire', label: 'Fire station' },
+	{ category: 'hospital', label: 'Hospital' },
+	{ category: 'school', label: 'School' },
+	{ category: 'evacuation-center', label: 'Evacuation center' }
+] as const satisfies readonly {
+	category: CriticalFacilityCategory;
+	label: string;
+}[];
 
 export const criticalFacilitiesAttribution =
-	'Facilities: NOAH / UP Diliman and OpenStreetMap contributors.';
+	'Facilities: NOAH / UP Diliman, OpenStreetMap contributors, and Google Maps listings.';
 
 export const emptyCriticalFacilities: CriticalFacilityCollection = {
 	type: 'FeatureCollection',
 	features: []
+};
+
+export const curatedCriticalFacilities: CriticalFacilityCollection = {
+	type: 'FeatureCollection',
+	features: configuredFacilitySources.curatedFeatures
+};
+
+export const curatedEvacuationCenters: CriticalFacilityCollection = {
+	type: 'FeatureCollection',
+	features: curatedCriticalFacilities.features.filter(
+		({ properties }) => properties.category === 'evacuation-center'
+	)
+};
+
+export const curatedFireStations: CriticalFacilityCollection = {
+	type: 'FeatureCollection',
+	features: curatedCriticalFacilities.features.filter(
+		({ properties }) => properties.category === 'fire'
+	)
 };
 
 function pointInRing(point: [number, number], ring: number[][]): boolean {
@@ -132,7 +154,10 @@ export function normalizeCriticalFacilities(
 					...properties,
 					category: source.category,
 					categoryLabel: source.label,
-					name
+					name,
+					verificationStatus: 'source-listed',
+					sourceLabel: source.sourceLabel,
+					sourceUrl: source.url
 				},
 				geometry: { type: 'Point', coordinates: [longitude, latitude] }
 			}
