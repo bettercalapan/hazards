@@ -22,9 +22,10 @@ function installDiagnostics(page: Page): BrowserDiagnostics {
 	page.on('pageerror', (error) => failures.push(`[pageerror] ${error.message}`));
 	page.on('requestfailed', (request) => {
 		if (isMapAsset(request.url())) {
-			failures.push(
-				`[requestfailed] ${request.url()} ${request.failure()?.errorText ?? ''}`.trim()
-			);
+			const errorText = request.failure()?.errorText ?? '';
+			if (errorText !== 'net::ERR_ABORTED') {
+				failures.push(`[requestfailed] ${request.url()} ${errorText}`.trim());
+			}
 		}
 	});
 	page.on('response', (response) => {

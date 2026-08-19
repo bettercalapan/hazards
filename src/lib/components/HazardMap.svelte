@@ -34,6 +34,18 @@
 		updateMapCamera as setMapCamera,
 		type MapBounds
 	} from '$lib/map/map-setup';
+	import {
+		fillColorForLayer,
+		hazardFamilies,
+		hazardTileBounds,
+		isLayerEnabled,
+		layerIdFor,
+		layersForFamily,
+		sourceIdsForFamily,
+		sourceLayerFor,
+		type EnabledHazardLayers,
+		type HazardLayerDefinition
+	} from '$lib/map/hazard-layers';
 	import MapControls from './MapControls.svelte';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
@@ -330,52 +342,26 @@
 				const { firstSymbolLayerId } = baseMap;
 				const addHazardLayers = (
 					family: HazardFamily,
-					layers: readonly {
-						key: string | number;
-						tilePath: string;
-						colors?: { readonly Low: string; readonly Medium: string; readonly High: string };
-						classes?: readonly { readonly color: string }[];
-					}[],
-					sourceLayer: string
+					layers: readonly HazardLayerDefinition[]
 				) => {
 					for (const layer of [...layers].reverse()) {
-						const sourceId =
-							family === 'flood'
-								? `calapan-flood-hazard-${layer.key}`
-								: family === 'storm-surge'
-									? `calapan-storm-surge-advisory-${layer.key}`
-									: family === 'landslide'
-										? `calapan-landslide-hazard-${layer.key}`
-										: `calapan-${layer.key}`;
-						const classColors = layer.classes?.map((item) => item.color) ?? [
-							layer.colors?.Low ?? '#000000',
-							layer.colors?.Medium ?? '#000000',
-							layer.colors?.High ?? '#000000'
-						];
-						const fillColor = [
-							'match',
-							['get', 'Var'],
-							...classColors.flatMap((color, index) => [index + 1, color]),
-							'#000000'
-						] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
+						const sourceId = layerIdFor(family, layer.key);
 						mapInstance.addSource(sourceId, {
 							type: 'vector',
 							tiles: [layer.tilePath],
 							minzoom: 10,
 							maxzoom: 15,
-							bounds: [
-								121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054
-							]
+							bounds: hazardTileBounds
 						});
 						mapInstance.addLayer(
 							{
 								id: sourceId,
 								type: 'fill',
 								source: sourceId,
-								'source-layer': sourceLayer,
+								'source-layer': sourceLayerFor(family, layer),
 								layout: { visibility: 'none' },
 								paint: {
-									'fill-color': fillColor,
+									'fill-color': fillColorForLayer(layer),
 									'fill-opacity': 0.85
 								}
 							},
@@ -383,11 +369,11 @@
 						);
 					}
 				};
-				addHazardLayers('flood', floodHazardPeriods, 'flood');
-				addHazardLayers('storm-surge', stormSurgeAdvisories, 'storm-surge');
-				addHazardLayers('landslide', landslideHazards, 'landslide');
+				addHazardLayers('flood', floodHazardPeriods);
+				addHazardLayers('storm-surge', stormSurgeAdvisories);
+				addHazardLayers('landslide', landslideHazards);
 				for (const layer of seismicHazards) {
-					addHazardLayers('earthquake', [layer], layer.sourceLayer);
+					addHazardLayers('earthquake', [layer]);
 				}
 				const typhoonLayerIds = [
 					'calapan-typhoon-grid',
@@ -504,35 +490,12 @@
 					firstSymbolLayerId
 				);
 
-				const hazardFamilies: HazardFamily[] = [
-					'flood',
-					'storm-surge',
-					'landslide',
-					'earthquake',
-					'typhoon'
-				];
-				const layersForFamily = (family: HazardFamily) => {
-					if (family === 'flood') return floodHazardPeriods;
-					if (family === 'storm-surge') return stormSurgeAdvisories;
-					if (family === 'landslide') return landslideHazards;
-					if (family === 'typhoon') return [];
-					return seismicHazards;
-				};
-				const layerIdFor = (family: HazardFamily, key: string | number) => {
-					if (family === 'flood') return `calapan-flood-hazard-${key}`;
-					if (family === 'storm-surge') return `calapan-storm-surge-advisory-${key}`;
-					if (family === 'landslide') return `calapan-landslide-hazard-${key}`;
-					return `calapan-${key}`;
-				};
-				const layerEnabled = (family: HazardFamily, key: string | number) => {
-					if (family === 'flood') return enabledFloodPeriods.includes(key as ReturnPeriod);
-					if (family === 'storm-surge') {
-						return enabledStormSurgeAdvisories.includes(key as StormSurgeAdvisory);
-					}
-					if (family === 'landslide') return enabledLandslideLayers.includes(key as LandslideLayer);
-					if (family === 'typhoon') return true;
-					return enabledSeismicLayers.includes(key as SeismicLayer);
-				};
+				const getEnabledLayers = (): EnabledHazardLayers => ({
+					enabledFloodPeriods,
+					enabledStormSurgeAdvisories,
+					enabledLandslideLayers,
+					enabledSeismicLayers
+				});
 				const setFamilyVisibility = (family: HazardFamily, visible: boolean, opacity = 0.85) => {
 					if (family === 'typhoon') {
 						for (const layerId of typhoonLayerIds) {
@@ -560,22 +523,18 @@
 					}
 					for (const layer of layersForFamily(family)) {
 						const layerId = layerIdFor(family, layer.key);
-						const shouldShow = visible && layerEnabled(family, layer.key);
+						const shouldShow = visible && isLayerEnabled(family, layer.key, getEnabledLayers());
 						if (!mapInstance.getLayer(layerId)) continue;
 						mapInstance.setLayoutProperty(layerId, 'visibility', shouldShow ? 'visible' : 'none');
 						mapInstance.setPaintProperty(layerId, 'fill-opacity', shouldShow ? opacity : 0.85);
 					}
 				};
-				const sourceIdsForFamily = (family: HazardFamily) =>
-					layersForFamily(family)
-						.filter((layer) => layerEnabled(family, layer.key))
-						.map((layer) => layerIdFor(family, layer.key));
 				const familyLoads = new SvelteMap<HazardFamily, Promise<void>>();
 				const loadFamilyTiles = (family: HazardFamily) => {
 					const existingLoad = familyLoads.get(family);
 					if (existingLoad) return existingLoad;
 
-					const sourceIds = sourceIdsForFamily(family);
+					const sourceIds = sourceIdsForFamily(family, getEnabledLayers());
 					if (sourceIds.length === 0) return Promise.resolve();
 
 					const load = new Promise<void>((resolve) => {
