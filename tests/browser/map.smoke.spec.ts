@@ -80,6 +80,24 @@ test.describe('map browser smoke tests', () => {
 		await diagnostics.assertClean();
 	});
 
+	test('resets the share button after copying the map link', async ({ page }) => {
+		await page.addInitScript(() => {
+			Object.defineProperty(navigator, 'clipboard', {
+				configurable: true,
+				value: { writeText: async () => undefined }
+			});
+		});
+		const diagnostics = installDiagnostics(page);
+		await openMap(page);
+
+		const share = page.locator('.share-button');
+		await expect(share).toHaveAttribute('aria-label', 'Copy map link');
+		await share.click();
+		await expect(share).toHaveAttribute('aria-label', 'Map link copied');
+		await expect(share).toHaveAttribute('aria-label', 'Copy map link', { timeout: 5_000 });
+		await diagnostics.assertClean();
+	});
+
 	test('switches hazard families and updates active layer state', async ({ page }) => {
 		test.setTimeout(90_000);
 		const diagnostics = installDiagnostics(page);

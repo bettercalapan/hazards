@@ -38,6 +38,7 @@
 	let activeHazardFamily = $state<HazardFamily>(initialMapState.activeHazardFamily);
 	let mapShareState = $state<MapShareState>(initialMapState);
 	let shareStatus = $state<'idle' | 'copied' | 'error'>('idle');
+	let shareStatusResetTimeout: ReturnType<typeof setTimeout> | undefined;
 	let barangayMatches = $derived(
 		barangays ? searchCalapanBarangays(barangays, barangayQuery).slice(0, 8) : []
 	);
@@ -152,6 +153,11 @@
 		} catch {
 			shareStatus = 'error';
 		}
+		if (shareStatusResetTimeout) clearTimeout(shareStatusResetTimeout);
+		shareStatusResetTimeout = setTimeout(() => {
+			shareStatus = 'idle';
+			shareStatusResetTimeout = undefined;
+		}, 2000);
 	}
 
 	onMount(() => {
@@ -177,6 +183,10 @@
 			.catch(() => {
 				barangays = null;
 			});
+
+		return () => {
+			if (shareStatusResetTimeout) clearTimeout(shareStatusResetTimeout);
+		};
 	});
 </script>
 
@@ -250,7 +260,16 @@
 					<img src={logo} alt="" width="36" height="36" />
 					<span>BetterCalapan</span>
 				</a>
-				<button class="share-button" type="button" onclick={copyMapLink}>
+				<button
+					class="share-button"
+					aria-label={shareStatus === 'copied'
+						? 'Map link copied'
+						: shareStatus === 'error'
+							? 'Copy map link failed'
+							: 'Copy map link'}
+					type="button"
+					onclick={copyMapLink}
+				>
 					<span class="icon">
 						{#if shareStatus === 'copied'}
 							<Check />
@@ -700,8 +719,9 @@
 	}
 
 	.share-button:hover {
-		border-color: var(--accent);
-		color: var(--accent-dark);
+		border-color: var(--fg);
+		background: var(--fg);
+		color: var(--bg);
 	}
 
 	.info-card.search-card {
