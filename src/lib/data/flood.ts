@@ -48,8 +48,8 @@ export const floodHazardPeriods = [
 
 export const floodHazardMetadata = {
 	cellSizeMeters: 25,
-	source: 'UP Resilience Institute NOAH Center',
-	sourceUrl: 'https://noah.up.edu.ph/know-your-hazards',
+	source: 'NOAH',
+	sourceUrl: 'https://noah.up.edu.ph',
 	sourceDate: null,
 	sourceDateNote: 'The downloaded shapefile metadata does not include a source date.',
 	coverage: 'Oriental Mindoro source layers clipped to Calapan City.',

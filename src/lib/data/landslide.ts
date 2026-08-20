@@ -19,8 +19,8 @@ export const landslideHazards = [
 ] as const;
 
 export const landslideMetadata = {
-	source: 'UP Resilience Institute NOAH Center',
-	sourceUrl: 'https://noah.up.edu.ph/know-your-hazards',
+	source: 'NOAH',
+	sourceUrl: 'https://noah.up.edu.ph',
 	sourceDate: null,
 	sourceDateNote: 'The downloaded shapefile metadata does not include a source date.',
 	coverage: 'Oriental Mindoro source layer clipped to Calapan City.',

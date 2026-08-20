@@ -34,6 +34,6 @@ describe('Calapan storm surge hazard', () => {
 			Medium: '#FA5F96',
 			High: '#C21D7D'
 		});
-		expect(stormSurgeMetadata.source).toBe('UP Resilience Institute NOAH Center');
+		expect(stormSurgeMetadata.source).toBe('NOAH');
 	});
 });

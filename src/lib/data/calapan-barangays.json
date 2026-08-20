@@ -6,8 +6,7 @@
 			"id": "PH1705205001",
 			"properties": {
 				"id": "PH1705205001",
-				"name": "Balingayan",
-				"sourceName": "Balingayan"
+				"name": "Balingayan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -223,8 +222,7 @@
 			"id": "PH1705205002",
 			"properties": {
 				"id": "PH1705205002",
-				"name": "Balite",
-				"sourceName": "Balite"
+				"name": "Balite"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -940,8 +938,7 @@
 			"id": "PH1705205003",
 			"properties": {
 				"id": "PH1705205003",
-				"name": "Baruyan",
-				"sourceName": "Baruyan"
+				"name": "Baruyan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1153,8 +1150,7 @@
 			"id": "PH1705205004",
 			"properties": {
 				"id": "PH1705205004",
-				"name": "Batino",
-				"sourceName": "Batino"
+				"name": "Batino"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1328,8 +1324,7 @@
 			"id": "PH1705205005",
 			"properties": {
 				"id": "PH1705205005",
-				"name": "Bayanan I",
-				"sourceName": "Bayanan I"
+				"name": "Bayanan I"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1483,8 +1478,7 @@
 			"id": "PH1705205006",
 			"properties": {
 				"id": "PH1705205006",
-				"name": "Bayanan II",
-				"sourceName": "Bayanan II"
+				"name": "Bayanan II"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1538,8 +1532,7 @@
 			"id": "PH1705205007",
 			"properties": {
 				"id": "PH1705205007",
-				"name": "Biga",
-				"sourceName": "Biga"
+				"name": "Biga"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1598,8 +1591,7 @@
 			"id": "PH1705205008",
 			"properties": {
 				"id": "PH1705205008",
-				"name": "Bondoc",
-				"sourceName": "Bondoc"
+				"name": "Bondoc"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1656,8 +1648,7 @@
 			"id": "PH1705205009",
 			"properties": {
 				"id": "PH1705205009",
-				"name": "Bucayao",
-				"sourceName": "Bucayao"
+				"name": "Bucayao"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1723,8 +1714,7 @@
 			"id": "PH1705205010",
 			"properties": {
 				"id": "PH1705205010",
-				"name": "Buhuan",
-				"sourceName": "Buhuan"
+				"name": "Buhuan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1759,8 +1749,7 @@
 			"id": "PH1705205011",
 			"properties": {
 				"id": "PH1705205011",
-				"name": "Bulusan",
-				"sourceName": "Bulusan"
+				"name": "Bulusan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -1827,8 +1816,7 @@
 			"id": "PH1705205013",
 			"properties": {
 				"id": "PH1705205013",
-				"name": "Calero",
-				"sourceName": "Calero (Pob.)"
+				"name": "Calero"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -2094,8 +2082,7 @@
 			"id": "PH1705205015",
 			"properties": {
 				"id": "PH1705205015",
-				"name": "Camansihan",
-				"sourceName": "Camansihan"
+				"name": "Camansihan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -2169,8 +2156,7 @@
 			"id": "PH1705205016",
 			"properties": {
 				"id": "PH1705205016",
-				"name": "Camilmil",
-				"sourceName": "Camilmil"
+				"name": "Camilmil"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -2263,8 +2249,7 @@
 			"id": "PH1705205017",
 			"properties": {
 				"id": "PH1705205017",
-				"name": "Canubing I",
-				"sourceName": "Canubing I"
+				"name": "Canubing I"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -2520,8 +2505,7 @@
 			"id": "PH1705205018",
 			"properties": {
 				"id": "PH1705205018",
-				"name": "Canubing II",
-				"sourceName": "Canubing II"
+				"name": "Canubing II"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -2960,8 +2944,7 @@
 			"id": "PH1705205019",
 			"properties": {
 				"id": "PH1705205019",
-				"name": "Comunal",
-				"sourceName": "Comunal"
+				"name": "Comunal"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3001,8 +2984,7 @@
 			"id": "PH1705205021",
 			"properties": {
 				"id": "PH1705205021",
-				"name": "Guinobatan",
-				"sourceName": "Guinobatan"
+				"name": "Guinobatan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3088,8 +3070,7 @@
 			"id": "PH1705205022",
 			"properties": {
 				"id": "PH1705205022",
-				"name": "Gulod",
-				"sourceName": "Gulod"
+				"name": "Gulod"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3417,8 +3398,7 @@
 			"id": "PH1705205023",
 			"properties": {
 				"id": "PH1705205023",
-				"name": "Gutad",
-				"sourceName": "Gutad"
+				"name": "Gutad"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3565,8 +3545,7 @@
 			"id": "PH1705205025",
 			"properties": {
 				"id": "PH1705205025",
-				"name": "Ibaba East",
-				"sourceName": "Ibaba East (Pob.)"
+				"name": "Ibaba East"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3704,8 +3683,7 @@
 			"id": "PH1705205026",
 			"properties": {
 				"id": "PH1705205026",
-				"name": "Ibaba West",
-				"sourceName": "Ibaba West (Pob.)"
+				"name": "Ibaba West"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3831,8 +3809,7 @@
 			"id": "PH1705205027",
 			"properties": {
 				"id": "PH1705205027",
-				"name": "Ilaya",
-				"sourceName": "Ilaya (Pob.)"
+				"name": "Ilaya"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -3905,8 +3882,7 @@
 			"id": "PH1705205028",
 			"properties": {
 				"id": "PH1705205028",
-				"name": "Lalud",
-				"sourceName": "Lalud"
+				"name": "Lalud"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -4032,8 +4008,7 @@
 			"id": "PH1705205029",
 			"properties": {
 				"id": "PH1705205029",
-				"name": "Lazareto",
-				"sourceName": "Lazareto"
+				"name": "Lazareto"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -6850,8 +6825,7 @@
 			"id": "PH1705205030",
 			"properties": {
 				"id": "PH1705205030",
-				"name": "Libis",
-				"sourceName": "Libis (Pob.)"
+				"name": "Libis"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -6888,8 +6862,7 @@
 			"id": "PH1705205031",
 			"properties": {
 				"id": "PH1705205031",
-				"name": "Lumangbayan",
-				"sourceName": "Lumangbayan"
+				"name": "Lumangbayan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -7093,8 +7066,7 @@
 			"id": "PH1705205032",
 			"properties": {
 				"id": "PH1705205032",
-				"name": "Mahal na Pangalan",
-				"sourceName": "Mahal Na Pangalan"
+				"name": "Mahal na Pangalan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -7917,8 +7889,7 @@
 			"id": "PH1705205033",
 			"properties": {
 				"id": "PH1705205033",
-				"name": "Maidlang",
-				"sourceName": "Maidlang"
+				"name": "Maidlang"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -8674,8 +8645,7 @@
 			"id": "PH1705205034",
 			"properties": {
 				"id": "PH1705205034",
-				"name": "Malad",
-				"sourceName": "Malad"
+				"name": "Malad"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -8809,8 +8779,7 @@
 			"id": "PH1705205035",
 			"properties": {
 				"id": "PH1705205035",
-				"name": "Malamig",
-				"sourceName": "Malamig"
+				"name": "Malamig"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -8900,8 +8869,7 @@
 			"id": "PH1705205036",
 			"properties": {
 				"id": "PH1705205036",
-				"name": "Managpi",
-				"sourceName": "Managpi"
+				"name": "Managpi"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -9221,8 +9189,7 @@
 			"id": "PH1705205037",
 			"properties": {
 				"id": "PH1705205037",
-				"name": "Masipit",
-				"sourceName": "Masipit"
+				"name": "Masipit"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -9288,8 +9255,7 @@
 			"id": "PH1705205038",
 			"properties": {
 				"id": "PH1705205038",
-				"name": "Nag-Iba I",
-				"sourceName": "Nag-Iba I"
+				"name": "Nag-Iba I"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -9930,8 +9896,7 @@
 			"id": "PH1705205068",
 			"properties": {
 				"id": "PH1705205068",
-				"name": "Nag-Iba II",
-				"sourceName": "Nag-Iba II"
+				"name": "Nag-Iba II"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -10422,8 +10387,7 @@
 			"id": "PH1705205039",
 			"properties": {
 				"id": "PH1705205039",
-				"name": "Navotas",
-				"sourceName": "Navotas"
+				"name": "Navotas"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -11410,8 +11374,7 @@
 			"id": "PH1705205041",
 			"properties": {
 				"id": "PH1705205041",
-				"name": "Pachoca",
-				"sourceName": "Pachoca"
+				"name": "Pachoca"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -11744,8 +11707,7 @@
 			"id": "PH1705205042",
 			"properties": {
 				"id": "PH1705205042",
-				"name": "Palhi",
-				"sourceName": "Palhi"
+				"name": "Palhi"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -12032,8 +11994,7 @@
 			"id": "PH1705205043",
 			"properties": {
 				"id": "PH1705205043",
-				"name": "Panggalaan",
-				"sourceName": "Panggalaan"
+				"name": "Panggalaan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -12086,8 +12047,7 @@
 			"id": "PH1705205044",
 			"properties": {
 				"id": "PH1705205044",
-				"name": "Parang",
-				"sourceName": "Parang"
+				"name": "Parang"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -13599,8 +13559,7 @@
 			"id": "PH1705205045",
 			"properties": {
 				"id": "PH1705205045",
-				"name": "Patas",
-				"sourceName": "Patas"
+				"name": "Patas"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -13864,8 +13823,7 @@
 			"id": "PH1705205046",
 			"properties": {
 				"id": "PH1705205046",
-				"name": "Personas",
-				"sourceName": "Personas"
+				"name": "Personas"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -13984,8 +13942,7 @@
 			"id": "PH1705205047",
 			"properties": {
 				"id": "PH1705205047",
-				"name": "Puting Tubig",
-				"sourceName": "Puting Tubig"
+				"name": "Puting Tubig"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -14327,8 +14284,7 @@
 			"id": "PH1705205048",
 			"properties": {
 				"id": "PH1705205048",
-				"name": "Salong",
-				"sourceName": "Salong"
+				"name": "Salong"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15094,8 +15050,7 @@
 			"id": "PH1705205049",
 			"properties": {
 				"id": "PH1705205049",
-				"name": "San Antonio",
-				"sourceName": "San Antonio"
+				"name": "San Antonio"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15503,8 +15458,7 @@
 			"id": "PH1705205050",
 			"properties": {
 				"id": "PH1705205050",
-				"name": "San Vicente Central",
-				"sourceName": "San Vicente Central (Pob.)"
+				"name": "San Vicente Central"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15538,8 +15492,7 @@
 			"id": "PH1705205051",
 			"properties": {
 				"id": "PH1705205051",
-				"name": "San Vicente East",
-				"sourceName": "San Vicente East (Pob.)"
+				"name": "San Vicente East"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15606,8 +15559,7 @@
 			"id": "PH1705205052",
 			"properties": {
 				"id": "PH1705205052",
-				"name": "San Vicente North",
-				"sourceName": "San Vicente North (Pob.)"
+				"name": "San Vicente North"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15666,8 +15618,7 @@
 			"id": "PH1705205053",
 			"properties": {
 				"id": "PH1705205053",
-				"name": "San Vicente South",
-				"sourceName": "San Vicente South (Pob.)"
+				"name": "San Vicente South"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15698,8 +15649,7 @@
 			"id": "PH1705205054",
 			"properties": {
 				"id": "PH1705205054",
-				"name": "San Vicente West",
-				"sourceName": "San Vicente West (Pob.)"
+				"name": "San Vicente West"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15737,8 +15687,7 @@
 			"id": "PH1705205058",
 			"properties": {
 				"id": "PH1705205058",
-				"name": "Sapul",
-				"sourceName": "Sapul"
+				"name": "Sapul"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -15923,8 +15872,7 @@
 			"id": "PH1705205059",
 			"properties": {
 				"id": "PH1705205059",
-				"name": "Silonay",
-				"sourceName": "Silonay"
+				"name": "Silonay"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16099,8 +16047,7 @@
 			"id": "PH1705205055",
 			"properties": {
 				"id": "PH1705205055",
-				"name": "Sta. Cruz",
-				"sourceName": "Sta. Cruz"
+				"name": "Sta. Cruz"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16149,8 +16096,7 @@
 			"id": "PH1705205056",
 			"properties": {
 				"id": "PH1705205056",
-				"name": "Sta. Isabel",
-				"sourceName": "Sta. Isabel"
+				"name": "Sta. Isabel"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16248,8 +16194,7 @@
 			"id": "PH1705205061",
 			"properties": {
 				"id": "PH1705205061",
-				"name": "Sta. Maria Village",
-				"sourceName": "Sta. Maria Village"
+				"name": "Sta. Maria Village"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16303,8 +16248,7 @@
 			"id": "PH1705205012",
 			"properties": {
 				"id": "PH1705205012",
-				"name": "Sta. Rita",
-				"sourceName": "Sta. Rita (Bungahan)"
+				"name": "Sta. Rita"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16512,8 +16456,7 @@
 			"id": "PH1705205057",
 			"properties": {
 				"id": "PH1705205057",
-				"name": "Sto. Ni\u00f1o",
-				"sourceName": "Sto. Ni\u00f1o"
+				"name": "Sto. Ni\u00f1o"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -16591,8 +16534,7 @@
 			"id": "PH1705205062",
 			"properties": {
 				"id": "PH1705205062",
-				"name": "Suqui",
-				"sourceName": "Suqui"
+				"name": "Suqui"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -17400,8 +17342,7 @@
 			"id": "PH1705205063",
 			"properties": {
 				"id": "PH1705205063",
-				"name": "Tawagan",
-				"sourceName": "Tawagan"
+				"name": "Tawagan"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -17501,8 +17442,7 @@
 			"id": "PH1705205064",
 			"properties": {
 				"id": "PH1705205064",
-				"name": "Tawiran",
-				"sourceName": "Tawiran"
+				"name": "Tawiran"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -17589,8 +17529,7 @@
 			"id": "PH1705205065",
 			"properties": {
 				"id": "PH1705205065",
-				"name": "Tibag",
-				"sourceName": "Tibag"
+				"name": "Tibag"
 			},
 			"geometry": {
 				"type": "MultiPolygon",
@@ -17693,8 +17632,7 @@
 			"id": "PH1705205066",
 			"properties": {
 				"id": "PH1705205066",
-				"name": "Wawa",
-				"sourceName": "Wawa"
+				"name": "Wawa"
 			},
 			"geometry": {
 				"type": "MultiPolygon",

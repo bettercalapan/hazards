@@ -4,8 +4,7 @@ import { createBarangayLayerManager, getBarangayBounds } from './barangay-layer-
 
 const properties = {
 	id: 'barangay-a',
-	name: 'Barangay A',
-	sourceName: 'Test source'
+	name: 'Barangay A'
 } as BarangayProperties;
 
 const barangays = {

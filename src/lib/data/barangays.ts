@@ -20,7 +20,6 @@ type SeismicSummaryData = Record<string, Partial<Record<SeismicLayer, SeismicHaz
 export type BarangayProperties = {
 	id: string;
 	name: string;
-	sourceName: string;
 	floodHazards: Record<ReturnPeriod, FloodHazardSummary>;
 	stormSurgeHazards: Record<StormSurgeAdvisory, StormSurgeSummary>;
 	landslideHazards: Record<LandslideLayer, LandslideHazardSummary>;
@@ -79,7 +78,7 @@ export function loadCalapanBarangays(): Promise<BarangayCollection> {
 
 export const calapanBarangayLabelPoints = barangayLabelPointData as FeatureCollection<
 	Point,
-	Pick<BarangayProperties, 'id' | 'name' | 'sourceName'>
+	Pick<BarangayProperties, 'id' | 'name'>
 >;
 
 function normalizeBarangaySearch(value: string): string {

@@ -10,7 +10,7 @@ export type SafetyGuidance = {
 
 export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 	flood: {
-		title: 'If flooding is possible',
+		title: 'Safety measures',
 		summary:
 			'Monitor official advisories and move people and essential items to safer, higher ground early.',
 		actions: [
@@ -22,7 +22,7 @@ export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 		sourceUrl: 'https://pagasa.dost.gov.ph/flood'
 	},
 	'storm-surge': {
-		title: 'If storm surge is possible',
+		title: 'Safety measures',
 		summary:
 			'Storm surge can arrive with a tropical cyclone. Leave exposed coastal and low-lying areas when officials advise it.',
 		actions: [
@@ -34,7 +34,7 @@ export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 		sourceUrl: 'https://pagasa.dost.gov.ph/information/storm-surge'
 	},
 	landslide: {
-		title: 'If landslides are possible',
+		title: 'Safety measures',
 		summary:
 			'Heavy rain can destabilize slopes. Leave early if officials warn your area or you notice signs of ground movement.',
 		actions: [
@@ -46,7 +46,7 @@ export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 		sourceUrl: 'https://hazardhunter.georisk.gov.ph/'
 	},
 	earthquake: {
-		title: 'If an earthquake occurs',
+		title: 'Safety measures',
 		summary:
 			'During shaking, protect yourself first. Afterward, expect aftershocks and follow official instructions.',
 		actions: [
@@ -58,7 +58,7 @@ export const safetyGuidance: Record<HazardFamily, SafetyGuidance> = {
 		sourceUrl: 'https://www.phivolcs.dost.gov.ph/'
 	},
 	typhoon: {
-		title: 'If a typhoon threatens',
+		title: 'Safety measures',
 		summary:
 			'Use official bulletins for timing and action. A track or hazard zone is not a guarantee of local conditions.',
 		actions: [

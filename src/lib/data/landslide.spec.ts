@@ -10,6 +10,6 @@ describe('Calapan landslide hazard', () => {
 			Medium: '#f2994a',
 			High: '#eb5757'
 		});
-		expect(landslideMetadata.source).toBe('UP Resilience Institute NOAH Center');
+		expect(landslideMetadata.source).toBe('NOAH');
 	});
 });

@@ -13,6 +13,6 @@ describe('Calapan seismic hazards', () => {
 			layer.classes.map((item): string => item.color)
 		);
 		expect(colors).not.toContain('#ff0000');
-		expect(seismicMetadata.source).toContain('PHIVOLCS');
+		expect(seismicMetadata.source).toBe('GeoRisk Philippines');
 	});
 });

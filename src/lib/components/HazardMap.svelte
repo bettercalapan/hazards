@@ -11,11 +11,7 @@
 	import { type LandslideLayer } from '$lib/data/landslide';
 	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
-	import {
-		criticalFacilityCategories,
-		criticalFacilitiesAttribution,
-		criticalFacilityColors
-	} from '$lib/data/critical-facilities';
+	import { criticalFacilitiesAttribution } from '$lib/data/critical-facilities';
 	import {
 		createDefaultMapShareState,
 		type HazardFamily,
@@ -321,12 +317,15 @@
 		{enabledStormSurgeAdvisories}
 		{enabledLandslideLayers}
 		{enabledSeismicLayers}
+		{criticalFacilitiesEnabled}
+		{criticalFacilitiesState}
 		onViewModeChange={setViewMode}
 		onHazardFamilyChange={setHazardFamily}
 		onFloodPeriodChange={setFloodPeriodEnabled}
 		onStormSurgeAdvisoryChange={setStormSurgeAdvisoryEnabled}
 		onLandslideLayerChange={setLandslideLayerEnabled}
 		onSeismicLayerChange={setSeismicLayerEnabled}
+		onCriticalFacilitiesToggle={toggleCriticalFacilities}
 		onPreloadHazardFamily={preloadHazardFamily}
 	/>
 
@@ -354,40 +353,6 @@
 			{:else}
 				Loading typhoon track
 			{/if}
-		</div>
-	{:else}
-		<button
-			class="facility-toggle"
-			class:active={criticalFacilitiesEnabled}
-			class:error={criticalFacilitiesState === 'error'}
-			aria-pressed={criticalFacilitiesEnabled}
-			aria-busy={criticalFacilitiesState === 'loading'}
-			aria-live="polite"
-			type="button"
-			onclick={toggleCriticalFacilities}
-		>
-			<span class="facility-toggle-dot"></span>
-			<span>
-				{criticalFacilitiesState === 'loading'
-					? 'Loading facilities'
-					: criticalFacilitiesState === 'error'
-						? 'Facilities unavailable'
-						: 'Critical facilities'}
-			</span>
-		</button>
-	{/if}
-
-	{#if criticalFacilitiesEnabled}
-		<div class="facility-legend" role="group" aria-label="Critical facility colors">
-			{#each criticalFacilityCategories as facility (facility.category)}
-				<div>
-					<span
-						class="facility-legend-swatch"
-						style={`background: ${criticalFacilityColors[facility.category]}`}
-					></span>
-					{facility.label}
-				</div>
-			{/each}
 		</div>
 	{/if}
 
@@ -429,15 +394,13 @@
 	}
 
 	.map-status,
-	.facility-toggle,
-	.facility-legend,
 	.boundary-note {
 		position: absolute;
 		z-index: 2;
 	}
 
 	.map-status {
-		top: 1rem;
+		top: 4.5rem;
 		right: 1rem;
 		display: flex;
 		align-items: center;
@@ -459,74 +422,6 @@
 		background: #d18f38;
 	}
 
-	.facility-toggle {
-		top: 1rem;
-		right: 1rem;
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		border: 1px solid rgb(46 157 104 / 35%);
-		padding: 0.55rem 0.75rem;
-		border-radius: 999px;
-		background: rgb(250 248 242 / 92%);
-		color: #476563;
-		font: inherit;
-		font-size: 0.72rem;
-		font-weight: 700;
-		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
-		backdrop-filter: blur(12px);
-		cursor: pointer;
-	}
-
-	.facility-toggle.active {
-		background: #e7f6ed;
-		color: #145a3c;
-	}
-
-	.facility-toggle.error {
-		border-color: rgb(190 77 77 / 35%);
-		color: #9a3d3d;
-	}
-
-	.facility-toggle-dot {
-		width: 0.55rem;
-		height: 0.55rem;
-		border: 2px solid #249b61;
-		border-radius: 50%;
-		background: #35c978;
-		box-shadow: 0 0 0 3px rgb(53 201 120 / 18%);
-	}
-
-	.facility-legend {
-		top: 3.5rem;
-		right: 1rem;
-		display: grid;
-		gap: 0.35rem;
-		padding: 0.55rem 0.7rem;
-		border: 1px solid rgb(255 255 255 / 65%);
-		border-radius: 0.65rem;
-		background: rgb(250 248 242 / 92%);
-		color: #476563;
-		font-size: 0.68rem;
-		font-weight: 700;
-		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
-		backdrop-filter: blur(12px);
-	}
-
-	.facility-legend div {
-		display: flex;
-		align-items: center;
-		gap: 0.4rem;
-	}
-
-	.facility-legend-swatch {
-		width: 0.6rem;
-		height: 0.6rem;
-		border: 1px solid rgb(255 255 255 / 90%);
-		border-radius: 50%;
-		box-shadow: 0 0 0 1px rgb(23 62 59 / 18%);
-	}
-
 	.boundary-note {
 		left: 1rem;
 		bottom: 1rem;
@@ -534,10 +429,9 @@
 		padding: 0.65rem 0.8rem;
 		border: 1px solid rgb(255 255 255 / 55%);
 		border-radius: 0.6rem;
-		background: rgb(250 248 242 / 88%);
-		color: #476563;
-		font-size: 0.72rem;
-		line-height: 1.4;
+		background: var(--bg);
+		color: var(--fg);
+		font-size: 0.875rem;
 		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
 		backdrop-filter: blur(12px);
 	}
@@ -552,19 +446,6 @@
 			top: auto;
 			right: 0.75rem;
 			bottom: 0.75rem;
-		}
-
-		.facility-toggle {
-			top: auto;
-			right: 0.75rem;
-			bottom: 0.75rem;
-		}
-
-		.facility-legend {
-			top: auto;
-			right: 0.75rem;
-			bottom: 3.7rem;
-			max-width: calc(100% - 1.5rem);
 		}
 
 		.boundary-note {

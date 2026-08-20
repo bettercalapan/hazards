@@ -5,10 +5,7 @@ import type { MapBounds } from './map-setup';
 
 type MapInstance = import('maplibre-gl').Map;
 type FirstSymbolLayerId = string | undefined;
-type BarangayLabelPoints = FeatureCollection<
-	Point,
-	Pick<BarangayProperties, 'id' | 'name' | 'sourceName'>
->;
+type BarangayLabelPoints = FeatureCollection<Point, Pick<BarangayProperties, 'id' | 'name'>>;
 type LayerMouseEvent = import('maplibre-gl').MapMouseEvent & {
 	features?: Array<{ properties?: unknown }>;
 };
@@ -25,11 +22,7 @@ export function getBarangayProperties(object: unknown): BarangayProperties | nul
 	if (!object || typeof object !== 'object') return null;
 	const properties = object as Partial<BarangayProperties>;
 
-	if (
-		typeof properties.id !== 'string' ||
-		typeof properties.name !== 'string' ||
-		typeof properties.sourceName !== 'string'
-	) {
+	if (typeof properties.id !== 'string' || typeof properties.name !== 'string') {
 		return null;
 	}
 

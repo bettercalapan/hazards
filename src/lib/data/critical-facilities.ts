@@ -24,17 +24,6 @@ export type CriticalFacilityProperties = {
 
 export type CriticalFacilityCollection = FeatureCollection<Point, CriticalFacilityProperties>;
 
-export const criticalFacilityCategories = [
-	{ category: 'police', label: 'Police station' },
-	{ category: 'fire', label: 'Fire station' },
-	{ category: 'hospital', label: 'Hospital' },
-	{ category: 'school', label: 'School' },
-	{ category: 'evacuation-center', label: 'Evacuation center' }
-] as const satisfies readonly {
-	category: CriticalFacilityCategory;
-	label: string;
-}[];
-
 export const criticalFacilitiesAttribution =
 	'Facilities: NOAH / UP Diliman, OpenStreetMap contributors, and Google Maps listings.';
 

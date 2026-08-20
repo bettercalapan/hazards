@@ -43,8 +43,8 @@ export const stormSurgeAdvisories = [
 ] as const;
 
 export const stormSurgeMetadata = {
-	source: 'UP Resilience Institute NOAH Center',
-	sourceUrl: 'https://noah.up.edu.ph/know-your-hazards',
+	source: 'NOAH',
+	sourceUrl: 'https://noah.up.edu.ph',
 	sourceDate: '2021-07-19',
 	sourceDateNote: 'ArcGIS metadata creation date; the source update date was not provided.',
 	coverage: 'Oriental Mindoro source layers clipped to Calapan City.',

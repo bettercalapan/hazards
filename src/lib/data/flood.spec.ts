@@ -11,7 +11,7 @@ describe('Calapan flood hazard', () => {
 		]);
 		expect(floodHazardColors).toEqual({ Low: '#f2c94c', Medium: '#f2994a', High: '#eb5757' });
 		expect(floodHazardMetadata.cellSizeMeters).toBe(25);
-		expect(floodHazardMetadata.source).toBe('UP Resilience Institute NOAH Center');
+		expect(floodHazardMetadata.source).toBe('NOAH');
 	});
 
 	it('uses distinct palettes for each return period', () => {

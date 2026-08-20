@@ -64,7 +64,7 @@ export const seismicHazards = [
 ] as const;
 
 export const seismicMetadata = {
-	source: 'DOST-PHIVOLCS, GeoRiskPH HazardHunter',
+	source: 'GeoRisk Philippines',
 	sourceUrl: 'https://hazardhunter.georisk.gov.ph/map',
 	sourceDate: null,
 	sourceDateNote:

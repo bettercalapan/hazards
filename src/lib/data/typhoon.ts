@@ -3,6 +3,10 @@ import { calapanCityBounds } from './calapan-boundary';
 
 export const panahonCycloneTrackUrl = 'https://www.panahon.gov.ph/api/v1/cyclone-track';
 export const typhoonSourceUrl = 'https://www.panahon.gov.ph';
+export const typhoonMetadata = {
+	source: 'PANaHON',
+	sourceUrl: typhoonSourceUrl
+} as const;
 
 const trackFreshnessWindowMs = 36 * 60 * 60 * 1000;
 const gridCellSize = 0.004;

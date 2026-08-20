@@ -70,14 +70,13 @@ test.describe('map browser smoke tests', () => {
 		await diagnostics.assertClean();
 	});
 
-	test('toggles critical facilities and displays their legend', async ({ page }) => {
+	test('toggles critical facilities from the map controls', async ({ page }) => {
 		const diagnostics = installDiagnostics(page);
 		await openMap(page);
 
 		const facilities = page.getByRole('button', { name: 'Critical facilities', exact: true });
 		await facilities.click();
 		await expect(facilities).toHaveAttribute('aria-pressed', 'true');
-		await expect(page.getByRole('group', { name: 'Critical facility colors' })).toBeVisible();
 		await diagnostics.assertClean();
 	});
 
@@ -103,10 +102,13 @@ test.describe('map browser smoke tests', () => {
 		const diagnostics = installDiagnostics(page);
 		await openMap(page);
 
-		const search = page.getByRole('combobox', { name: 'Find a barangay' });
+		const search = page.locator('.map-search').getByRole('combobox', { name: 'Find a barangay' });
 		await search.fill(barangayName);
 		const result = page.getByRole('option', { name: barangayName, exact: true });
 		await expect(result).toBeVisible();
+		await search.press('Tab');
+		await expect(result).toBeFocused();
+		await expect(page.locator('#barangay-search-results')).toBeVisible();
 		await result.click();
 		await expect(search).toHaveValue(barangayName);
 		await expect(page).toHaveURL(new RegExp(`area=${barangayId}`));

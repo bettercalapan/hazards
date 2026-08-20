@@ -4,6 +4,7 @@
 	import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
 	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import type { HazardFamily, ViewMode } from '$lib/map-state';
+	import HouseHeart from '@lucide/svelte/icons/house-heart';
 
 	type Props = {
 		viewMode: ViewMode;
@@ -12,12 +13,15 @@
 		enabledStormSurgeAdvisories: readonly StormSurgeAdvisory[];
 		enabledLandslideLayers: readonly LandslideLayer[];
 		enabledSeismicLayers: readonly SeismicLayer[];
+		criticalFacilitiesEnabled: boolean;
+		criticalFacilitiesState: 'idle' | 'loading' | 'ready' | 'error';
 		onViewModeChange: (mode: ViewMode) => void;
 		onHazardFamilyChange: (family: HazardFamily) => void;
 		onFloodPeriodChange: (period: ReturnPeriod, enabled: boolean) => void;
 		onStormSurgeAdvisoryChange: (advisory: StormSurgeAdvisory, enabled: boolean) => void;
 		onLandslideLayerChange: (layer: LandslideLayer, enabled: boolean) => void;
 		onSeismicLayerChange: (layer: SeismicLayer, enabled: boolean) => void;
+		onCriticalFacilitiesToggle: () => void;
 		onPreloadHazardFamily: (family: HazardFamily) => void;
 	};
 
@@ -28,19 +32,17 @@
 		enabledStormSurgeAdvisories,
 		enabledLandslideLayers,
 		enabledSeismicLayers,
+		criticalFacilitiesEnabled,
+		criticalFacilitiesState,
 		onViewModeChange,
 		onHazardFamilyChange,
 		onFloodPeriodChange,
 		onStormSurgeAdvisoryChange,
 		onLandslideLayerChange,
 		onSeismicLayerChange,
+		onCriticalFacilitiesToggle,
 		onPreloadHazardFamily
 	}: Props = $props();
-
-	function hazardFamilyLabel(family: HazardFamily): string {
-		if (family === 'storm-surge') return 'Storm surge';
-		return family.charAt(0).toUpperCase() + family.slice(1);
-	}
 
 	const hazardFamilies = [
 		{ family: 'flood', label: 'Flood' },
@@ -55,8 +57,7 @@
 	<div class="map-control-groups">
 		<div class="control-header">
 			<div class="control-heading">
-				<span class="control-kicker">Map view</span>
-				<strong>Explore Calapan</strong>
+				<span class="control-kicker">Map Controls</span>
 			</div>
 			<div class="view-toggle" role="group" aria-label="Map view mode">
 				<button
@@ -75,17 +76,29 @@
 				>
 					2D
 				</button>
+				<button
+					class="critical-facilities"
+					class:active={criticalFacilitiesEnabled}
+					class:error={criticalFacilitiesState === 'error'}
+					aria-label="Critical facilities"
+					aria-pressed={criticalFacilitiesEnabled}
+					aria-busy={criticalFacilitiesState === 'loading'}
+					title={criticalFacilitiesState === 'loading'
+						? 'Loading facilities'
+						: criticalFacilitiesState === 'error'
+							? 'Facilities unavailable'
+							: 'Critical facilities'}
+					type="button"
+					onclick={onCriticalFacilitiesToggle}
+				>
+					<div class="icon">
+						<HouseHeart />
+					</div>
+				</button>
 			</div>
 		</div>
 
 		<div class="control-section">
-			<div class="control-section-heading">
-				<div class="control-heading">
-					<span class="control-kicker">Hazard layers</span>
-					<strong>{hazardFamilyLabel(activeHazardFamily)}</strong>
-				</div>
-				<span class="control-hint">Choose a view</span>
-			</div>
 			<div class="hazard-family-toggle" role="group" aria-label="Hazard type">
 				{#each hazardFamilies as item (item.family)}
 					<button
@@ -181,11 +194,11 @@
 		top: 1rem;
 		left: 1rem;
 		z-index: 2;
-		width: min(35rem, calc(100% - 2rem));
+		width: min(25rem, calc(100% - 2rem));
 		overflow: hidden;
 		border: 1px solid rgb(23 62 59 / 14%);
 		border-radius: 0.9rem;
-		background: rgb(250 248 242 / 96%);
+		background: var(--bg);
 		box-shadow: 0 0.75rem 2rem rgb(30 56 55 / 18%);
 		backdrop-filter: blur(12px);
 	}
@@ -194,8 +207,7 @@
 		display: grid;
 	}
 
-	.control-header,
-	.control-section-heading {
+	.control-header {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
@@ -203,8 +215,8 @@
 	}
 
 	.control-header {
-		padding: 0.75rem 0.85rem;
-		border-bottom: 1px solid rgb(23 62 59 / 12%);
+		padding: 1.5rem;
+		border-bottom: 1px dashed var(--gray);
 	}
 
 	.control-heading {
@@ -212,67 +224,60 @@
 		gap: 0.1rem;
 	}
 
-	.control-heading strong {
-		color: #173e3b;
-		font-size: 0.88rem;
-		line-height: 1.15;
-	}
-
 	.control-kicker {
-		color: #788d88;
-		font-size: 0.61rem;
-		font-weight: 800;
-		letter-spacing: 0.1em;
-		text-transform: uppercase;
-	}
-
-	.control-hint {
-		color: #788d88;
-		font-size: 0.68rem;
+		color: var(--fg);
+		font-size: 1.25rem;
 		font-weight: 700;
 	}
 
-	.control-section {
-		display: grid;
-		gap: 0.65rem;
-		padding: 0.8rem 0.85rem 0.85rem;
-	}
-
 	.context-controls {
+		padding: 1.5rem;
 		display: grid;
-		gap: 0.65rem;
-		padding-top: 0.65rem;
-		border-top: 1px solid rgb(23 62 59 / 12%);
+		gap: 0.75rem;
 	}
 
 	.view-toggle {
 		display: flex;
-		gap: 0.15rem;
+		gap: 0.5rem;
 	}
 
 	.view-toggle button {
+		width: 36px;
+		height: 36px;
+		display: grid;
+		place-items: center;
 		border: 1px solid rgb(23 62 59 / 14%);
-		border-radius: 999px;
-		padding: 0.4rem 0.7rem;
+		border-radius: 50%;
 		background: transparent;
 		color: #476563;
 		font: inherit;
 		font-size: 0.75rem;
 		font-weight: 700;
 		cursor: pointer;
+		transition: opacity 0.3s ease;
+
+		.icon {
+			width: 18px;
+			aspect-ratio: 1 / 1;
+		}
+	}
+
+	.view-toggle button:hover {
+		opacity: 0.75;
 	}
 
 	.view-toggle button.active {
-		background: #173e3b;
-		color: #fffdf7;
+		background: var(--fg);
+		color: var(--bg);
 	}
 
 	.hazard-family-toggle {
+		padding: 1.5rem;
 		display: flex;
-		gap: 0.3rem;
-		overflow-x: auto;
-		padding-bottom: 0.1rem;
+		flex-wrap: wrap;
+		gap: 0.5rem;
 		scrollbar-width: none;
+		border-bottom: 1px dashed var(--gray);
 	}
 
 	.hazard-family-toggle::-webkit-scrollbar {
@@ -281,46 +286,53 @@
 
 	.hazard-family-toggle button {
 		flex: 0 0 auto;
-		border: 1px solid rgb(23 62 59 / 14%);
-		border-radius: 999px;
-		padding: 0.42rem 0.72rem;
-		background: rgb(255 255 255 / 35%);
-		color: #476563;
-		font: inherit;
-		font-size: 0.72rem;
-		font-weight: 700;
+		border: none;
+		border-radius: 4rem;
+		padding: 0.5rem 1.25rem;
+		background: var(--neutral-light);
+		color: var(--fg);
+		font-size: 0.875rem;
+		font-weight: 600;
 		cursor: pointer;
+		transition: opacity 0.3s ease;
+	}
+
+	.hazard-family-toggle button:hover {
+		opacity: 0.75;
 	}
 
 	.hazard-family-toggle button.active {
-		background: #173e3b;
-		color: #fffdf7;
+		background: var(--fg);
+		color: var(--bg);
 	}
 
 	.flood-toggle {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.35rem;
+		gap: 0.5rem;
 	}
 
 	.flood-toggle label {
 		display: inline-flex;
 		align-items: center;
 		gap: 0.35rem;
-		border: 1px solid rgb(23 62 59 / 12%);
-		border-radius: 0.5rem;
-		padding: 0.42rem 0.6rem;
-		background: rgb(255 255 255 / 42%);
-		color: #476563;
-		font-size: 0.72rem;
+		border-radius: 5rem;
+		padding: 0.5rem 1rem;
+		background: var(--neutral-light);
+		color: var(--fg);
+		font-size: 0.875rem;
 		font-weight: 700;
 		cursor: pointer;
+		transition: opacity 0.3s ease;
+	}
+
+	.flood-toggle label:hover {
+		opacity: 0.75;
 	}
 
 	.flood-toggle label.active {
-		border-color: rgb(23 62 59 / 30%);
-		background: rgb(23 62 59 / 9%);
-		color: #173e3b;
+		background: var(--fg);
+		color: var(--neutral-lightest);
 	}
 
 	.flood-toggle input {
@@ -351,14 +363,6 @@
 			width: calc(100% - 1.5rem);
 			max-width: calc(100% - 1.5rem);
 			border-radius: 0.85rem;
-		}
-
-		.control-section-heading {
-			align-items: flex-start;
-		}
-
-		.control-hint {
-			display: none;
 		}
 	}
 </style>
