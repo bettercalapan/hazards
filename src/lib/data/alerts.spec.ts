@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
 	fetchPagasaAlerts,
-	formatAlertDate,
 	latestPagasaFeedUpdate,
 	pagasaAlertFeedUrl,
 	parsePagasaCap,
@@ -104,16 +103,10 @@ describe('PAGASA alerts', () => {
 	it('handles a missing expiry timestamp', () => {
 		const noExpiryCap = cap.replace('<expires>2026-08-18T10:00:00+08:00</expires>', '');
 		expect(parsePagasaCap(noExpiryCap, entry, now)).toMatchObject({ expiresAt: '' });
-		expect(formatAlertDate('')).toBe('not provided');
 	});
 
 	it('ignores expired alerts', () => {
 		const expiredCap = cap.replace('2026-08-18T10:00:00+08:00', '2026-08-17T11:00:00+08:00');
 		expect(parsePagasaCap(expiredCap, entry, now)).toBeNull();
-	});
-
-	it('formats alert timestamps in Philippine time', () => {
-		expect(formatAlertDate('2026-08-17T10:00:00Z')).toContain('Aug 17, 2026');
-		expect(formatAlertDate('2026-08-17T10:00:00Z')).toContain('6:00 PM');
 	});
 });

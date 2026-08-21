@@ -1,8 +1,15 @@
-import { floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
-import { stormSurgeAdvisories, type StormSurgeAdvisory } from '$lib/data/storm-surge';
-import { landslideHazards, type LandslideLayer } from '$lib/data/landslide';
-import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
+import type { PropertyValueSpecification } from 'maplibre-gl';
+import type { ReturnPeriod } from '$lib/data/flood';
+import type { LandslideLayer } from '$lib/data/landslide';
+import type { SeismicLayer } from '$lib/data/seismic';
+import type { StormSurgeAdvisory } from '$lib/data/storm-surge';
 import type { HazardFamily } from '$lib/map-state';
+
+import { calapanCityBounds } from '$lib/data/calapan-boundary';
+import { floodHazardPeriods } from '$lib/data/flood';
+import { landslideHazards } from '$lib/data/landslide';
+import { seismicHazards } from '$lib/data/seismic';
+import { stormSurgeAdvisories } from '$lib/data/storm-surge';
 
 type HazardColorMap = {
 	readonly Low: string;
@@ -33,9 +40,7 @@ export const hazardFamilies: readonly HazardFamily[] = [
 	'typhoon'
 ];
 
-export const hazardTileBounds: [number, number, number, number] = [
-	121.10036758600006, 13.296270203000063, 121.28920787700008, 13.467073836000054
-];
+export const hazardTileBounds: [number, number, number, number] = [...calapanCityBounds];
 
 export function layersForFamily(family: HazardFamily): readonly HazardLayerDefinition[] {
 	if (family === 'flood') return floodHazardPeriods;
@@ -96,11 +101,11 @@ export function classColorsForLayer(layer: HazardLayerDefinition): string[] {
 
 export function fillColorForLayer(
 	layer: HazardLayerDefinition
-): import('maplibre-gl').PropertyValueSpecification<string> {
+): PropertyValueSpecification<string> {
 	return [
 		'match',
 		['get', 'Var'],
 		...classColorsForLayer(layer).flatMap((color, index) => [index + 1, color]),
 		'#000000'
-	] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
+	] as unknown as PropertyValueSpecification<string>;
 }

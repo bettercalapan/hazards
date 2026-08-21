@@ -6,6 +6,7 @@
 - `src/routes/+page.svelte` owns the UI. `src/routes/+page.server.ts` fetches PAGASA alerts and PANaHON typhoon tracks, degrading unavailable feeds to empty/unavailable state.
 - `src/lib/components/HazardMap.svelte` dynamically imports and initializes MapLibre in `onMount`. Keep all WebGL and DOM map code browser-only.
 - Keep map setup and layer management under `src/lib/map`; keep pure map/data logic covered by Vitest specs.
+- Put separate type-only imports before all value imports in TypeScript and Svelte scripts.
 
 ## Commands and Verification
 

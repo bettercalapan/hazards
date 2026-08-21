@@ -1,3 +1,5 @@
+import type { GeoJSONSource, Map as MapLibreMap, Popup as MapLibrePopup } from 'maplibre-gl';
+
 import { describe, expect, it, vi } from 'vitest';
 import { emptyCriticalFacilities } from '$lib/data/critical-facilities';
 import { createCriticalFacilityLayerManager } from './critical-facility-layer-manager';
@@ -28,7 +30,7 @@ function createMapMock() {
 		getCanvas: vi.fn(() => canvas),
 		on,
 		off: vi.fn()
-	} as unknown as import('maplibre-gl').Map;
+	} as unknown as MapLibreMap;
 	return { map, handlers, canvas };
 }
 
@@ -55,9 +57,7 @@ describe('critical facility layer manager', () => {
 	it('loads facility data once and reports state', async () => {
 		const { map } = createMapMock();
 		const source = { setData: vi.fn() };
-		vi.mocked(map.getSource).mockReturnValue(
-			source as unknown as import('maplibre-gl').GeoJSONSource
-		);
+		vi.mocked(map.getSource).mockReturnValue(source as unknown as GeoJSONSource);
 		const fetchMock = vi.fn().mockResolvedValue({
 			ok: true,
 			json: async () => emptyCriticalFacilities
@@ -84,9 +84,7 @@ describe('critical facility layer manager', () => {
 	it('binds facility interactions and cleans them up', async () => {
 		const { map, handlers, canvas } = createMapMock();
 		const source = { getClusterExpansionZoom: vi.fn().mockResolvedValue(14) };
-		vi.mocked(map.getSource).mockReturnValue(
-			source as unknown as import('maplibre-gl').GeoJSONSource
-		);
+		vi.mocked(map.getSource).mockReturnValue(source as unknown as GeoJSONSource);
 		const popup = {
 			remove: vi.fn(),
 			setLngLat: vi.fn().mockReturnThis(),
@@ -110,7 +108,7 @@ describe('critical facility layer manager', () => {
 				return this;
 			}
 		}
-		const Popup = PopupMock as unknown as typeof import('maplibre-gl').Popup;
+		const Popup = PopupMock as unknown as new () => MapLibrePopup;
 		const manager = createCriticalFacilityLayerManager({
 			map,
 			firstSymbolLayerId: undefined,

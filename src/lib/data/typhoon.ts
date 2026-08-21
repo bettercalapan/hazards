@@ -2,11 +2,18 @@ import type { Feature, FeatureCollection, LineString, Point, Polygon } from 'geo
 import { calapanCityBounds } from './calapan-boundary';
 
 export const panahonCycloneTrackUrl = 'https://www.panahon.gov.ph/api/v1/cyclone-track';
-export const typhoonSourceUrl = 'https://www.panahon.gov.ph';
 export const typhoonMetadata = {
 	source: 'PANaHON',
-	sourceUrl: typhoonSourceUrl
+	sourceUrl: 'https://www.panahon.gov.ph'
 } as const;
+export const typhoonCategories = [
+	{ key: 'LPA', color: '#9aa5b1' },
+	{ key: 'TD', color: '#00e400' },
+	{ key: 'TS', color: '#ffe400' },
+	{ key: 'STS', color: '#ff9800' },
+	{ key: 'TY', color: '#ff2020' },
+	{ key: 'STY', color: '#e000e0' }
+] as const satisfies readonly { key: string; color: string }[];
 
 const trackFreshnessWindowMs = 36 * 60 * 60 * 1000;
 const gridCellSize = 0.004;
@@ -96,10 +103,6 @@ function normalizeCycloneName(value: string): string {
 		.trim();
 }
 
-function normalizeCycloneType(value: string): string {
-	return value.toUpperCase();
-}
-
 function readPoint(value: unknown, fallbackTime: string): TyphoonTrackPoint | null {
 	const record = asRecord(value);
 	if (!record) return null;
@@ -119,7 +122,7 @@ function readPoint(value: unknown, fallbackTime: string): TyphoonTrackPoint | nu
 		latitude,
 		longitude,
 		time: readString(record, ['datetime', 'timestamp']) || fallbackTime,
-		type: normalizeCycloneType(readString(record, ['cyclone_type', 'type']) || 'LPA'),
+		type: (readString(record, ['cyclone_type', 'type']) || 'LPA').toUpperCase(),
 		radius: Math.max(0, readNumber(record, ['radius']) ?? 0)
 	};
 }
@@ -173,7 +176,7 @@ function toLocalCoordinates(latitude: number, longitude: number): [number, numbe
 }
 
 function distanceBetweenKm(left: [number, number], right: [number, number]): number {
-	return Math.sqrt((left[0] - right[0]) ** 2 + (left[1] - right[1]) ** 2) * 111.32;
+	return Math.hypot(left[0] - right[0], left[1] - right[1]) * 111.32;
 }
 
 function distanceToSegmentKm(

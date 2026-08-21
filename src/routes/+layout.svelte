@@ -66,9 +66,7 @@
 
 	@media (max-width: 899px) {
 		main {
-			height: 100%;
 			min-height: 100dvh;
-			overflow: hidden;
 		}
 	}
 

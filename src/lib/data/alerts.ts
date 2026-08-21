@@ -125,9 +125,6 @@ export function parsePagasaCap(
 	const expiresTime = Date.parse(expiresAt);
 	const status = readTag(xml, 'status').toLowerCase();
 	const messageType = readTag(xml, 'msgType').toLowerCase();
-	const hasLocalArea = areas.some((area) =>
-		localAreaTerms.some((term) => area.toLowerCase().includes(term))
-	);
 	const localAreas = areas.filter((area) =>
 		localAreaTerms.some((term) => area.toLowerCase().includes(term))
 	);
@@ -137,7 +134,7 @@ export function parsePagasaCap(
 		!entry.capUrl ||
 		status !== 'actual' ||
 		messageType === 'cancel' ||
-		!hasLocalArea ||
+		localAreas.length === 0 ||
 		(Number.isFinite(expiresTime) && expiresTime <= now)
 	) {
 		return null;
@@ -199,15 +196,4 @@ export async function fetchPagasaAlerts(
 	);
 
 	return { alerts, sourceUpdatedAt: latestPagasaFeedUpdate(entries) };
-}
-
-export function formatAlertDate(value: string): string {
-	const date = new Date(value);
-	if (Number.isNaN(date.getTime())) return 'not provided';
-
-	return new Intl.DateTimeFormat('en-PH', {
-		dateStyle: 'medium',
-		timeStyle: 'short',
-		timeZone: 'Asia/Manila'
-	}).format(new Date(value));
 }

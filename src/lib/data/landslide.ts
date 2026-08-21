@@ -1,13 +1,11 @@
-import type { FloodHazardClass, FloodHazardSummary } from './flood';
+import type { FloodHazardSummary } from './flood';
 
 export type LandslideLayer = 'main';
-export type LandslideHazardClass = FloodHazardClass;
 export type LandslideHazardSummary = FloodHazardSummary;
 
 export const landslideHazards = [
 	{
 		key: 'main',
-		name: 'Landslide hazard',
 		shortName: 'Landslide',
 		tilePath: '/calapan-landslide-hazard-tiles/{z}/{x}/{y}.pbf',
 		colors: {

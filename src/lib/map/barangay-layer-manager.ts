@@ -1,12 +1,14 @@
 import type { FeatureCollection, Point } from 'geojson';
+import type { Map as MapLibreMap, MapMouseEvent, PropertyValueSpecification } from 'maplibre-gl';
 import type { BarangayCollection, BarangayProperties } from '$lib/data/barangays';
-import { calapanBarangayLabelPoints } from '$lib/data/barangays';
 import type { MapBounds } from './map-setup';
 
-type MapInstance = import('maplibre-gl').Map;
+import { calapanBarangayLabelPoints } from '$lib/data/barangays';
+
+type MapInstance = MapLibreMap;
 type FirstSymbolLayerId = string | undefined;
 type BarangayLabelPoints = FeatureCollection<Point, Pick<BarangayProperties, 'id' | 'name'>>;
-type LayerMouseEvent = import('maplibre-gl').MapMouseEvent & {
+type LayerMouseEvent = MapMouseEvent & {
 	features?: Array<{ properties?: unknown }>;
 };
 
@@ -100,7 +102,7 @@ export function createBarangayLayerManager({
 			['boolean', ['feature-state', 'selected'], false],
 			0,
 			0.3
-		] as unknown as import('maplibre-gl').PropertyValueSpecification<number>);
+		] as unknown as PropertyValueSpecification<number>);
 		onSelectArea?.(properties);
 	};
 
@@ -123,7 +125,7 @@ export function createBarangayLayerManager({
 		const properties = getBarangayProperties(event.features?.[0]?.properties);
 		if (properties) selectBarangay(properties);
 	};
-	const onMapClick = (event: import('maplibre-gl').MapMouseEvent) => {
+	const onMapClick = (event: MapMouseEvent) => {
 		if (
 			map.queryRenderedFeatures(event.point, { layers: ['calapan-barangay-fill'] }).length === 0
 		) {

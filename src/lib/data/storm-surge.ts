@@ -1,4 +1,6 @@
-import { floodHazardColors, floodHazardPeriods, type FloodHazardSummary } from './flood';
+import type { FloodHazardSummary } from './flood';
+
+import { floodHazardColors, floodHazardPeriods } from './flood';
 
 export type StormSurgeAdvisory = 1 | 2 | 3 | 4;
 export type StormSurgeSummary = FloodHazardSummary;
@@ -6,7 +8,6 @@ export type StormSurgeSummary = FloodHazardSummary;
 export const stormSurgeAdvisories = [
 	{
 		key: 1,
-		name: 'Storm Surge Advisory 1',
 		shortName: 'Advisory 1',
 		height: 'Up to 2 m',
 		tilePath: '/calapan-storm-surge-advisory-1-tiles/{z}/{x}/{y}.pbf',
@@ -18,7 +19,6 @@ export const stormSurgeAdvisories = [
 	},
 	{
 		key: 2,
-		name: 'Storm Surge Advisory 2',
 		shortName: 'Advisory 2',
 		height: 'Up to 3 m',
 		tilePath: '/calapan-storm-surge-advisory-2-tiles/{z}/{x}/{y}.pbf',
@@ -26,7 +26,6 @@ export const stormSurgeAdvisories = [
 	},
 	{
 		key: 3,
-		name: 'Storm Surge Advisory 3',
 		shortName: 'Advisory 3',
 		height: 'Up to 4 m',
 		tilePath: '/calapan-storm-surge-advisory-3-tiles/{z}/{x}/{y}.pbf',
@@ -34,7 +33,6 @@ export const stormSurgeAdvisories = [
 	},
 	{
 		key: 4,
-		name: 'Storm Surge Advisory 4',
 		shortName: 'Advisory 4',
 		height: 'More than 4 m',
 		tilePath: '/calapan-storm-surge-advisory-4-tiles/{z}/{x}/{y}.pbf',

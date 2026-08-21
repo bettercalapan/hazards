@@ -1,7 +1,12 @@
-import { floodHazardPeriods, type ReturnPeriod } from './data/flood';
-import { stormSurgeAdvisories, type StormSurgeAdvisory } from './data/storm-surge';
-import { landslideHazards, type LandslideLayer } from './data/landslide';
-import { seismicHazards, type SeismicLayer } from './data/seismic';
+import type { ReturnPeriod } from './data/flood';
+import type { LandslideLayer } from './data/landslide';
+import type { SeismicLayer } from './data/seismic';
+import type { StormSurgeAdvisory } from './data/storm-surge';
+
+import { floodHazardPeriods } from './data/flood';
+import { landslideHazards } from './data/landslide';
+import { seismicHazards } from './data/seismic';
+import { stormSurgeAdvisories } from './data/storm-surge';
 
 export type ViewMode = '3d' | '2d';
 export type HazardFamily = 'flood' | 'storm-surge' | 'landslide' | 'earthquake' | 'typhoon';

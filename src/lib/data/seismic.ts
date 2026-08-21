@@ -1,11 +1,5 @@
 export type SeismicLayer = 'ground-shaking' | 'liquefaction' | 'tsunami';
 
-export type SeismicClass = {
-	readonly value: string;
-	readonly label: string;
-	readonly color: string;
-};
-
 export type SeismicHazardSummary = {
 	classes: string[];
 	summary: string;

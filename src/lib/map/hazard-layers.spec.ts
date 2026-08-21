@@ -1,3 +1,5 @@
+import type { EnabledHazardLayers } from './hazard-layers';
+
 import { describe, expect, it } from 'vitest';
 import {
 	classColorsForLayer,
@@ -8,8 +10,7 @@ import {
 	layerIdFor,
 	layersForFamily,
 	sourceIdsForFamily,
-	sourceLayerFor,
-	type EnabledHazardLayers
+	sourceLayerFor
 } from './hazard-layers';
 
 const enabledLayers: EnabledHazardLayers = {

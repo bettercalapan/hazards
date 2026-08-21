@@ -1,8 +1,15 @@
-import { calapanCityBoundary, calapanCityMask } from '$lib/data/calapan-boundary';
+import type {
+	FilterSpecification,
+	Map as MapLibreMap,
+	PropertyValueSpecification,
+	RasterDEMSourceSpecification
+} from 'maplibre-gl';
 import type { BarangayCollection } from '$lib/data/barangays';
 import type { ViewMode } from '$lib/map-state';
 
-type MapInstance = import('maplibre-gl').Map;
+import { calapanCityBoundary, calapanCityMask } from '$lib/data/calapan-boundary';
+
+type MapInstance = MapLibreMap;
 const calapanContourDataUrl = '/calapan-contours.json';
 const terrainAttribution =
 	'Elevation data © Mapzen, sourced from USGS, NASA, and other contributors.';
@@ -24,21 +31,14 @@ export function getPanBounds(map: MapInstance): MapBounds {
 }
 
 function restrictSymbolLayers(map: MapInstance) {
-	const withinBoundary = [
-		'within',
-		calapanCityBoundary.geometry
-	] as unknown as import('maplibre-gl').FilterSpecification;
+	const withinBoundary = ['within', calapanCityBoundary.geometry] as unknown as FilterSpecification;
 
 	for (const layer of map.getStyle().layers ?? []) {
 		if (layer.id === 'calapan-barangay-labels' || layer.id === 'calapan-contour-labels') continue;
 		if (layer.type !== 'symbol') continue;
 
 		const filter = layer.filter
-			? ([
-					'all',
-					layer.filter,
-					withinBoundary
-				] as unknown as import('maplibre-gl').FilterSpecification)
+			? (['all', layer.filter, withinBoundary] as unknown as FilterSpecification)
 			: withinBoundary;
 
 		map.setFilter(layer.id, filter);
@@ -46,7 +46,7 @@ function restrictSymbolLayers(map: MapInstance) {
 }
 
 function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollection) {
-	const detailTextOpacity = [
+	const detailVisibility = [
 		'interpolate',
 		['linear'],
 		['zoom'],
@@ -54,16 +54,7 @@ function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollecti
 		0,
 		15,
 		1
-	] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
-	const detailHaloWidth = [
-		'interpolate',
-		['linear'],
-		['zoom'],
-		13,
-		0,
-		15,
-		1
-	] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
+	] as unknown as PropertyValueSpecification<number>;
 	const barangayNames = barangays.features.map((feature) => feature.properties.name);
 	const excludeBarangayNames = [
 		'!',
@@ -72,7 +63,7 @@ function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollecti
 			['match', ['get', 'name'], barangayNames, true, false],
 			['match', ['get', 'name:latin'], barangayNames, true, false]
 		]
-	] as unknown as import('maplibre-gl').FilterSpecification;
+	] as unknown as FilterSpecification;
 	const roadOpacityForClass = (motorway: number, secondary: number, other: number) => [
 		'match',
 		['get', 'class'],
@@ -92,7 +83,7 @@ function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollecti
 		roadOpacityForClass(0.12, 0.08, 0.04),
 		14,
 		roadOpacityForClass(0.28, 0.18, 0.1)
-	] as unknown as import('maplibre-gl').PropertyValueSpecification<number>;
+	] as unknown as PropertyValueSpecification<number>;
 
 	for (const layer of map.getStyle().layers ?? []) {
 		const styleLayer = layer as {
@@ -126,8 +117,8 @@ function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollecti
 		}
 
 		if (layer.type === 'symbol') {
-			map.setPaintProperty(layer.id, 'text-opacity', detailTextOpacity);
-			map.setPaintProperty(layer.id, 'text-halo-width', detailHaloWidth);
+			map.setPaintProperty(layer.id, 'text-opacity', detailVisibility);
+			map.setPaintProperty(layer.id, 'text-halo-width', detailVisibility);
 		}
 
 		if (
@@ -143,11 +134,7 @@ function dimBaseMapTransportLayers(map: MapInstance, barangays: BarangayCollecti
 			map.setFilter(
 				layer.id,
 				existingFilter
-					? ([
-							'all',
-							existingFilter,
-							excludeBarangayNames
-						] as unknown as import('maplibre-gl').FilterSpecification)
+					? (['all', existingFilter, excludeBarangayNames] as unknown as FilterSpecification)
 					: excludeBarangayNames
 			);
 		}
@@ -178,7 +165,7 @@ export function updateMapCamera(map: MapInstance, terrainReady: boolean, nextMod
 export function setupBaseMap(map: MapInstance, barangays: BarangayCollection) {
 	dimBaseMapTransportLayers(map, barangays);
 	const firstSymbolLayerId = map.getStyle().layers?.find((layer) => layer.type === 'symbol')?.id;
-	const terrainSource: import('maplibre-gl').RasterDEMSourceSpecification = {
+	const terrainSource: RasterDEMSourceSpecification = {
 		type: 'raster-dem',
 		tiles: ['https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png'],
 		tileSize: 256,

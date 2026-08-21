@@ -1,6 +1,8 @@
+import type { Map as MapLibreMap } from 'maplibre-gl';
+import type { HazardFamily } from '$lib/map-state';
+
 import { describe, expect, it, vi } from 'vitest';
 import { emptyTyphoonMapData } from '$lib/data/typhoon';
-import type { HazardFamily } from '$lib/map-state';
 import { createHazardLayerManager } from './hazard-layer-manager';
 
 function createMapMock() {
@@ -13,10 +15,10 @@ function createMapMock() {
 		isSourceLoaded: vi.fn(() => true),
 		on: vi.fn(),
 		off: vi.fn()
-	} as unknown as import('maplibre-gl').Map;
+	} as unknown as MapLibreMap;
 }
 
-function createManager(map: import('maplibre-gl').Map, activeFamily: HazardFamily = 'flood') {
+function createManager(map: MapLibreMap, activeFamily: HazardFamily = 'flood') {
 	const loadingFamilies: (HazardFamily | null)[] = [];
 	const manager = createHazardLayerManager({
 		map,
@@ -43,6 +45,29 @@ describe('hazard layer manager', () => {
 
 		expect(map.addSource).toHaveBeenCalledTimes(14);
 		expect(map.addLayer).toHaveBeenCalledTimes(15);
+		const layers = vi
+			.mocked(map.addLayer)
+			.mock.calls.map(([layer]) => layer as { id: string; paint?: Record<string, unknown> });
+		const grid = layers.find((layer) => layer.id === 'calapan-typhoon-grid');
+		const points = layers.find((layer) => layer.id === 'calapan-typhoon-points');
+		expect(grid?.paint?.['fill-color']).toEqual([
+			'match',
+			['get', 'type'],
+			'LPA',
+			'#9aa5b1',
+			'TD',
+			'#00e400',
+			'TS',
+			'#ffe400',
+			'STS',
+			'#ff9800',
+			'TY',
+			'#ff2020',
+			'STY',
+			'#e000e0',
+			'#9aa5b1'
+		]);
+		expect(points?.paint?.['circle-color']).toEqual(grid?.paint?.['fill-color']);
 		manager.dispose();
 	});
 

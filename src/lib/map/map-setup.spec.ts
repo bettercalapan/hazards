@@ -1,3 +1,5 @@
+import type { Map as MapLibreMap } from 'maplibre-gl';
+
 import { describe, expect, it, vi } from 'vitest';
 import { getPanBounds, updateMapCamera } from './map-setup';
 
@@ -13,7 +15,7 @@ describe('map setup utilities', () => {
 			getCenter: () => ({ lng: 121.5, lat: 13.5 }),
 			project: () => ({ x: 100, y: 200 }),
 			unproject: ([x, y]: [number, number]) => ({ lng: x === 98 ? 121.49 : 121.51, lat: y })
-		} as unknown as import('maplibre-gl').Map;
+		} as unknown as MapLibreMap;
 
 		expect(getPanBounds(map)).toEqual([
 			[120.99, 13],
@@ -29,7 +31,7 @@ describe('map setup utilities', () => {
 			easeTo,
 			dragRotate: { enable: vi.fn(), disable: vi.fn() },
 			touchZoomRotate: { enableRotation: vi.fn(), disableRotation: vi.fn() }
-		} as unknown as import('maplibre-gl').Map;
+		} as unknown as MapLibreMap;
 
 		updateMapCamera(map, true, '2d');
 		expect(setTerrain).toHaveBeenCalledWith(null);

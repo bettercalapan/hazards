@@ -1,5 +1,7 @@
-import { describe, expect, it, vi } from 'vitest';
+import type { Map as MapLibreMap } from 'maplibre-gl';
 import type { BarangayCollection, BarangayProperties } from '$lib/data/barangays';
+
+import { describe, expect, it, vi } from 'vitest';
 import { createBarangayLayerManager, getBarangayBounds } from './barangay-layer-manager';
 
 const properties = {
@@ -63,7 +65,7 @@ function createMapMock() {
 		getCanvas: vi.fn(() => canvas),
 		on,
 		off: vi.fn()
-	} as unknown as import('maplibre-gl').Map;
+	} as unknown as MapLibreMap;
 	return { map, handlers, canvas };
 }
 

@@ -1,11 +1,11 @@
+import type { RemoteStyle, RemoteStyleLayer } from './open-free-map-style';
+
 import { describe, expect, it } from 'vitest';
 import {
 	loadOpenFreeMapStyle,
 	openFreeMapStyleUrl,
 	sanitizeOpenFreeMapStyle,
-	transformOpenFreeMapRequest,
-	type RemoteStyle,
-	type RemoteStyleLayer
+	transformOpenFreeMapRequest
 } from './open-free-map-style';
 
 describe('OpenFreeMap style utilities', () => {

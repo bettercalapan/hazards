@@ -1,15 +1,22 @@
-import {
-	criticalFacilityColors,
-	emptyCriticalFacilities,
-	type CriticalFacilityCollection
-} from '$lib/data/critical-facilities';
+import type {
+	GeoJSONSource,
+	Map as MapLibreMap,
+	MapMouseEvent,
+	Popup as MapLibrePopup,
+	PopupOptions,
+	PropertyValueSpecification
+} from 'maplibre-gl';
+import type { CriticalFacilityCollection } from '$lib/data/critical-facilities';
 
-type MapInstance = import('maplibre-gl').Map;
+import { criticalFacilityColors, emptyCriticalFacilities } from '$lib/data/critical-facilities';
+
+type MapInstance = MapLibreMap;
 type FirstSymbolLayerId = string | undefined;
 type LoadState = 'idle' | 'loading' | 'ready' | 'error';
-type LayerMouseEvent = import('maplibre-gl').MapMouseEvent & {
+type LayerMouseEvent = MapMouseEvent & {
 	features?: Array<{ properties?: unknown }>;
 };
+type PopupConstructor = new (options?: PopupOptions) => MapLibrePopup;
 
 const layerIds = [
 	'critical-facilities-clusters',
@@ -22,18 +29,9 @@ const layerIds = [
 const colorExpression = [
 	'match',
 	['get', 'category'],
-	'police',
-	criticalFacilityColors.police,
-	'fire',
-	criticalFacilityColors.fire,
-	'hospital',
-	criticalFacilityColors.hospital,
-	'school',
-	criticalFacilityColors.school,
-	'evacuation-center',
-	criticalFacilityColors['evacuation-center'],
+	...Object.entries(criticalFacilityColors).flatMap(([category, color]) => [category, color]),
 	'#249b61'
-] as unknown as import('maplibre-gl').PropertyValueSpecification<string>;
+] as unknown as PropertyValueSpecification<string>;
 
 type Options = {
 	map: MapInstance;
@@ -51,8 +49,8 @@ export function createCriticalFacilityLayerManager({
 	let disposed = false;
 	let facilityPulseFrame: number | null = null;
 	let facilityRequest: Promise<void> | null = null;
-	let facilityPopup: import('maplibre-gl').Popup | null = null;
-	let facilityPopupConstructor: typeof import('maplibre-gl').Popup;
+	let facilityPopup: MapLibrePopup | null = null;
+	let facilityPopupConstructor: PopupConstructor;
 	let interactionsBound = false;
 
 	const escapeHtml = (value: string): string =>
@@ -202,8 +200,7 @@ export function createCriticalFacilityLayerManager({
 				: undefined
 		);
 		if (!Number.isFinite(clusterId)) return;
-		const source = map.getSource('calapan-critical-facilities') as
-			import('maplibre-gl').GeoJSONSource | undefined;
+		const source = map.getSource('calapan-critical-facilities') as GeoJSONSource | undefined;
 		if (!source) return;
 		void source
 			.getClusterExpansionZoom(clusterId)
@@ -254,7 +251,7 @@ export function createCriticalFacilityLayerManager({
 		map.getCanvas().style.cursor = '';
 	};
 
-	const bindInteractions = (Popup: typeof import('maplibre-gl').Popup) => {
+	const bindInteractions = (Popup: PopupConstructor) => {
 		if (disposed || interactionsBound) return;
 		facilityPopupConstructor = Popup;
 		interactionsBound = true;
@@ -279,8 +276,7 @@ export function createCriticalFacilityLayerManager({
 				if (!response.ok) throw new Error(`Critical facilities returned ${response.status}`);
 				const data = (await response.json()) as CriticalFacilityCollection;
 				if (disposed) return;
-				const source = map.getSource('calapan-critical-facilities') as
-					import('maplibre-gl').GeoJSONSource | undefined;
+				const source = map.getSource('calapan-critical-facilities') as GeoJSONSource | undefined;
 				if (!source) throw new Error('Critical facility map source is unavailable');
 				source.setData(data);
 				setState('ready');

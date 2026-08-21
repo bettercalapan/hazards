@@ -1,21 +1,21 @@
 <script lang="ts">
+	import type { BarangayProperties } from '$lib/data/barangays';
+	import type { TyphoonMapData } from '$lib/data/typhoon';
+	import type { HazardFamily, MapShareState, ViewMode } from '$lib/map-state';
+	import type { MapBounds } from '$lib/map/map-setup';
+	import type { Map } from 'maplibre-gl';
+
 	import { onMount } from 'svelte';
 	import { calapanCityBounds } from '$lib/data/calapan-boundary';
-	import {
-		calapanBarangayLabelPoints,
-		loadCalapanBarangays,
-		type BarangayProperties
-	} from '$lib/data/barangays';
-	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
+	import { calapanBarangayLabelPoints, loadCalapanBarangays } from '$lib/data/barangays';
+	import { emptyTyphoonMapData } from '$lib/data/typhoon';
 	import { criticalFacilitiesAttribution } from '$lib/data/critical-facilities';
-	import { type HazardFamily, type MapShareState, type ViewMode } from '$lib/map-state';
 	import { loadOpenFreeMapStyle, transformOpenFreeMapRequest } from '$lib/map/open-free-map-style';
 	import {
 		getPanBounds,
 		restrictSymbolLayers,
 		setupBaseMap,
-		updateMapCamera as setMapCamera,
-		type MapBounds
+		updateMapCamera as setMapCamera
 	} from '$lib/map/map-setup';
 	import { createBarangayLayerManager } from '$lib/map/barangay-layer-manager';
 	import { createCriticalFacilityLayerManager } from '$lib/map/critical-facility-layer-manager';
@@ -46,7 +46,7 @@
 	let syncSelectedBarangay: (id: string | null) => void = () => {};
 
 	let criticalFacilitiesState = $state<CriticalFacilitiesState>('idle');
-	let lastCriticalFacilitiesEnabled = $state(false);
+	let lastCriticalFacilitiesEnabled = false;
 	let loadCriticalFacilities: () => void = () => {};
 	let setCriticalFacilitiesVisibility: (visible: boolean) => void = () => {};
 	let disposeCriticalFacilityLayerManager = () => {};
@@ -56,8 +56,8 @@
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 	let updateHazardVisibility: () => void = () => {};
 	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
-	let lastActiveHazardFamily = $state<HazardFamily | null>(null);
-	let lastViewMode = $state<ViewMode | null>(null);
+	let lastActiveHazardFamily: HazardFamily | null = null;
+	let lastViewMode: ViewMode | null = null;
 	let disposeBarangayLayerManager = () => {};
 	let disposeHazardLayerManager = () => {};
 
@@ -105,7 +105,7 @@
 
 	onMount(() => {
 		let disposed = false;
-		let map: import('maplibre-gl').Map | undefined;
+		let map: Map | undefined;
 		let terrainReady = false;
 		let terrainEnabled = false;
 		let terrainTimer: ReturnType<typeof setTimeout> | undefined;
@@ -296,8 +296,6 @@
 <style>
 	.map-shell {
 		position: relative;
-		display: flex;
-		flex: 1;
 		width: 100%;
 		height: 100%;
 		min-height: 0;
@@ -314,9 +312,6 @@
 	.boundary-note {
 		position: absolute;
 		z-index: 2;
-	}
-
-	.boundary-note {
 		left: 1rem;
 		bottom: 1rem;
 		max-width: 18rem;
@@ -327,20 +322,11 @@
 		color: var(--fg);
 		font-size: 0.875rem;
 		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
-		backdrop-filter: blur(12px);
 	}
 
 	@media (max-width: 899px) {
-		.map-shell {
-			height: 100%;
-			min-height: 0;
-		}
-
 		.boundary-note {
 			display: none;
-			left: 0.75rem;
-			bottom: 4.5rem;
-			max-width: calc(100% - 1.5rem);
 		}
 
 		:global(.maplibregl-ctrl-bottom-right) {

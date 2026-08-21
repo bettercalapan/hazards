@@ -1,4 +1,6 @@
-import { expect, test, type Page } from '@playwright/test';
+import type { Page } from '@playwright/test';
+
+import { expect, test } from '@playwright/test';
 
 const barangayName = 'Balingayan';
 const barangayId = 'PH1705205001';

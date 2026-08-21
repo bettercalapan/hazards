@@ -1,16 +1,17 @@
 import type { FeatureCollection, MultiPolygon, Point } from 'geojson';
 import type { FloodHazardSummary, ReturnPeriod } from './flood';
+import type { LandslideHazardSummary, LandslideLayer } from './landslide';
+import type { SeismicHazardSummary, SeismicLayer } from './seismic';
+import type { StormSurgeAdvisory, StormSurgeSummary } from './storm-surge';
+
 import barangayDataUrl from './calapan-barangays.json?url';
 import barangayLabelPointData from './calapan-barangay-label-points.json';
 import floodSummaryData from './calapan-flood-summaries.json';
-import stormSurgeSummaryData from './calapan-storm-surge-summaries.json';
-import type { StormSurgeAdvisory, StormSurgeSummary } from './storm-surge';
 import landslideSummaryData from './calapan-landslide-summaries.json';
-import type { LandslideHazardSummary, LandslideLayer } from './landslide';
 import groundShakingSummaryData from './calapan-ground-shaking-summaries.json';
 import liquefactionSummaryData from './calapan-liquefaction-summaries.json';
+import stormSurgeSummaryData from './calapan-storm-surge-summaries.json';
 import tsunamiSummaryData from './calapan-tsunami-summaries.json';
-import type { SeismicHazardSummary, SeismicLayer } from './seismic';
 
 type FloodSummaryData = Record<string, Record<ReturnPeriod, FloodHazardSummary>>;
 type StormSurgeSummaryData = Record<string, Record<StormSurgeAdvisory, StormSurgeSummary>>;

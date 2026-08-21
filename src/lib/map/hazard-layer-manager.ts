@@ -1,4 +1,9 @@
+import type { Map as MapLibreMap, PropertyValueSpecification } from 'maplibre-gl';
 import type { TyphoonMapData } from '$lib/data/typhoon';
+import type { HazardFamily } from '$lib/map-state';
+import type { EnabledHazardLayers, HazardLayerDefinition } from './hazard-layers';
+
+import { typhoonCategories } from '$lib/data/typhoon';
 import {
 	fillColorForLayer,
 	hazardFamilies,
@@ -7,13 +12,10 @@ import {
 	layerIdFor,
 	layersForFamily,
 	sourceIdsForFamily,
-	sourceLayerFor,
-	type EnabledHazardLayers,
-	type HazardLayerDefinition
+	sourceLayerFor
 } from './hazard-layers';
-import type { HazardFamily } from '$lib/map-state';
 
-type MapInstance = import('maplibre-gl').Map;
+type MapInstance = MapLibreMap;
 type FirstSymbolLayerId = string | undefined;
 
 type Options = {
@@ -29,6 +31,22 @@ type FamilyLoad = {
 	promise: Promise<void>;
 	cancel: () => void;
 };
+
+const typhoonColorExpression = [
+	'match',
+	['get', 'type'],
+	...typhoonCategories.flatMap(({ key, color }) => [key, color]),
+	typhoonCategories[0].color
+] as unknown as PropertyValueSpecification<string>;
+const typhoonOpacityExpression = [
+	'interpolate',
+	['linear'],
+	['get', 'proximity'],
+	1,
+	0.18,
+	4,
+	0.78
+] as unknown as PropertyValueSpecification<number>;
 
 export function createHazardLayerManager({
 	map,
@@ -93,32 +111,8 @@ export function createHazardLayerManager({
 				source: 'calapan-typhoon-grid',
 				layout: { visibility: 'none' },
 				paint: {
-					'fill-color': [
-						'match',
-						['get', 'type'],
-						'LPA',
-						'#9aa5b1',
-						'TD',
-						'#00e400',
-						'TS',
-						'#ffe400',
-						'STS',
-						'#ff9800',
-						'TY',
-						'#ff2020',
-						'STY',
-						'#e000e0',
-						'#9aa5b1'
-					] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
-					'fill-opacity': [
-						'interpolate',
-						['linear'],
-						['get', 'proximity'],
-						1,
-						0.18,
-						4,
-						0.78
-					] as unknown as import('maplibre-gl').PropertyValueSpecification<number>,
+					'fill-color': typhoonColorExpression,
+					'fill-opacity': typhoonOpacityExpression,
 					'fill-outline-color': '#fff8df'
 				}
 			},
@@ -167,23 +161,7 @@ export function createHazardLayerManager({
 				layout: { visibility: 'none' },
 				paint: {
 					'circle-radius': 4,
-					'circle-color': [
-						'match',
-						['get', 'type'],
-						'LPA',
-						'#9aa5b1',
-						'TD',
-						'#00e400',
-						'TS',
-						'#ffe400',
-						'STS',
-						'#ff9800',
-						'TY',
-						'#ff2020',
-						'STY',
-						'#e000e0',
-						'#9aa5b1'
-					] as unknown as import('maplibre-gl').PropertyValueSpecification<string>,
+					'circle-color': typhoonColorExpression,
 					'circle-stroke-color': '#b83355',
 					'circle-stroke-width': 2
 				}
@@ -201,17 +179,7 @@ export function createHazardLayerManager({
 					map.setPaintProperty(
 						layerId,
 						'fill-opacity',
-						visible && opacity > 0
-							? ([
-									'interpolate',
-									['linear'],
-									['get', 'proximity'],
-									1,
-									0.18,
-									4,
-									0.78
-								] as unknown as import('maplibre-gl').PropertyValueSpecification<number>)
-							: 0
+						visible && opacity > 0 ? typhoonOpacityExpression : 0
 					);
 				}
 			}

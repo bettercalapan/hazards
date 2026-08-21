@@ -17,7 +17,6 @@ export const floodHazardColors: Record<FloodHazardClass, string> = warmFloodHaza
 export const floodHazardPeriods = [
 	{
 		key: 5,
-		name: '5-year flood hazard',
 		shortName: '5-year',
 		tilePath: '/calapan-flood-hazard-5yr-tiles/{z}/{x}/{y}.pbf',
 		colors: {
@@ -28,7 +27,6 @@ export const floodHazardPeriods = [
 	},
 	{
 		key: 25,
-		name: '25-year flood hazard',
 		shortName: '25-year',
 		tilePath: '/calapan-flood-hazard-25yr-tiles/{z}/{x}/{y}.pbf',
 		colors: {
@@ -39,7 +37,6 @@ export const floodHazardPeriods = [
 	},
 	{
 		key: 100,
-		name: '100-year flood hazard',
 		shortName: '100-year',
 		tilePath: '/calapan-flood-hazard-100yr-tiles/{z}/{x}/{y}.pbf',
 		colors: warmFloodHazardColors
