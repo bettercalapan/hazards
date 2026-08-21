@@ -44,21 +44,14 @@ function installDiagnostics(page: Page): BrowserDiagnostics {
 	};
 }
 
-async function stubLiveFeeds(page: Page) {
-	await page.route('https://publicalert.pagasa.dost.gov.ph/feeds/**', (route) =>
-		route.fulfill({
-			status: 200,
-			contentType: 'application/atom+xml',
-			body: '<feed xmlns="http://www.w3.org/2005/Atom"></feed>'
-		})
-	);
+async function stubPanahonFeed(page: Page) {
 	await page.route('https://www.panahon.gov.ph/api/v1/cyclone-track', (route) =>
 		route.fulfill({ status: 200, contentType: 'application/json', body: '[]' })
 	);
 }
 
 async function openMap(page: Page) {
-	await stubLiveFeeds(page);
+	await stubPanahonFeed(page);
 	await page.goto('/');
 	await expect(page.getByRole('region', { name: 'Interactive map of Calapan City' })).toBeVisible();
 	await expect(page.locator('.map')).toHaveAttribute('data-map-ready', 'true', { timeout: 30_000 });

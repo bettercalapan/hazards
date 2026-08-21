@@ -4,7 +4,7 @@
 
 - Single-package SvelteKit app using TypeScript, Svelte 5 runes, MapLibre GL JS, the Cloudflare adapter, and Wrangler Worker deployment. Use `pnpm@11.20.0`.
 - `src/routes/+page.svelte` owns map/share state, URL synchronization, barangay search, and mobile drawer coordination. `Sidebar.svelte` owns hazard information presentation; `MapControls.svelte` remains controlled through callbacks.
-- `src/routes/+page.server.ts` fetches PAGASA alerts and PANaHON tracks concurrently. Preserve independent fallback behavior when either feed fails.
+- `src/routes/+page.server.ts` fetches the optional PANaHON typhoon track feed and falls back to an unavailable state when it fails.
 - `HazardMap.svelte` dynamically imports MapLibre in `onMount`. Keep WebGL and DOM map work browser-only; use `$effect` only to synchronize reactive state with MapLibre.
 - Keep map setup and layer managers under `src/lib/map`; keep testable map/data logic in TypeScript covered by Vitest.
 - Put separate type-only imports before all value imports in TypeScript and Svelte scripts.
@@ -13,7 +13,7 @@
 
 - After `wrangler.jsonc` changes, run `pnpm run gen` first. Otherwise verify in order: `pnpm run check`, `pnpm run build`, `pnpm run lint`, `pnpm run test`.
 - Deploy with `pnpm run deploy`.
-- Browser checks require `pnpm exec playwright install chromium`, then `pnpm run test:browser`. Playwright starts Vite but still depends on external map/terrain assets; `page.route` does not intercept server-side feed requests.
+- Browser checks require `pnpm exec playwright install chromium`, then `pnpm run test:browser`. Playwright starts Vite but still depends on external map/terrain assets and the server-side PANaHON request; `page.route` does not intercept server-side requests.
 - Before treating network-related browser failures as regressions, rerun with `pnpm exec playwright test --workers=1`.
 - Focused examples: `pnpm exec vitest run src/lib/map/hazard-layers.spec.ts` and `pnpm exec playwright test tests/browser/map.smoke.spec.ts -g "test name" --workers=1`.
 

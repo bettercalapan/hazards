@@ -231,7 +231,7 @@
 	<title>Hazards</title>
 	<meta
 		name="description"
-		content="A localized view of hazard-risk zones and active official alerts in Calapan City."
+		content="A localized view of hazard-risk zones and typhoon tracks in Calapan City."
 	/>
 </svelte:head>
 
