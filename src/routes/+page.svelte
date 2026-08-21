@@ -9,17 +9,29 @@
 		type BarangayCollection,
 		type BarangayProperties
 	} from '$lib/data/barangays';
-	import { floodHazardMetadata, floodHazardPeriods } from '$lib/data/flood';
-	import { stormSurgeAdvisories, stormSurgeMetadata } from '$lib/data/storm-surge';
-	import { landslideHazards, landslideMetadata } from '$lib/data/landslide';
-	import { seismicHazards, seismicMetadata } from '$lib/data/seismic';
+	import { floodHazardMetadata, floodHazardPeriods, type ReturnPeriod } from '$lib/data/flood';
+	import {
+		stormSurgeAdvisories,
+		stormSurgeMetadata,
+		type StormSurgeAdvisory
+	} from '$lib/data/storm-surge';
+	import { landslideHazards, landslideMetadata, type LandslideLayer } from '$lib/data/landslide';
+	import { seismicHazards, seismicMetadata, type SeismicLayer } from '$lib/data/seismic';
 	import { safetyGuidance } from '$lib/data/safety';
 	import { typhoonMetadata, typhoonSourceUrl } from '$lib/data/typhoon';
 	import logo from '$lib/assets/logo.svg';
 	import HazardMap from '$lib/components/HazardMap.svelte';
-	import { serializeMapShareState, type HazardFamily, type MapShareState } from '$lib/map-state';
+	import MapControls from '$lib/components/MapControls.svelte';
+	import {
+		serializeMapShareState,
+		type HazardFamily,
+		type MapShareState,
+		type ViewMode
+	} from '$lib/map-state';
 	import type { PageData } from './$types';
 	import Check from '@lucide/svelte/icons/check';
+	import ChevronDown from '@lucide/svelte/icons/chevron-down';
+	import ChevronUp from '@lucide/svelte/icons/chevron-up';
 	import Info from '@lucide/svelte/icons/info';
 	import Link from '@lucide/svelte/icons/link';
 	import X from '@lucide/svelte/icons/x';
@@ -35,10 +47,16 @@
 	let barangays = $state<BarangayCollection | null>(null);
 	let barangaySearchInput: HTMLInputElement;
 	let barangaySearchBlurTimeout: ReturnType<typeof setTimeout> | undefined;
-	let activeHazardFamily = $state<HazardFamily>(initialMapState.activeHazardFamily);
 	let mapShareState = $state<MapShareState>(initialMapState);
+	let activeHazardFamily = $derived(mapShareState.activeHazardFamily);
 	let shareStatus = $state<'idle' | 'copied' | 'error'>('idle');
 	let shareStatusResetTimeout: ReturnType<typeof setTimeout> | undefined;
+	let hasInitializedSeismicLayers = $state(initialMapState.activeHazardFamily === 'earthquake');
+	let criticalFacilitiesEnabled = $state(false);
+	let criticalFacilitiesState = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
+	let mobileSidebarOpen = $state(false);
+	let mobileControlsOpen = $state(false);
+	let preloadHazardFamily = $state<(family: HazardFamily) => void>(() => {});
 	let barangayMatches = $derived(
 		barangays ? searchCalapanBarangays(barangays, barangayQuery).slice(0, 8) : []
 	);
@@ -68,14 +86,18 @@
 		replaceState(`${resolve('/')}${serializeMapShareState(state)}`, {});
 	}
 
+	function updateMapState(nextState: Partial<MapShareState>) {
+		mapShareState = { ...mapShareState, ...nextState };
+		updateMapUrl(mapShareState);
+	}
+
 	function updateSelectedArea(area: BarangayProperties | null) {
 		selectedArea = area;
 		selectedBarangayId = area?.id ?? null;
 		barangayQuery = area?.name ?? '';
 		barangaySearchOpen = false;
 		highlightedBarangayIndex = 0;
-		mapShareState = { ...mapShareState, selectedBarangayId: selectedBarangayId };
-		updateMapUrl(mapShareState);
+		updateMapState({ selectedBarangayId });
 	}
 
 	function handleBarangaySearchInput(event: Event) {
@@ -139,11 +161,64 @@
 		}
 	}
 
-	function handleMapStateChange(nextState: MapShareState) {
-		mapShareState = nextState;
-		activeHazardFamily = nextState.activeHazardFamily;
-		selectedBarangayId = nextState.selectedBarangayId;
-		updateMapUrl(nextState);
+	function setViewMode(viewMode: ViewMode) {
+		updateMapState({ viewMode });
+	}
+
+	function setHazardFamily(activeHazardFamily: HazardFamily) {
+		if (activeHazardFamily === mapShareState.activeHazardFamily) return;
+		const nextState: Partial<MapShareState> = { activeHazardFamily };
+		if (activeHazardFamily === 'earthquake' && !hasInitializedSeismicLayers) {
+			nextState.enabledSeismicLayers = seismicHazards.map((layer) => layer.key);
+			hasInitializedSeismicLayers = true;
+		}
+		updateMapState(nextState);
+	}
+
+	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
+		updateMapState({
+			enabledFloodPeriods: enabled
+				? [...new Set([...mapShareState.enabledFloodPeriods, period])]
+				: mapShareState.enabledFloodPeriods.filter((value) => value !== period)
+		});
+	}
+
+	function setStormSurgeAdvisoryEnabled(advisory: StormSurgeAdvisory, enabled: boolean) {
+		updateMapState({
+			enabledStormSurgeAdvisories: enabled
+				? [...new Set([...mapShareState.enabledStormSurgeAdvisories, advisory])]
+				: mapShareState.enabledStormSurgeAdvisories.filter((value) => value !== advisory)
+		});
+	}
+
+	function setLandslideLayerEnabled(layer: LandslideLayer, enabled: boolean) {
+		updateMapState({
+			enabledLandslideLayers: enabled
+				? [...new Set([...mapShareState.enabledLandslideLayers, layer])]
+				: mapShareState.enabledLandslideLayers.filter((value) => value !== layer)
+		});
+	}
+
+	function setSeismicLayerEnabled(layer: SeismicLayer, enabled: boolean) {
+		updateMapState({
+			enabledSeismicLayers: enabled
+				? [...new Set([...mapShareState.enabledSeismicLayers, layer])]
+				: mapShareState.enabledSeismicLayers.filter((value) => value !== layer)
+		});
+	}
+
+	function toggleCriticalFacilities() {
+		criticalFacilitiesEnabled = !criticalFacilitiesEnabled;
+	}
+
+	function toggleMobileSidebar() {
+		mobileSidebarOpen = !mobileSidebarOpen;
+		mobileControlsOpen = false;
+	}
+
+	function toggleMobileControls() {
+		mobileControlsOpen = !mobileControlsOpen;
+		mobileSidebarOpen = false;
 	}
 
 	async function copyMapLink() {
@@ -177,8 +252,7 @@
 				}
 
 				selectedBarangayId = null;
-				mapShareState = { ...mapShareState, selectedBarangayId: null };
-				updateMapUrl(mapShareState);
+				updateMapState({ selectedBarangayId: null });
 			})
 			.catch(() => {
 				barangays = null;
@@ -203,13 +277,18 @@
 		<HazardMap
 			typhoonMapData={data.typhoonMapData}
 			{selectedBarangayId}
-			{initialMapState}
+			mapState={mapShareState}
 			onSelectArea={updateSelectedArea}
-			onHazardFamilyChange={(family) => (activeHazardFamily = family)}
-			onMapStateChange={handleMapStateChange}
+			onPreloadHazardFamilyReady={(preload) => (preloadHazardFamily = preload)}
+			{criticalFacilitiesEnabled}
+			onCriticalFacilitiesStateChange={(state) => (criticalFacilitiesState = state)}
 		/>
 
-		<section class="info-card search-card map-search" onfocusout={handleBarangaySearchFocusOut}>
+		<section
+			class="info-card search-card map-search"
+			data-search-ready={barangays !== null}
+			onfocusout={handleBarangaySearchFocusOut}
+		>
 			<div class="search-input-wrap">
 				<input
 					autocomplete="off"
@@ -220,7 +299,9 @@
 					placeholder="Find a barangay..."
 					role="combobox"
 					aria-autocomplete="list"
-					aria-controls={barangayMatches.length > 0 ? 'barangay-search-results' : undefined}
+					aria-controls={barangaySearchOpen && barangayQuery.trim()
+						? 'barangay-search-results'
+						: undefined}
 					aria-expanded={barangaySearchOpen}
 					aria-activedescendant={barangaySearchOpen && barangayMatches.length > 0
 						? `barangay-result-${barangayMatches[highlightedBarangayIndex].id}`
@@ -230,30 +311,105 @@
 					onfocus={handleBarangaySearchFocus}
 				/>
 			</div>
-			{#if barangaySearchOpen && barangayMatches.length > 0}
-				<div id="barangay-search-results" class="search-results" role="listbox">
-					{#each barangayMatches as barangay, index (barangay.id)}
-						<button
-							id={`barangay-result-${barangay.id}`}
-							class:highlighted={highlightedBarangayIndex === index}
-							class="search-result"
-							role="option"
-							aria-selected={selectedBarangayId === barangay.id}
-							type="button"
-							onclick={() => selectSearchBarangay(barangay)}
-							onmouseenter={() => (highlightedBarangayIndex = index)}
-						>
-							{barangay.name}
-						</button>
-					{/each}
+			{#if barangaySearchOpen && (barangayMatches.length > 0 || barangayQuery.trim())}
+				<div
+					id="barangay-search-results"
+					class="search-results"
+					role={barangayMatches.length > 0 ? 'listbox' : 'status'}
+					aria-live="polite"
+				>
+					{#if barangayMatches.length > 0}
+						{#each barangayMatches as barangay, index (barangay.id)}
+							<button
+								id={`barangay-result-${barangay.id}`}
+								class:highlighted={highlightedBarangayIndex === index}
+								class="search-result"
+								role="option"
+								aria-selected={selectedBarangayId === barangay.id}
+								type="button"
+								onclick={() => selectSearchBarangay(barangay)}
+								onmouseenter={() => (highlightedBarangayIndex = index)}
+							>
+								{barangay.name}
+							</button>
+						{/each}
+					{:else}
+						<p class="search-empty">No barangays found.</p>
+					{/if}
 				</div>
-			{:else if barangaySearchOpen && barangayQuery.trim()}
-				<p class="search-empty" role="status">No barangays found.</p>
 			{/if}
 		</section>
+
+		<div
+			id="mobile-map-controls"
+			class:mobile-open={mobileControlsOpen}
+			class="mobile-controls-panel"
+		>
+			<MapControls
+				viewMode={mapShareState.viewMode}
+				activeHazardFamily={mapShareState.activeHazardFamily}
+				enabledFloodPeriods={mapShareState.enabledFloodPeriods}
+				enabledStormSurgeAdvisories={mapShareState.enabledStormSurgeAdvisories}
+				enabledLandslideLayers={mapShareState.enabledLandslideLayers}
+				enabledSeismicLayers={mapShareState.enabledSeismicLayers}
+				{criticalFacilitiesEnabled}
+				{criticalFacilitiesState}
+				onViewModeChange={setViewMode}
+				onHazardFamilyChange={setHazardFamily}
+				onFloodPeriodChange={setFloodPeriodEnabled}
+				onStormSurgeAdvisoryChange={setStormSurgeAdvisoryEnabled}
+				onLandslideLayerChange={setLandslideLayerEnabled}
+				onSeismicLayerChange={setSeismicLayerEnabled}
+				onCriticalFacilitiesToggle={toggleCriticalFacilities}
+				onPreloadHazardFamily={preloadHazardFamily}
+			/>
+		</div>
+
+		<div class="mobile-action-bar">
+			<button
+				class:open={mobileSidebarOpen}
+				class="mobile-sidebar-toggle"
+				type="button"
+				aria-controls="hazard-information"
+				aria-expanded={mobileSidebarOpen}
+				onclick={toggleMobileSidebar}
+			>
+				<span class="icon">
+					{#if mobileSidebarOpen}
+						<ChevronDown />
+					{:else}
+						<ChevronUp />
+					{/if}
+				</span>
+				<span>{mobileSidebarOpen ? 'Hide details' : 'Show details'}</span>
+			</button>
+			<button
+				class:open={mobileControlsOpen}
+				class="mobile-controls-toggle"
+				type="button"
+				aria-controls="mobile-map-controls"
+				aria-expanded={mobileControlsOpen}
+				onclick={toggleMobileControls}
+			>
+				<span class="icon">
+					{#if mobileControlsOpen}
+						<ChevronDown />
+					{:else}
+						<ChevronUp />
+					{/if}
+				</span>
+				<span>{mobileControlsOpen ? 'Hide controls' : 'Map controls'}</span>
+			</button>
+		</div>
 	</section>
 
-	<aside id="hazard-information" class="sidebar" tabindex="-1" aria-label="Hazard information">
+	<aside
+		id="hazard-information"
+		class="sidebar"
+		class:mobile-open={mobileSidebarOpen}
+		tabindex="-1"
+		aria-label="Hazard information"
+	>
 		<div class="sidebar-inner">
 			<div class="brand-row">
 				<a class="brand-link" href={resolve('/')} aria-label="Go to Hazards home">
@@ -651,9 +807,24 @@
 	.map-search {
 		position: absolute;
 		top: 1rem;
-		right: 1rem;
+		left: 1rem;
 		z-index: 3;
 		width: min(20rem, calc(100% - 2rem));
+	}
+
+	@media (min-width: 1250px) {
+		.map-search {
+			left: auto;
+			right: 1rem;
+		}
+	}
+
+	.mobile-action-bar {
+		display: none;
+	}
+
+	.mobile-controls-panel {
+		display: contents;
 	}
 
 	.sidebar {
@@ -738,10 +909,6 @@
 	}
 
 	.info-card + .info-card {
-		margin-top: 1rem;
-	}
-
-	.brand-row + .selection-card {
 		margin-top: 1rem;
 	}
 
@@ -869,8 +1036,8 @@
 	}
 
 	.search-empty {
-		margin: 0.6rem 0 0 !important;
-		font-size: 0.8rem !important;
+		padding: 0.5rem 1rem;
+		font-size: 1rem;
 	}
 
 	.legend {
@@ -967,45 +1134,143 @@
 		margin-top: 1rem;
 	}
 
-	@media (max-width: 850px) {
+	@media (max-width: 899px) {
 		.app-shell {
-			display: flex;
-			flex-direction: column;
-			min-height: 100%;
+			display: block;
+			position: relative;
+			height: 100dvh;
+			min-height: 100dvh;
+			overflow: hidden;
 		}
 
 		.map-pane {
-			flex: 0 0 auto;
-			height: 55dvh;
-			min-height: 24rem;
-			max-height: 42rem;
+			height: 100%;
+			min-height: 100%;
 		}
 
 		.sidebar {
-			flex: 1 0 auto;
-			overflow: visible;
-			border-top: 1px solid var(--gray);
-			border-left: 0;
+			position: absolute;
+			inset: auto 0 0;
+			z-index: 10;
+			max-height: 50dvh;
+			overflow-y: auto;
+			border: 1px solid var(--gray);
+			border-bottom: 0;
+			border-radius: 1.25rem 1.25rem 0 0;
+			box-shadow: 0 -1rem 2rem rgb(30 56 55 / 18%);
+			transform: translateY(100%);
+			visibility: hidden;
+			transition:
+				transform 220ms ease-out,
+				visibility 0s linear 220ms;
+		}
+
+		.sidebar.mobile-open {
+			transform: translateY(0);
+			visibility: visible;
+			transition:
+				transform 220ms ease-out,
+				visibility 0s linear 0s;
 		}
 
 		.sidebar-inner {
-			padding: 1.25rem 1rem 3rem;
+			padding: 1rem 1rem 5rem;
 		}
 
 		.map-search {
+			left: 0.75rem;
 			top: 0.75rem;
 			right: 0.75rem;
 			width: calc(100% - 1.5rem);
 		}
+
+		.mobile-controls-panel {
+			display: block;
+			position: absolute;
+			inset: auto 0 0;
+			z-index: 10;
+			max-height: 50dvh;
+			overflow-y: auto;
+			border: 1px solid var(--gray);
+			border-bottom: 0;
+			border-radius: 1.25rem 1.25rem 0 0;
+			background: var(--bg);
+			box-shadow: 0 -1rem 2rem rgb(30 56 55 / 18%);
+			transform: translateY(100%);
+			visibility: hidden;
+			transition:
+				transform 220ms ease-out,
+				visibility 0s linear 220ms;
+		}
+
+		.mobile-controls-panel.mobile-open {
+			transform: translateY(0);
+			visibility: visible;
+			transition:
+				transform 220ms ease-out,
+				visibility 0s linear 0s;
+		}
+
+		.mobile-action-bar {
+			position: absolute;
+			left: 50%;
+			bottom: 0.75rem;
+			z-index: 12;
+			display: flex;
+			gap: 0.5rem;
+			align-items: center;
+			justify-content: center;
+			width: max-content;
+			max-width: calc(100% - 1.5rem);
+			transform: translateX(-50%);
+		}
+
+		.mobile-sidebar-toggle,
+		.mobile-controls-toggle {
+			position: static;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.35rem;
+			min-width: 8.5rem;
+			border: 1px solid rgb(23 62 59 / 14%);
+			border-radius: 999px;
+			padding: 0.65rem 1rem;
+			background: var(--fg);
+			color: var(--bg);
+			font: inherit;
+			font-size: 0.8rem;
+			font-weight: 700;
+			box-shadow: 0 0.75rem 2rem rgb(30 56 55 / 24%);
+		}
+
+		.mobile-sidebar-toggle.open,
+		.mobile-controls-toggle.open {
+			background: var(--accent-dark);
+		}
+
+		.mobile-sidebar-toggle .icon,
+		.mobile-controls-toggle .icon {
+			margin-top: -0.5rem;
+			width: 1rem;
+			height: 1rem;
+		}
 	}
 
-	@media (min-width: 851px) and (max-width: 1100px) {
+	@media (prefers-reduced-motion: reduce) {
+		.sidebar,
+		.mobile-controls-panel {
+			transition: none;
+		}
+	}
+
+	@media (min-width: 900px) and (max-width: 1100px) {
 		.sidebar-inner {
 			padding: 1.25rem;
 		}
 	}
 
-	@media (min-width: 851px) {
+	@media (min-width: 900px) {
 		.app-shell,
 		.map-pane,
 		.sidebar {

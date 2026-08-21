@@ -64,10 +64,11 @@
 		outline: none;
 	}
 
-	@media (max-width: 850px) {
+	@media (max-width: 899px) {
 		main {
-			height: auto;
-			overflow: visible;
+			height: 100%;
+			min-height: 100dvh;
+			overflow: hidden;
 		}
 	}
 

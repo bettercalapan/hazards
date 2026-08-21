@@ -1,23 +1,14 @@
 <script lang="ts">
-	import { onMount, untrack } from 'svelte';
+	import { onMount } from 'svelte';
 	import { calapanCityBounds } from '$lib/data/calapan-boundary';
 	import {
 		calapanBarangayLabelPoints,
 		loadCalapanBarangays,
 		type BarangayProperties
 	} from '$lib/data/barangays';
-	import { type ReturnPeriod } from '$lib/data/flood';
-	import { type StormSurgeAdvisory } from '$lib/data/storm-surge';
-	import { type LandslideLayer } from '$lib/data/landslide';
-	import { seismicHazards, type SeismicLayer } from '$lib/data/seismic';
 	import { emptyTyphoonMapData, type TyphoonMapData } from '$lib/data/typhoon';
 	import { criticalFacilitiesAttribution } from '$lib/data/critical-facilities';
-	import {
-		createDefaultMapShareState,
-		type HazardFamily,
-		type MapShareState,
-		type ViewMode
-	} from '$lib/map-state';
+	import { type HazardFamily, type MapShareState, type ViewMode } from '$lib/map-state';
 	import { loadOpenFreeMapStyle, transformOpenFreeMapRequest } from '$lib/map/open-free-map-style';
 	import {
 		getPanBounds,
@@ -29,130 +20,87 @@
 	import { createBarangayLayerManager } from '$lib/map/barangay-layer-manager';
 	import { createCriticalFacilityLayerManager } from '$lib/map/critical-facility-layer-manager';
 	import { createHazardLayerManager } from '$lib/map/hazard-layer-manager';
-	import MapControls from './MapControls.svelte';
 	import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url';
 	import 'maplibre-gl/dist/maplibre-gl.css';
+
+	type CriticalFacilitiesState = 'idle' | 'loading' | 'ready' | 'error';
 
 	type Props = {
 		typhoonMapData?: TyphoonMapData;
 		selectedBarangayId?: string | null;
-		initialMapState?: MapShareState;
+		mapState: MapShareState;
+		criticalFacilitiesEnabled: boolean;
 		onSelectArea?: (area: BarangayProperties | null) => void;
-		onHazardFamilyChange?: (family: HazardFamily) => void;
-		onMapStateChange?: (state: MapShareState) => void;
+		onPreloadHazardFamilyReady?: (preload: (family: HazardFamily) => void) => void;
+		onCriticalFacilitiesStateChange?: (state: CriticalFacilitiesState) => void;
 	};
 	let {
 		typhoonMapData = emptyTyphoonMapData,
 		selectedBarangayId = null,
-		initialMapState = createDefaultMapShareState(),
+		mapState,
+		criticalFacilitiesEnabled,
 		onSelectArea,
-		onHazardFamilyChange,
-		onMapStateChange
+		onPreloadHazardFamilyReady,
+		onCriticalFacilitiesStateChange
 	}: Props = $props();
-	const initialState = untrack(() => initialMapState);
 	let syncSelectedBarangay: (id: string | null) => void = () => {};
 
-	let criticalFacilitiesEnabled = $state(false);
-	let criticalFacilitiesState = $state<'idle' | 'loading' | 'ready' | 'error'>('idle');
+	let criticalFacilitiesState = $state<CriticalFacilitiesState>('idle');
+	let lastCriticalFacilitiesEnabled = $state(false);
 	let loadCriticalFacilities: () => void = () => {};
 	let setCriticalFacilitiesVisibility: (visible: boolean) => void = () => {};
 	let disposeCriticalFacilityLayerManager = () => {};
 
-	function toggleCriticalFacilities() {
-		criticalFacilitiesEnabled = !criticalFacilitiesEnabled;
-		setCriticalFacilitiesVisibility(criticalFacilitiesEnabled);
-		if (
-			criticalFacilitiesEnabled &&
-			(criticalFacilitiesState === 'idle' || criticalFacilitiesState === 'error')
-		) {
-			loadCriticalFacilities();
-		}
-	}
-
 	let mapElement: HTMLDivElement;
-	let viewMode = $state<ViewMode>(initialState.viewMode);
 	let mapReady = $state(false);
-	let activeHazardFamily = $state<HazardFamily>(initialState.activeHazardFamily);
-	let loadingHazardFamily = $state<HazardFamily | null>(null);
-	let enabledFloodPeriods = $state<ReturnPeriod[]>([...initialState.enabledFloodPeriods]);
-	let enabledStormSurgeAdvisories = $state<StormSurgeAdvisory[]>([
-		...initialState.enabledStormSurgeAdvisories
-	]);
-	let enabledLandslideLayers = $state<LandslideLayer[]>([...initialState.enabledLandslideLayers]);
-	let enabledSeismicLayers = $state<SeismicLayer[]>([...initialState.enabledSeismicLayers]);
-	let hasInitializedSeismicLayers = $state(initialState.activeHazardFamily === 'earthquake');
 	let updateMapCamera: (nextMode: ViewMode) => void = () => {};
 	let updateHazardVisibility: () => void = () => {};
 	let transitionHazardFamily: (nextFamily: HazardFamily) => void = () => {};
-	let preloadHazardFamily = $state<(family: HazardFamily) => void>(() => {});
+	let lastActiveHazardFamily = $state<HazardFamily | null>(null);
+	let lastViewMode = $state<ViewMode | null>(null);
 	let disposeBarangayLayerManager = () => {};
 	let disposeHazardLayerManager = () => {};
-
-	function reportMapState() {
-		onMapStateChange?.({
-			viewMode,
-			activeHazardFamily,
-			selectedBarangayId,
-			enabledFloodPeriods: [...enabledFloodPeriods],
-			enabledStormSurgeAdvisories: [...enabledStormSurgeAdvisories],
-			enabledLandslideLayers: [...enabledLandslideLayers],
-			enabledSeismicLayers: [...enabledSeismicLayers]
-		});
-	}
-
-	function setViewMode(nextMode: ViewMode) {
-		viewMode = nextMode;
-		updateMapCamera(nextMode);
-		reportMapState();
-	}
-
-	function setHazardFamily(nextFamily: HazardFamily) {
-		if (nextFamily === activeHazardFamily) return;
-		if (nextFamily === 'earthquake' && !hasInitializedSeismicLayers) {
-			enabledSeismicLayers = seismicHazards.map((layer) => layer.key);
-			hasInitializedSeismicLayers = true;
-		}
-		activeHazardFamily = nextFamily;
-		onHazardFamilyChange?.(nextFamily);
-		transitionHazardFamily(nextFamily);
-		reportMapState();
-	}
-
-	function setFloodPeriodEnabled(period: ReturnPeriod, enabled: boolean) {
-		enabledFloodPeriods = enabled
-			? [...new Set([...enabledFloodPeriods, period])]
-			: enabledFloodPeriods.filter((value) => value !== period);
-		updateHazardVisibility();
-		reportMapState();
-	}
-
-	function setStormSurgeAdvisoryEnabled(advisory: StormSurgeAdvisory, enabled: boolean) {
-		enabledStormSurgeAdvisories = enabled
-			? [...new Set([...enabledStormSurgeAdvisories, advisory])]
-			: enabledStormSurgeAdvisories.filter((value) => value !== advisory);
-		updateHazardVisibility();
-		reportMapState();
-	}
-
-	function setLandslideLayerEnabled(layer: LandslideLayer, enabled: boolean) {
-		enabledLandslideLayers = enabled
-			? [...new Set([...enabledLandslideLayers, layer])]
-			: enabledLandslideLayers.filter((value) => value !== layer);
-		updateHazardVisibility();
-		reportMapState();
-	}
-
-	function setSeismicLayerEnabled(layer: SeismicLayer, enabled: boolean) {
-		enabledSeismicLayers = enabled
-			? [...new Set([...enabledSeismicLayers, layer])]
-			: enabledSeismicLayers.filter((value) => value !== layer);
-		updateHazardVisibility();
-		reportMapState();
-	}
 
 	$effect(() => {
 		const id = selectedBarangayId;
 		if (mapReady) syncSelectedBarangay(id);
+	});
+
+	$effect(() => {
+		const state = mapState;
+		if (!mapReady) return;
+		if (lastActiveHazardFamily === null) {
+			lastActiveHazardFamily = state.activeHazardFamily;
+			updateHazardVisibility();
+			return;
+		}
+		if (state.activeHazardFamily !== lastActiveHazardFamily) {
+			lastActiveHazardFamily = state.activeHazardFamily;
+			transitionHazardFamily(state.activeHazardFamily);
+		} else {
+			updateHazardVisibility();
+		}
+	});
+
+	$effect(() => {
+		const mode = mapState.viewMode;
+		if (!mapReady || mode === lastViewMode) return;
+		lastViewMode = mode;
+		updateMapCamera(mode);
+	});
+
+	$effect(() => {
+		const enabled = criticalFacilitiesEnabled;
+		if (!mapReady) return;
+		setCriticalFacilitiesVisibility(enabled);
+		if (
+			enabled &&
+			!lastCriticalFacilitiesEnabled &&
+			(criticalFacilitiesState === 'idle' || criticalFacilitiesState === 'error')
+		) {
+			loadCriticalFacilities();
+		}
+		lastCriticalFacilitiesEnabled = enabled;
 	});
 
 	onMount(() => {
@@ -208,19 +156,19 @@
 					map: mapInstance,
 					firstSymbolLayerId,
 					typhoonMapData,
-					getActiveFamily: () => activeHazardFamily,
+					getActiveFamily: () => mapState.activeHazardFamily,
 					getEnabledLayers: () => ({
-						enabledFloodPeriods,
-						enabledStormSurgeAdvisories,
-						enabledLandslideLayers,
-						enabledSeismicLayers
+						enabledFloodPeriods: mapState.enabledFloodPeriods,
+						enabledStormSurgeAdvisories: mapState.enabledStormSurgeAdvisories,
+						enabledLandslideLayers: mapState.enabledLandslideLayers,
+						enabledSeismicLayers: mapState.enabledSeismicLayers
 					}),
-					setLoadingFamily: (family) => (loadingHazardFamily = family)
+					setLoadingFamily: () => {}
 				});
 				hazardLayerManager.addLayers();
 				disposeHazardLayerManager = hazardLayerManager.dispose;
 				transitionHazardFamily = hazardLayerManager.transition;
-				preloadHazardFamily = hazardLayerManager.preload;
+				onPreloadHazardFamilyReady?.(hazardLayerManager.preload);
 				updateHazardVisibility = hazardLayerManager.updateVisibility;
 				hazardLayerManager.updateVisibility();
 				mapInstance.addLayer(
@@ -252,7 +200,10 @@
 					map: mapInstance,
 					firstSymbolLayerId,
 					reducedMotion,
-					setState: (state) => (criticalFacilitiesState = state)
+					setState: (state) => {
+						criticalFacilitiesState = state;
+						onCriticalFacilitiesStateChange?.(state);
+					}
 				});
 				criticalFacilityLayerManager.addLayers();
 				disposeCriticalFacilityLayerManager = criticalFacilityLayerManager.dispose;
@@ -279,13 +230,16 @@
 				});
 				mapInstance.setMaxBounds(getPanBounds(mapInstance));
 				mapInstance.setMinZoom(mapInstance.getZoom());
-				updateMapCamera(viewMode);
+				updateMapCamera(mapState.viewMode);
+				lastViewMode = mapState.viewMode;
 				mapReady = true;
 				terrainTimer = setTimeout(() => {
 					if (disposed) return;
 					terrainEnabled = true;
 					mapInstance.setLayoutProperty('calapan-terrain-hillshade', 'visibility', 'visible');
-					updateMapCamera(viewMode);
+					if (mapState.viewMode === '3d') {
+						mapInstance.setTerrain({ source: 'calapan-terrain', exaggeration: 1.15 });
+					}
 				}, 1500);
 			});
 		};
@@ -304,67 +258,31 @@
 			if (terrainTimer) clearTimeout(terrainTimer);
 			setCriticalFacilitiesVisibility = () => {};
 			loadCriticalFacilities = () => {};
+			onPreloadHazardFamilyReady?.(() => {});
 			map?.remove();
 		};
 	});
 </script>
 
 <div class="map-shell">
-	<MapControls
-		{viewMode}
-		{activeHazardFamily}
-		{enabledFloodPeriods}
-		{enabledStormSurgeAdvisories}
-		{enabledLandslideLayers}
-		{enabledSeismicLayers}
-		{criticalFacilitiesEnabled}
-		{criticalFacilitiesState}
-		onViewModeChange={setViewMode}
-		onHazardFamilyChange={setHazardFamily}
-		onFloodPeriodChange={setFloodPeriodEnabled}
-		onStormSurgeAdvisoryChange={setStormSurgeAdvisoryEnabled}
-		onLandslideLayerChange={setLandslideLayerEnabled}
-		onSeismicLayerChange={setSeismicLayerEnabled}
-		onCriticalFacilitiesToggle={toggleCriticalFacilities}
-		onPreloadHazardFamily={preloadHazardFamily}
-	/>
-
 	<div
 		bind:this={mapElement}
 		class="map"
+		data-map-ready={mapReady}
 		role="region"
 		aria-label="Interactive map of Calapan City"
 		aria-describedby="map-boundary-note"
 	></div>
 
-	{#if !mapReady || loadingHazardFamily}
-		<div class="map-status" role="status" aria-live="polite">
-			<span class="status-dot"></span>
-			{#if !mapReady}
-				Loading map
-			{:else if loadingHazardFamily === 'flood'}
-				Loading flood tiles
-			{:else if loadingHazardFamily === 'storm-surge'}
-				Loading storm-surge tiles
-			{:else if loadingHazardFamily === 'landslide'}
-				Loading landslide tiles
-			{:else if loadingHazardFamily === 'earthquake'}
-				Loading earthquake tiles
-			{:else}
-				Loading typhoon track
-			{/if}
-		</div>
-	{/if}
-
 	<div id="map-boundary-note" class="boundary-note" role="note">
-		{#if activeHazardFamily === 'earthquake'}
+		{#if mapState.activeHazardFamily === 'earthquake'}
 			PHIVOLCS Ground Shaking, Liquefaction, and Tsunami vector layers.
-		{:else if activeHazardFamily === 'typhoon'}
+		{:else if mapState.activeHazardFamily === 'typhoon'}
 			PANaHON track proximity grid. Colors are not wind speeds.
 		{:else}
-			NOAH {activeHazardFamily === 'flood'
+			NOAH {mapState.activeHazardFamily === 'flood'
 				? 'flood hazard'
-				: activeHazardFamily === 'storm-surge'
+				: mapState.activeHazardFamily === 'storm-surge'
 					? 'storm-surge'
 					: 'landslide hazard'} layers.
 		{/if}
@@ -393,33 +311,9 @@
 		inset: 0;
 	}
 
-	.map-status,
 	.boundary-note {
 		position: absolute;
 		z-index: 2;
-	}
-
-	.map-status {
-		top: 4.5rem;
-		right: 1rem;
-		display: flex;
-		align-items: center;
-		gap: 0.45rem;
-		padding: 0.55rem 0.75rem;
-		border-radius: 999px;
-		background: rgb(250 248 242 / 90%);
-		color: #476563;
-		font-size: 0.72rem;
-		font-weight: 700;
-		box-shadow: 0 0.5rem 1.5rem rgb(30 56 55 / 12%);
-		backdrop-filter: blur(12px);
-	}
-
-	.status-dot {
-		width: 0.45rem;
-		height: 0.45rem;
-		border-radius: 50%;
-		background: #d18f38;
 	}
 
 	.boundary-note {
@@ -436,21 +330,24 @@
 		backdrop-filter: blur(12px);
 	}
 
-	@media (max-width: 640px) {
+	@media (max-width: 899px) {
 		.map-shell {
 			height: 100%;
 			min-height: 0;
 		}
 
-		.map-status {
-			top: auto;
-			right: 0.75rem;
-			bottom: 0.75rem;
-		}
-
 		.boundary-note {
+			display: none;
 			left: 0.75rem;
 			bottom: 4.5rem;
+			max-width: calc(100% - 1.5rem);
+		}
+
+		:global(.maplibregl-ctrl-bottom-right) {
+			top: 4.5rem;
+			right: 0.75rem;
+			bottom: auto;
+			left: auto;
 			max-width: calc(100% - 1.5rem);
 		}
 	}

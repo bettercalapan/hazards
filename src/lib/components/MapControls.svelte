@@ -114,83 +114,84 @@
 				{/each}
 			</div>
 
-			<div class="context-controls">
-				{#if activeHazardFamily === 'flood'}
-					<div class="flood-toggle" role="group" aria-label="Flood return period layers">
-						{#each floodHazardPeriods as period (period.key)}
-							<label class:active={enabledFloodPeriods.includes(period.key)}>
-								<input
-									type="checkbox"
-									checked={enabledFloodPeriods.includes(period.key)}
-									onchange={(event) => onFloodPeriodChange(period.key, event.currentTarget.checked)}
-								/>
-								<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}
-								></span>
-								<span>{period.shortName}</span>
-							</label>
-						{/each}
-					</div>
-				{:else if activeHazardFamily === 'storm-surge'}
-					<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
-						{#each stormSurgeAdvisories as advisory (advisory.key)}
-							<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
-								<input
-									type="checkbox"
-									checked={enabledStormSurgeAdvisories.includes(advisory.key)}
-									onchange={(event) =>
-										onStormSurgeAdvisoryChange(advisory.key, event.currentTarget.checked)}
-								/>
-								<span class="flood-toggle-swatch" style={`background: ${advisory.colors.Medium}`}
-								></span>
-								<span>{advisory.shortName}</span>
-							</label>
-						{/each}
-					</div>
-				{:else if activeHazardFamily === 'landslide'}
-					<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
-						{#each landslideHazards as layer (layer.key)}
-							<label class:active={enabledLandslideLayers.includes(layer.key)}>
-								<input
-									type="checkbox"
-									checked={enabledLandslideLayers.includes(layer.key)}
-									onchange={(event) =>
-										onLandslideLayerChange(layer.key, event.currentTarget.checked)}
-								/>
-								<span class="flood-toggle-swatch" style={`background: ${layer.colors.Medium}`}
-								></span>
-								<span>{layer.shortName}</span>
-							</label>
-						{/each}
-					</div>
-				{:else if activeHazardFamily === 'earthquake'}
-					<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
-						{#each seismicHazards as layer (layer.key)}
-							<label class:active={enabledSeismicLayers.includes(layer.key)}>
-								<input
-									type="checkbox"
-									checked={enabledSeismicLayers.includes(layer.key)}
-									onchange={(event) => onSeismicLayerChange(layer.key, event.currentTarget.checked)}
-								/>
-								<span class="flood-toggle-swatch" style={`background: ${layer.classes[0].color}`}
-								></span>
-								<span>{layer.shortName}</span>
-							</label>
-						{/each}
-					</div>
-				{:else}
-					<div class="flood-toggle typhoon-toggle" role="status" aria-label="Typhoon track status">
-						<span class="typhoon-toggle-swatch"></span>
-						<span>Track proximity</span>
-					</div>
-				{/if}
-			</div>
+			{#if activeHazardFamily !== 'typhoon'}
+				<div class="context-controls">
+					{#if activeHazardFamily === 'flood'}
+						<div class="flood-toggle" role="group" aria-label="Flood return period layers">
+							{#each floodHazardPeriods as period (period.key)}
+								<label class:active={enabledFloodPeriods.includes(period.key)}>
+									<input
+										type="checkbox"
+										checked={enabledFloodPeriods.includes(period.key)}
+										onchange={(event) =>
+											onFloodPeriodChange(period.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${period.colors.Medium}`}
+									></span>
+									<span>{period.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'storm-surge'}
+						<div class="flood-toggle" role="group" aria-label="Storm surge advisory layers">
+							{#each stormSurgeAdvisories as advisory (advisory.key)}
+								<label class:active={enabledStormSurgeAdvisories.includes(advisory.key)}>
+									<input
+										type="checkbox"
+										checked={enabledStormSurgeAdvisories.includes(advisory.key)}
+										onchange={(event) =>
+											onStormSurgeAdvisoryChange(advisory.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${advisory.colors.Medium}`}
+									></span>
+									<span>{advisory.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'landslide'}
+						<div class="flood-toggle" role="group" aria-label="Landslide hazard layers">
+							{#each landslideHazards as layer (layer.key)}
+								<label class:active={enabledLandslideLayers.includes(layer.key)}>
+									<input
+										type="checkbox"
+										checked={enabledLandslideLayers.includes(layer.key)}
+										onchange={(event) =>
+											onLandslideLayerChange(layer.key, event.currentTarget.checked)}
+									/>
+									<span class="flood-toggle-swatch" style={`background: ${layer.colors.Medium}`}
+									></span>
+									<span>{layer.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{:else if activeHazardFamily === 'earthquake'}
+						<div class="flood-toggle" role="group" aria-label="Earthquake hazard layers">
+							{#each seismicHazards as layer (layer.key)}
+								<label class:active={enabledSeismicLayers.includes(layer.key)}>
+									<input
+										type="checkbox"
+										checked={enabledSeismicLayers.includes(layer.key)}
+										onchange={(event) =>
+											onSeismicLayerChange(layer.key, event.currentTarget.checked)}
+									/>
+									<span
+										class="flood-toggle-swatch"
+										style={`background: ${layer.classes[layer.key === 'ground-shaking' ? 2 : layer.key === 'liquefaction' ? 6 : 4]!.color}`}
+									></span>
+									<span>{layer.shortName}</span>
+								</label>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			{/if}
 		</div>
 	</div>
 </div>
 
 <style>
 	.map-toolbar {
-		position: absolute;
+		position: fixed;
 		top: 1rem;
 		left: 1rem;
 		z-index: 2;
@@ -356,13 +357,22 @@
 		border-radius: 50%;
 	}
 
-	@media (max-width: 640px) {
+	@media (min-width: 900px) and (max-width: 1249px) {
 		.map-toolbar {
-			top: 0.75rem;
-			left: 0.75rem;
-			width: calc(100% - 1.5rem);
-			max-width: calc(100% - 1.5rem);
-			border-radius: 0.85rem;
+			top: 5.5rem;
+		}
+	}
+
+	@media (max-width: 899px) {
+		.map-toolbar {
+			position: static;
+			width: auto;
+			max-width: none;
+			border-radius: 1rem 1rem 0 0;
+			border-bottom: none;
+			margin-bottom: 3.5rem;
+			box-shadow: none;
+			backdrop-filter: none;
 		}
 	}
 </style>
