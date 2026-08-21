@@ -1,55 +1,93 @@
-# Hazards
+![Banner](./static/banner.png)
 
-Localized hazard-risk mapping for Calapan City.
+# Overview
 
-## Development
+Hazards is BetterCalapan's localized hazard-risk map for Calapan City. It helps residents explore barangay-level hazard zones and critical facilities.
 
-```sh
+> [!NOTE]  
+> The platform is currently in beta. Versions >= 0.1.x are usable and publicly released, but the version will be tagged as 1.0.0 once the app has been optimized.
+
+## Tech Stack
+
+| Tool               | Purpose            |
+| ------------------ | ------------------ |
+| SvelteKit          | Framework          |
+| TypeScript         | Type safety        |
+| MapLibre GL JS     | Interactive maps   |
+| Vite               | Build tool         |
+| Vanilla CSS        | Styling            |
+| Vitest             | Unit testing       |
+| Playwright         | Browser testing    |
+| Cloudflare Workers | Hosting            |
+| pnpm               | Package management |
+
+## Getting Started
+
+```bash
+# Install dependencies
 pnpm install
+
+# Start the dev server
 pnpm run dev
-```
 
-Run the project checks in this order:
-
-```sh
-pnpm run gen
+# Run checks in order
 pnpm run check
 pnpm run build
 pnpm run lint
 pnpm run test
 ```
 
-`pnpm run gen` regenerates Cloudflare Worker types after changing `wrangler.jsonc`.
+If `wrangler.jsonc` changes, run `pnpm run gen` before the checks.
 
-Browser smoke tests use Playwright and Chromium:
+Browser tests require Chromium:
 
-```sh
+```bash
 pnpm exec playwright install chromium
 pnpm run test:browser
 ```
 
-The browser suite checks map startup, critical facilities, hazard controls, barangay search, and map asset failures.
+For network-related browser failures, rerun serially:
+
+```bash
+pnpm exec playwright test --workers=1
+```
 
 ## Deployment
 
-The app uses SvelteKit with the Cloudflare adapter and deploys to Workers through Wrangler.
-
-```sh
+```bash
 pnpm run deploy
 ```
 
-The current map view shows Calapan's 62 barangay boundaries from OCHA Philippines' COD-AB dataset, sourced from NAMRIA and PSA, plus the UP Resilience Institute NOAH Center's flood, storm-surge, and landslide hazard classes. It also includes DOST-PHIVOLCS Ground Shaking, Liquefaction, and Tsunami vector layers from GeoRiskPH HazardHunter. These are official hazard-proneness layers, not a site-specific building assessment or a live warning. Other hazard classes are source-provided modeled information, not a guarantee of future flooding, storm surge, or landslides. The 3D view uses Mapzen Terrain Tiles with elevation data sourced from USGS, NASA, and other contributors. The alert panel reads PAGASA's Public Alert CAP feed and shows active alerts whose geographic areas include Oriental Mindoro.
+The app deploys to Cloudflare Workers through Wrangler.
 
-The localized hazard vector tiles and barangay summaries are generated with `pnpm run generate:hazards`. The script expects flood source files under `~/downloads/noah/flood/{5yr,25yr,100yr}`, storm-surge source files under `~/downloads/noah/storm-surge/ss-advisory-{1,2,3,4}`, and landslide source files under `~/downloads/noah/landslide/hazards` by default, or under the directory set in `NOAH_DATA_DIR`. The PHIVOLCS Feature Layer snapshots are pinned under `src/lib/data/phivolcs-*.json`; they are clipped to Calapan during generation and are not fetched by the browser. PHIVOLCS may revise these source layers, so refresh the snapshots and regenerate the tiles during data reviews.
+## Data Sources
 
-Critical facilities are refreshed into the static `static/critical-facilities.json` snapshot with `pnpm run generate:critical-facilities`. The generator fetches the configured facility sources, filters them to Calapan City, and adds the manually curated map-listed fire stations and evacuation centers. Review source freshness, licensing, and the verification status of curated points before publishing a refreshed snapshot.
+| Source                                                                  | Data                                             |
+| ----------------------------------------------------------------------- | ------------------------------------------------ |
+| [OCHA Philippines COD-AB](https://data.humdata.org/dataset/cod-ps-phil) | Calapan barangay boundaries                      |
+| [UP NOAH Center](https://noah.up.edu.ph/)                               | Flood, storm-surge, and landslide hazard classes |
+| [GeoRisk Philippines](https://hazardhunter.georisk.gov.ph/)             | Ground shaking, liquefaction, and tsunami layers |
+| [PANaHON](https://www.panahon.gov.ph/)                                  | Typhoon tracks                                   |
+| [Mapzen Terrain Tiles](https://registry.opendata.aws/terrain-tiles/)    | 3D elevation data                                |
 
-## Data Provenance
+## Data Generation
 
-- `sourceDate` is a date supplied by the source metadata, not the local file modification date.
-- `preparedAt` in `src/lib/data/hazard-data-manifest.json` is when the local hazard tiles and barangay summaries were generated.
-- The downloaded NOAH flood and landslide shapefiles do not include source dates, so the app shows that the date is unknown.
-- The storm-surge shapefile metadata includes a 19 July 2021 creation date. This is shown as a creation date, not as a confirmed update date.
-- The pinned PHIVOLCS snapshots do not include source publication dates.
-- Hazard layers are clipped to Calapan City. Current licensing notes are kept beside each dataset metadata object and must be rechecked before redistribution.
-- Local PDRRMO, police, fire, public safety, and provincial hospital contacts are sourced from the Province of Oriental Mindoro contact page and verified on 18 August 2026.
+Generate localized hazard tiles and barangay summaries:
+
+```bash
+pnpm run generate:hazards
+```
+
+The generator expects NOAH inputs under `~/downloads/noah/{flood,storm-surge,landslide}`. Set `NOAH_DATA_DIR` to use another root.
+
+Refresh the critical-facilities snapshot:
+
+```bash
+pnpm run generate:critical-facilities
+```
+
+Review source freshness, coverage, licensing, and verification status before publishing refreshed data.
+
+## License
+
+GNU GPL v3.0. See [LICENSE](LICENSE) for details.
