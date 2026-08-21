@@ -1,0 +1,870 @@
+{
+	"PH1705205001": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205002": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205003": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205004": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205005": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205006": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205007": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205008": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205009": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205010": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205011": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205013": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205015": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205016": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205017": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205018": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205019": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205021": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205022": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205023": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205025": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205026": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205027": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205028": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205029": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205030": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205031": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205032": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205033": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205034": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205035": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205036": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205037": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205038": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205068": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205039": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205041": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205042": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205043": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205044": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205045": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205046": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205047": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205048": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205049": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205050": {
+		"5": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"25": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205051": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205052": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205053": {
+		"5": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"25": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"100": {
+			"classes": ["Low"],
+			"summary": "Low"
+		}
+	},
+	"PH1705205054": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205058": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205059": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205055": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205056": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205061": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205012": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205057": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205062": {
+		"5": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205063": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205064": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205065": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205066": {
+		"5": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"25": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"100": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	}
+}

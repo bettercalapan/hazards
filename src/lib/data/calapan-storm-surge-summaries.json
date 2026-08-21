@@ -1,0 +1,1118 @@
+{
+	"PH1705205001": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205002": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205003": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205004": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205005": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205006": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205007": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205008": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205009": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205010": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205011": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205013": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205015": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205016": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205017": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205018": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205019": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205021": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205022": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205023": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205025": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205026": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["High"],
+			"summary": "High"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205027": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205028": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205029": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205030": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205031": {
+		"1": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205032": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205033": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205034": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205035": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205036": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205037": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205038": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205068": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205039": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205041": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205042": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205043": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205044": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205045": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205046": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205047": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205048": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205049": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205050": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205051": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205052": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["High"],
+			"summary": "High"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205053": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205054": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205058": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205059": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205055": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": ["Low"],
+			"summary": "Low"
+		}
+	},
+	"PH1705205056": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205061": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205012": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"3": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"4": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205057": {
+		"1": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205062": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205063": {
+		"1": {
+			"classes": ["Low"],
+			"summary": "Low"
+		},
+		"2": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205064": {
+		"1": {
+			"classes": [],
+			"summary": "NoData"
+		},
+		"2": {
+			"classes": ["Low", "Medium"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205065": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["High"],
+			"summary": "High"
+		}
+	},
+	"PH1705205066": {
+		"1": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"2": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"3": {
+			"classes": ["Low", "Medium", "High"],
+			"summary": "Mixed"
+		},
+		"4": {
+			"classes": ["Medium", "High"],
+			"summary": "Mixed"
+		}
+	}
+}

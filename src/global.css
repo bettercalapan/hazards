@@ -1,0 +1,109 @@
+/* CSS Reset by Josh Comeau
+   https://www.joshwcomeau.com/css/custom-css-reset/ */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+*:not(dialog) {
+	margin: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		interpolate-size: allow-keywords;
+	}
+}
+
+body {
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+	display: block;
+	max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+p {
+	text-wrap: pretty;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	text-wrap: balance;
+}
+
+/* Shared BetterCalapan color tokens */
+html {
+	--fg: oklch(0.24 0 0);
+	--fg-secondary: oklch(0.3 0 0);
+	--bg: oklch(1 0 0);
+	--accent: oklch(0.68 0.22 39);
+	--accent-dark: oklch(0.55 0.22 39);
+	--gray: oklch(0.83 0.01 54.5);
+	--neutral-lightest: oklch(0.99 0.003 84.56);
+	--neutral-light: oklch(0.96 0.007 97.35);
+}
+
+@font-face {
+	font-family: 'figtree';
+	font-display: swap;
+	src: url('$lib/assets/figtree-variable.woff2') format('woff2');
+}
+
+html {
+	height: 100%;
+	scrollbar-color: var(--gray) var(--bg);
+	scroll-behavior: smooth;
+}
+
+body {
+	height: 100%;
+	min-height: 100dvh;
+	display: flex;
+	flex-direction: column;
+	background-color: var(--bg);
+	color: var(--fg);
+	font-family: 'figtree', sans-serif;
+}
+
+ul,
+ol {
+	padding: 0;
+}
+
+a {
+	color: var(--fg);
+	text-decoration: none;
+}
+
+button {
+	cursor: pointer;
+}

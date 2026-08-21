@@ -1,0 +1,374 @@
+{
+	"PH1705205001": {
+		"liquefaction": {
+			"classes": ["Moderately Susceptible", "Highly Susceptible"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205002": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205003": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205004": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205005": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205006": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205007": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205008": {
+		"liquefaction": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205009": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205010": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205011": {
+		"liquefaction": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205013": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205015": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205016": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205017": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205018": {
+		"liquefaction": {
+			"classes": ["Moderately Susceptible", "Highly Susceptible"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205019": {
+		"liquefaction": {
+			"classes": ["Moderately Susceptible", "Highly Susceptible"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205021": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205022": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205023": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205025": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205026": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205027": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205028": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205029": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205030": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205031": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205032": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205033": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205034": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205035": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205036": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205037": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205038": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205068": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205039": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205041": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205042": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205043": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205044": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205045": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205046": {
+		"liquefaction": {
+			"classes": ["Moderately Susceptible", "Highly Susceptible"],
+			"summary": "Mixed"
+		}
+	},
+	"PH1705205047": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205048": {
+		"liquefaction": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205049": {
+		"liquefaction": {
+			"classes": [],
+			"summary": "NoData"
+		}
+	},
+	"PH1705205050": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205051": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205052": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205053": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205054": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205058": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205059": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205055": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205056": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205061": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205012": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205057": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205062": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205063": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205064": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205065": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	},
+	"PH1705205066": {
+		"liquefaction": {
+			"classes": ["Highly Susceptible"],
+			"summary": "Highly Susceptible"
+		}
+	}
+}

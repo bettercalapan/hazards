@@ -1,0 +1,625 @@
+{
+	"type": "FeatureCollection",
+	"features": [
+		{
+			"type": "Feature",
+			"id": "PH1705205001",
+			"properties": {
+				"id": "PH1705205001",
+				"name": "Balingayan",
+				"sourceName": "Balingayan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.14198011220715, 13.326231772773141] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205002",
+			"properties": {
+				"id": "PH1705205002",
+				"name": "Balite",
+				"sourceName": "Balite"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.15867413029616, 13.406092169188618] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205003",
+			"properties": {
+				"id": "PH1705205003",
+				"name": "Baruyan",
+				"sourceName": "Baruyan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1320284707226, 13.386271741154124] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205004",
+			"properties": {
+				"id": "PH1705205004",
+				"name": "Batino",
+				"sourceName": "Batino"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.21976426066034, 13.358024006662545] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205005",
+			"properties": {
+				"id": "PH1705205005",
+				"name": "Bayanan I",
+				"sourceName": "Bayanan I"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.169946216518, 13.366919569073914] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205006",
+			"properties": {
+				"id": "PH1705205006",
+				"name": "Bayanan II",
+				"sourceName": "Bayanan II"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17007575745491, 13.35377033889996] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205007",
+			"properties": {
+				"id": "PH1705205007",
+				"name": "Biga",
+				"sourceName": "Biga"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17307952421442, 13.321938162644841] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205008",
+			"properties": {
+				"id": "PH1705205008",
+				"name": "Bondoc",
+				"sourceName": "Bondoc"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.19615290329679, 13.38493459367602] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205009",
+			"properties": {
+				"id": "PH1705205009",
+				"name": "Bucayao",
+				"sourceName": "Bucayao"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18692975339258, 13.30798798312156] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205010",
+			"properties": {
+				"id": "PH1705205010",
+				"name": "Buhuan",
+				"sourceName": "Buhuan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.21878382412046, 13.310274550595192] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205011",
+			"properties": {
+				"id": "PH1705205011",
+				"name": "Bulusan",
+				"sourceName": "Bulusan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1943837178006, 13.401889750564827] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205013",
+			"properties": {
+				"id": "PH1705205013",
+				"name": "Calero",
+				"sourceName": "Calero (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18269973287585, 13.416106173387435] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205015",
+			"properties": {
+				"id": "PH1705205015",
+				"name": "Camansihan",
+				"sourceName": "Camansihan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.2268259639727, 13.3349886831709] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205016",
+			"properties": {
+				"id": "PH1705205016",
+				"name": "Camilmil",
+				"sourceName": "Camilmil"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17495882033643, 13.405420853891528] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205017",
+			"properties": {
+				"id": "PH1705205017",
+				"name": "Canubing I",
+				"sourceName": "Canubing I"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.13479494470215, 13.35985966391903] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205018",
+			"properties": {
+				"id": "PH1705205018",
+				"name": "Canubing II",
+				"sourceName": "Canubing II"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.11864089427667, 13.31424602471089] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205019",
+			"properties": {
+				"id": "PH1705205019",
+				"name": "Comunal",
+				"sourceName": "Comunal"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.15981980332703, 13.310109597506678] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205021",
+			"properties": {
+				"id": "PH1705205021",
+				"name": "Guinobatan",
+				"sourceName": "Guinobatan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18125765260712, 13.385284194908916] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205022",
+			"properties": {
+				"id": "PH1705205022",
+				"name": "Gulod",
+				"sourceName": "Gulod"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.20821032831104, 13.346558136892178] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205023",
+			"properties": {
+				"id": "PH1705205023",
+				"name": "Gutad",
+				"sourceName": "Gutad"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.23949996411244, 13.362200450354502] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205025",
+			"properties": {
+				"id": "PH1705205025",
+				"name": "Ibaba East",
+				"sourceName": "Ibaba East (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17896866149782, 13.414758759918106] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205026",
+			"properties": {
+				"id": "PH1705205026",
+				"name": "Ibaba West",
+				"sourceName": "Ibaba West (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1756099939613, 13.413930127664191] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205027",
+			"properties": {
+				"id": "PH1705205027",
+				"name": "Ilaya",
+				"sourceName": "Ilaya (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1874927289154, 13.412888148476844] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205028",
+			"properties": {
+				"id": "PH1705205028",
+				"name": "Lalud",
+				"sourceName": "Lalud"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17069288405087, 13.399783481540629] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205029",
+			"properties": {
+				"id": "PH1705205029",
+				"name": "Lazareto",
+				"sourceName": "Lazareto"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.19973933616748, 13.429692309940377] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205030",
+			"properties": {
+				"id": "PH1705205030",
+				"name": "Libis",
+				"sourceName": "Libis (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18399415296162, 13.414533705381938] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205031",
+			"properties": {
+				"id": "PH1705205031",
+				"name": "Lumangbayan",
+				"sourceName": "Lumangbayan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18001904949526, 13.398937419358509] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205032",
+			"properties": {
+				"id": "PH1705205032",
+				"name": "Mahal na Pangalan",
+				"sourceName": "Mahal Na Pangalan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.15080345998707, 13.403922631752852] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205033",
+			"properties": {
+				"id": "PH1705205033",
+				"name": "Maidlang",
+				"sourceName": "Maidlang"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.23189362603779, 13.385805052254133] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205034",
+			"properties": {
+				"id": "PH1705205034",
+				"name": "Malad",
+				"sourceName": "Malad"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.15892817170581, 13.33941430281615] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205035",
+			"properties": {
+				"id": "PH1705205035",
+				"name": "Malamig",
+				"sourceName": "Malamig"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.14523049730188, 13.344465915081512] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205036",
+			"properties": {
+				"id": "PH1705205036",
+				"name": "Managpi",
+				"sourceName": "Managpi"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.20033335227626, 13.327033670406541] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205037",
+			"properties": {
+				"id": "PH1705205037",
+				"name": "Masipit",
+				"sourceName": "Masipit"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.15712640677374, 13.388088719823617] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205038",
+			"properties": {
+				"id": "PH1705205038",
+				"name": "Nag-Iba I",
+				"sourceName": "Nag-Iba I"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.27340801222044, 13.343655254937396] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205068",
+			"properties": {
+				"id": "PH1705205068",
+				"name": "Nag-Iba II",
+				"sourceName": "Nag-Iba II"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.2595515853001, 13.34833234664317] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205039",
+			"properties": {
+				"id": "PH1705205039",
+				"name": "Navotas",
+				"sourceName": "Navotas"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.2502498180037, 13.3712030686974] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205041",
+			"properties": {
+				"id": "PH1705205041",
+				"name": "Pachoca",
+				"sourceName": "Pachoca"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.16639780748173, 13.4093774357268] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205042",
+			"properties": {
+				"id": "PH1705205042",
+				"name": "Palhi",
+				"sourceName": "Palhi"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.20936384833124, 13.378846465868286] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205043",
+			"properties": {
+				"id": "PH1705205043",
+				"name": "Panggalaan",
+				"sourceName": "Panggalaan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.20164874061388, 13.307589736700164] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205044",
+			"properties": {
+				"id": "PH1705205044",
+				"name": "Parang",
+				"sourceName": "Parang"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.21525651532508, 13.401835643595739] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205045",
+			"properties": {
+				"id": "PH1705205045",
+				"name": "Patas",
+				"sourceName": "Patas"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.11982784443718, 13.341066972745205] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205046",
+			"properties": {
+				"id": "PH1705205046",
+				"name": "Personas",
+				"sourceName": "Personas"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1413543023477, 13.30651594596275] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205047",
+			"properties": {
+				"id": "PH1705205047",
+				"name": "Puting Tubig",
+				"sourceName": "Puting Tubig"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18634213559024, 13.344905344063564] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205048",
+			"properties": {
+				"id": "PH1705205048",
+				"name": "Salong",
+				"sourceName": "Salong"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.19057153700739, 13.418575322910836] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205049",
+			"properties": {
+				"id": "PH1705205049",
+				"name": "San Antonio",
+				"sourceName": "San Antonio"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.19550907103893, 13.42592932457168] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205050",
+			"properties": {
+				"id": "PH1705205050",
+				"name": "San Vicente Central",
+				"sourceName": "San Vicente Central (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17845997548612, 13.41203601503411] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205051",
+			"properties": {
+				"id": "PH1705205051",
+				"name": "San Vicente East",
+				"sourceName": "San Vicente East (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.1801965098503, 13.409415807644887] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205052",
+			"properties": {
+				"id": "PH1705205052",
+				"name": "San Vicente North",
+				"sourceName": "San Vicente North (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17914895139445, 13.413170068489508] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205053",
+			"properties": {
+				"id": "PH1705205053",
+				"name": "San Vicente South",
+				"sourceName": "San Vicente South (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17776800121706, 13.41008815885742] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205054",
+			"properties": {
+				"id": "PH1705205054",
+				"name": "San Vicente West",
+				"sourceName": "San Vicente West (Pob.)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17663039840873, 13.412203785871528] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205058",
+			"properties": {
+				"id": "PH1705205058",
+				"name": "Sapul",
+				"sourceName": "Sapul"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18691808588957, 13.365175221657884] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205059",
+			"properties": {
+				"id": "PH1705205059",
+				"name": "Silonay",
+				"sourceName": "Silonay"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.22524552832876, 13.399584969634546] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205055",
+			"properties": {
+				"id": "PH1705205055",
+				"name": "Sta. Cruz",
+				"sourceName": "Sta. Cruz"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.24115820928945, 13.32450750460104] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205056",
+			"properties": {
+				"id": "PH1705205056",
+				"name": "Sta. Isabel",
+				"sourceName": "Sta. Isabel"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.16023894718434, 13.367938314737163] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205061",
+			"properties": {
+				"id": "PH1705205061",
+				"name": "Sta. Maria Village",
+				"sourceName": "Sta. Maria Village"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17340033675347, 13.408860436770295] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205012",
+			"properties": {
+				"id": "PH1705205012",
+				"name": "Sta. Rita",
+				"sourceName": "Sta. Rita (Bungahan)"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.12933429827915, 13.345665290414402] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205057",
+			"properties": {
+				"id": "PH1705205057",
+				"name": "Sto. Ni\u00f1o",
+				"sourceName": "Sto. Ni\u00f1o"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.18497174377207, 13.406829728349413] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205062",
+			"properties": {
+				"id": "PH1705205062",
+				"name": "Suqui",
+				"sourceName": "Suqui"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.20193883767084, 13.41680257749892] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205063",
+			"properties": {
+				"id": "PH1705205063",
+				"name": "Tawagan",
+				"sourceName": "Tawagan"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.14714963533987, 13.374415589227521] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205064",
+			"properties": {
+				"id": "PH1705205064",
+				"name": "Tawiran",
+				"sourceName": "Tawiran"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.16767195048618, 13.392799978668823] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205065",
+			"properties": {
+				"id": "PH1705205065",
+				"name": "Tibag",
+				"sourceName": "Tibag"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.17340945541945, 13.412172509281243] }
+		},
+		{
+			"type": "Feature",
+			"id": "PH1705205066",
+			"properties": {
+				"id": "PH1705205066",
+				"name": "Wawa",
+				"sourceName": "Wawa"
+			},
+			"geometry": { "type": "Point", "coordinates": [121.14543988004151, 13.403263266968638] }
+		}
+	]
+}
